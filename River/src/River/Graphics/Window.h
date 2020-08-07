@@ -1,0 +1,37 @@
+#pragma once
+
+#include <iostream>
+
+#define GLEW_STATIC
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
+
+namespace River {
+
+	class Window {
+
+
+	private:
+        GLFWwindow* glfwWindow;
+        int width;
+        int height;
+        std::string title = "River Window";
+
+		/* The number of texture slots (or units) accessible from the fragment shader */
+		int numTextureSlots;
+
+	public:
+
+		Window(std::string title);
+		~Window();
+
+		void clear();
+		void clearDepth();
+		bool shouldClose();
+
+	};
+
+}
+
+
