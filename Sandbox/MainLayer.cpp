@@ -6,5 +6,9 @@ void MainLayer::onInitialization() {
 }
 
 void MainLayer::onUpdate() {
-	imageRenderer->drawImage(image_coffee, 0, 0, 0.5, 0.5);
+	x += 0.005;
+	if (x > 1.0) x = -1.50;
+	imageRenderer->drawImage(image_coffee, x-0.5, -0.25, 0.5, 0.5);
+	imageRenderer->drawImage(image_coffee, -(x-0.5), 0.25, 0.5, 0.5);
+	imageRenderer->flush();
 }

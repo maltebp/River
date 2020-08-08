@@ -114,6 +114,7 @@
     <ClInclude Include="src\River\Error.h" />
     <ClInclude Include="src\River\Graphics\Texture.h" />
     <ClInclude Include="src\River\Graphics\ImageRenderer.h" />
+    <ClInclude Include="src\River\Graphics\VertexArray.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\River\Layer\Layer.cpp" />
@@ -125,6 +126,7 @@
     <ClCompile Include="src\River\Game.cpp" />
     <ClCompile Include="src\River\Graphics\Texture.cpp" />
     <ClCompile Include="src\River\Graphics\ImageRenderer.cpp" />
+    <ClCompile Include="src\River\Graphics\VertexArray.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

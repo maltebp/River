@@ -4,16 +4,30 @@
 #include "Texture.h"
 #include "Window.h"
 #include "Shader/ShaderProgram.h"
+#include "VertexArray.h"
 
 
 namespace River {
+
+	struct ImageVertex {
+		GLfloat x, y, texX, texY;
+	};
+
+	class ImageVertexArray : public VertexArray<ImageVertex> {
+
+	protected:
+		void setupAttributes() override {
+			addAttributeFloat(2); // Position
+			addAttributeFloat(2); // Tex position
+		}
+	};
+
+
 	
 	class ImageRenderer : public Renderer {
 
 	private:
-		unsigned int vertexArray;
-		unsigned int vertexBuffer;
-		unsigned int indexBuffer;
+		ImageVertexArray vertexArray;
 
 		ShaderProgram* shaderProgram;
 
@@ -30,6 +44,9 @@ namespace River {
 		// TODO: Function -> draw texture with texture size
 	};
 
+
+
+	
 }
 
 

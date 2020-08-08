@@ -4,10 +4,12 @@ Today:
     ✔ Fix glew header reference
     ✔ Add index buffer to rendering
     ✔ Create ShaderProgram class
-    ☐ Setup Renderer system in Game class
+    ✔ Implement Layer
+    ☐ Create VertexArray class
 
 First thing next time:
     ☐ Figure out how to access renderer
+    ☐ Create GL error handling
 
 
 All:

@@ -36,29 +36,9 @@ void main()
 //
 
 
-
+River::Texture* texture;
 
 River::ImageRenderer::ImageRenderer(River::Window *window) : River::Renderer(window) {
-	
-
-	// Setup data layout
-	glGenVertexArrays(1, &vertexArray);
-	glBindVertexArray(vertexArray);
-
-	// Vertex buffer must be nound before settings attributes (apparently)
-	glGenBuffers(1, &vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (void*)0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (void*) (2*sizeof(float)) );
-
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-
-	// Index buffer
-	glGenBuffers(1, &indexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-
 	// Shader program
 	Shader vertexShader(Shader::Type::VERTEX, vertexShaderSource);
 	Shader fragmentShader(Shader::Type::FRAGMENT, fragmentShaderSource);
@@ -67,41 +47,57 @@ River::ImageRenderer::ImageRenderer(River::Window *window) : River::Renderer(win
 	shaderProgram->setVertexShader(&vertexShader);
 	shaderProgram->setFragmentShader(&fragmentShader);
 	shaderProgram->build();
+
+	vertexArray.initialize();
 }
 
 
-void River::ImageRenderer::drawImage(Texture *texture, float x, float y, float width, float height) {
+void River::ImageRenderer::drawImage(River::Texture *tex, float x, float y, float width, float height) {
 
 	shaderProgram->use();
+	texture = tex;
 
-	glBindTexture(GL_TEXTURE_2D, texture->getId());
+	unsigned int verticesOffset = vertexArray.getNumVertices();
+	ImageVertex* vertices = vertexArray.nextVertices(4);
 
-	float vertices[] = {
-		x,			y + height,		0.0f, 1.0f,	// top left
-		x + width,	y + height,		1.0f, 1.0f, // top right
-		x,			y,				0.0f, 0.0f,	// bottom left
-		x + width,	y,				1.0f, 0.0f	// bottom right
-	};
+	vertices[0].x = x;
+	vertices[0].y = y + height;
+	vertices[0].texX = 0.0f;
+	vertices[0].texY = 1.0f;
 
-	int indices[] = {
-		0, 1, 2,
-		1, 2, 3
-	};
+	vertices[1].x = x + width;
+	vertices[1].y = y + height;
+	vertices[1].texX = 1.0f;
+	vertices[1].texY = 1.0f;
 
-	glBindVertexArray(vertexArray);
+	vertices[2].x = x;
+	vertices[2].y = y;
+	vertices[2].texX = 0.0f;
+	vertices[2].texY = 0.0f;
+	
+	vertices[3].x = x + width;
+	vertices[3].y = y;
+	vertices[3].texX = 1.0f;
+	vertices[3].texY = 0.0f;
 
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW );
+	unsigned int* indices = vertexArray.nextIndices(6);
+	indices[0] = verticesOffset + 0;
+	indices[1] = verticesOffset + 1;
+	indices[2] = verticesOffset + 2;
+	indices[3] = verticesOffset + 1;
+	indices[4] = verticesOffset + 2;
+	indices[5] = verticesOffset + 3;
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
-
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 
 void River::ImageRenderer::flush() {
-
+	glBindTexture(GL_TEXTURE_2D, texture->getId());
+	vertexArray.bind();
+	glDrawElements(GL_TRIANGLES, vertexArray.getNumIndices(), GL_UNSIGNED_INT, 0);
+	vertexArray.unbind();
+	vertexArray.clear();
 }
+
 
 

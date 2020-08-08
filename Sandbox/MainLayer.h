@@ -10,6 +10,8 @@ private:
 	River::ImageRenderer* imageRenderer = nullptr;
 	River::Texture* image_coffee = nullptr;
 
+	float x = 0;
+
 public:
 
 	MainLayer(River::Game* game) : game(game) {}
