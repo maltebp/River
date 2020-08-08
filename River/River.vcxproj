@@ -102,6 +102,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\Layer\Layer.h" />
     <ClInclude Include="lib\stb_image\stb_image.h" />
     <ClInclude Include="src\River\Graphics\Shader\ShaderProgram.h" />
     <ClInclude Include="src\River\Graphics\Graphics.h" />
@@ -115,6 +116,7 @@
     <ClInclude Include="src\River\Graphics\ImageRenderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\River\Layer\Layer.cpp" />
     <ClCompile Include="lib\stb_image\stb_image.cpp" />
     <ClCompile Include="src\River\Graphics\Shader\ShaderProgram.cpp" />
     <ClCompile Include="src\River\Graphics\Shader\Shader.cpp" />

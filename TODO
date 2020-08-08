@@ -3,9 +3,11 @@ Setup with: Visual Studio Code using extension https://marketplace.visualstudio.
 Today:
     ✔ Fix glew header reference
     ✔ Add index buffer to rendering
-    ☐ Create ShaderProgram class
-    ☐ Create ShaderLoader class
+    ✔ Create ShaderProgram class
     ☐ Setup Renderer system in Game class
+
+First thing next time:
+    ☐ Figure out how to access renderer
 
 
 All:
@@ -17,5 +19,7 @@ All:
         ☐ Render text
 
 
+    ☐ Create ShaderLoader class
     ☐ Circle renderer
     ☐ Line renderer
+    ☐ Implement depth

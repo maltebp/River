@@ -48,6 +48,9 @@
     <ClInclude Include="src\River\Graphics\Shader\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\River\Layer\Layer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\River\Game.cpp">
@@ -72,6 +75,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\River\Graphics\Shader\Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\River\Layer\Layer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
