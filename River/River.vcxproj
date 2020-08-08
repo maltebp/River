@@ -100,6 +100,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="lib\stb_image\stb_image.h" />
+    <ClInclude Include="src\River\Graphics\Graphics.h" />
     <ClInclude Include="src\River\Graphics\Shader.h" />
     <ClInclude Include="src\River\Graphics\Renderer.h" />
     <ClInclude Include="src\River\Graphics\Window.h" />

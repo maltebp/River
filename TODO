@@ -1,0 +1,19 @@
+Setup with: Visual Studio Code using extension https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-todo-plus
+
+Today:
+    ✔ Fix glew header reference
+    ☐ Add index buffer to rendering
+    ☐ Create ShaderProgram class
+    ☐ Create ShaderLoader class
+    ☐ Setup Renderer system in Game class
+
+
+
+All:
+    ☐ Create OpenGL buffer abstraction
+    ☐ Layer system (figure out how to do it)
+
+    Text Rendering:
+        ☐ Setup FreeType library
+        ☐ Render text
+

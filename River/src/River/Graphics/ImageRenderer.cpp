@@ -1,8 +1,6 @@
 #include "ImageRenderer.h"
 
-#define GLEW_STATIC
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include "Graphics.h"
 
 #include "Shader.h"
 #include "River/Error.h"

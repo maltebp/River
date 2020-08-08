@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "Graphics.h"
+
 namespace River {
 	class Texture {
 
