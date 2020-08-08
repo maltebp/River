@@ -7,8 +7,7 @@ Today:
     ☐ Create ShaderLoader class
     ☐ Setup Renderer system in Game class
 
-
-
+    
 All:
     ☐ Create OpenGL buffer abstraction
     ☐ Layer system (figure out how to do it)
