@@ -3,6 +3,8 @@
 #include "Renderer.h"
 #include "Texture.h"
 #include "Window.h"
+#include "Shader/ShaderProgram.h"
+
 
 namespace River {
 	
@@ -11,8 +13,9 @@ namespace River {
 	private:
 		unsigned int vertexArray;
 		unsigned int vertexBuffer;
+		unsigned int indexBuffer;
 
-		unsigned int shaderProgram;
+		ShaderProgram* shaderProgram;
 
 	public:
 

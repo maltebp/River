@@ -5,12 +5,18 @@
 namespace River {
 
 	class Shader {
+
+	public:
+		enum class Type {
+			VERTEX,
+			FRAGMENT
+		};
 		
 	private:
 		unsigned int id;
+		Type type;
 		std::string source;
-
-		Shader();
+		bool ready = false;
 
 	public:
 
@@ -19,10 +25,14 @@ namespace River {
 		 * @param source The source code for the shader
 		 * @throws River::ShaderException Thrown if someone goes wrong when loading the shader (i.e. source code couldn't compile)
 		*/
-		Shader(unsigned int type, const std::string &source);
+		Shader(Type type, const std::string &source);
 		~Shader();
 
 		unsigned int getId();
+
+		bool isReady();
+
+		Type getType();
 
 	};
 

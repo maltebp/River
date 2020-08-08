@@ -1,14 +1,18 @@
 #include "Shader.h"
 
-#include "Graphics.h"
+#include "River/Graphics/Graphics.h"
 
 #include "River/Error.h"
 
-River::Shader::Shader(unsigned int type, const std::string& source) {
-	
+River::Shader::Shader(Type type, const std::string& source) {
+	this->type = type;
 	this->source = source;
 	
-	id = glCreateShader(type);
+	if( type == Type::VERTEX )
+		id = glCreateShader(GL_VERTEX_SHADER);
+	if (type == Type::FRAGMENT)
+		id = glCreateShader(GL_FRAGMENT_SHADER);
+
 	const char* cSource = source.c_str();
 	glShaderSource(id, 1, &cSource, nullptr );
 
@@ -27,6 +31,7 @@ River::Shader::Shader(unsigned int type, const std::string& source) {
 		throw River::ShaderException("Shader compilation failed with the message '" + stringMessage + "'");
 	}
 
+	ready = true;
 }
 
 River::Shader::~Shader() {
@@ -37,4 +42,12 @@ River::Shader::~Shader() {
 
 unsigned int River::Shader::getId() {
 	return id;
+}
+
+bool River::Shader::isReady() {
+	return ready;
+}
+
+River::Shader::Type River::Shader::getType() {
+	return type;
 }

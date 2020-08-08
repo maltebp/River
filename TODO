@@ -2,12 +2,12 @@ Setup with: Visual Studio Code using extension https://marketplace.visualstudio.
 
 Today:
     ✔ Fix glew header reference
-    ☐ Add index buffer to rendering
+    ✔ Add index buffer to rendering
     ☐ Create ShaderProgram class
     ☐ Create ShaderLoader class
     ☐ Setup Renderer system in Game class
 
-    
+
 All:
     ☐ Create OpenGL buffer abstraction
     ☐ Layer system (figure out how to do it)
@@ -16,3 +16,6 @@ All:
         ☐ Setup FreeType library
         ☐ Render text
 
+
+    ☐ Circle renderer
+    ☐ Line renderer

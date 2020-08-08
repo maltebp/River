@@ -2,7 +2,7 @@
 
 #include "Graphics.h"
 
-#include "Shader.h"
+#include "Shader/Shader.h"
 #include "River/Error.h"
 
 std::string vertexShaderSource = R"(
@@ -45,6 +45,7 @@ River::ImageRenderer::ImageRenderer(River::Window *window) : River::Renderer(win
 	glGenVertexArrays(1, &vertexArray);
 	glBindVertexArray(vertexArray);
 
+	// Vertex buffer must be nound before settings attributes (apparently)
 	glGenBuffers(1, &vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
@@ -54,56 +55,48 @@ River::ImageRenderer::ImageRenderer(River::Window *window) : River::Renderer(win
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 
+	// Index buffer
+	glGenBuffers(1, &indexBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 
 	// Shader program
-	Shader vertexShader(GL_VERTEX_SHADER, vertexShaderSource);
-	Shader fragmentShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
+	Shader vertexShader(Shader::Type::VERTEX, vertexShaderSource);
+	Shader fragmentShader(Shader::Type::FRAGMENT, fragmentShaderSource);
 
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader.getId());
-	glAttachShader(shaderProgram, fragmentShader.getId());
-
-	glLinkProgram(shaderProgram);
-	int linkStatus;
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &linkStatus);
-	if( linkStatus != GL_TRUE ){
-		// TODO: Print program info log
-		throw River::ShaderException("Program could not be linked");
-	}
-
-	glValidateProgram(shaderProgram);
-	int validationStatus;
-	glGetProgramiv(shaderProgram, GL_VALIDATE_STATUS, &validationStatus);
-	if (validationStatus != GL_TRUE) {
-		// TODO: Print program info log
-		throw River::ShaderException("Program could not be validated");
-	}
-
-	// TODO: Clean up if program build fails
-
+	shaderProgram = new ShaderProgram();
+	shaderProgram->setVertexShader(&vertexShader);
+	shaderProgram->setFragmentShader(&fragmentShader);
+	shaderProgram->build();
 }
 
 
 void River::ImageRenderer::drawImage(Texture *texture, float x, float y, float width, float height) {
 
-	glUseProgram(shaderProgram);
+	shaderProgram->use();
 
 	glBindTexture(GL_TEXTURE_2D, texture->getId());
 
 	float vertices[] = {
-		x + width,	y + height,		1.0f, 1.0f, // top right
-		x + width,	y,				1.0f, 0.0f,	// bottom right
-		x,			y,				0.0f, 0.0f,	// bottom left
-		x + width,	y + height,		1.0f, 1.0f, // top right
-		x,			y,				0.0f, 0.0f,	// bottom left
 		x,			y + height,		0.0f, 1.0f,	// top left
+		x + width,	y + height,		1.0f, 1.0f, // top right
+		x,			y,				0.0f, 0.0f,	// bottom left
+		x + width,	y,				1.0f, 0.0f	// bottom right
+	};
+
+	int indices[] = {
+		0, 1, 2,
+		1, 2, 3
 	};
 
 	glBindVertexArray(vertexArray);
+
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW );
 
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 

@@ -103,8 +103,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="lib\stb_image\stb_image.h" />
+    <ClInclude Include="src\River\Graphics\Shader\ShaderProgram.h" />
     <ClInclude Include="src\River\Graphics\Graphics.h" />
-    <ClInclude Include="src\River\Graphics\Shader.h" />
+    <ClInclude Include="src\River\Graphics\Shader\Shader.h" />
     <ClInclude Include="src\River\Graphics\Renderer.h" />
     <ClInclude Include="src\River\Graphics\Window.h" />
     <ClInclude Include="src\River\Game.h" />
@@ -115,7 +116,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lib\stb_image\stb_image.cpp" />
-    <ClCompile Include="src\River\Graphics\Shader.cpp" />
+    <ClCompile Include="src\River\Graphics\Shader\ShaderProgram.cpp" />
+    <ClCompile Include="src\River\Graphics\Shader\Shader.cpp" />
     <ClCompile Include="src\River\Graphics\Renderer.cpp" />
     <ClCompile Include="src\River\Graphics\Window.cpp" />
     <ClCompile Include="src\River\Game.cpp" />
