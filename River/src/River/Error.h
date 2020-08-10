@@ -2,9 +2,6 @@
 
 #include <stdexcept>
 
-
-
-
 namespace River {
 
 	/// <summary>
@@ -29,6 +26,11 @@ namespace River {
 	class ShaderException : public Exception {
 	public:
 		ShaderException(const std::string& message) : Exception("ShaderException", message) {}
+	};
+
+	class GLException : public Exception {
+	public:
+		GLException(const std::string& message) : Exception("GLException", message) {}
 	};
 }
 

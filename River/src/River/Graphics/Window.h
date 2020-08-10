@@ -2,7 +2,8 @@
 
 #include <iostream>
 
-#include "Graphics.h"
+#include "River/Error.h"
+#include "River/Graphics/GL.h"
 
 namespace River {
 

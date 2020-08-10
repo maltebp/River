@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "River/Graphics/Graphics.h"
+#include "GL.h"
 
 namespace River {
 
@@ -64,25 +64,25 @@ namespace River {
 		//}
 
 		void initialize() {
-			glGenVertexArrays(1, &vertexArrayId);
-			glGenBuffers(1, &vertexBufferId);
-			glGenBuffers(1, &indexBufferId);
+			GL(glGenVertexArrays(1, &vertexArrayId));
+			GL(glGenBuffers(1, &vertexBufferId));
+			GL(glGenBuffers(1, &indexBufferId));
 
 			GLint currentVertexArray = 0;
 			GLint currentVertexBuffer = 0;
-			glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &currentVertexArray);
-			glGetIntegerv(GL_VERTEX_ARRAY_BUFFER_BINDING, &currentVertexBuffer);
+			GL(glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &currentVertexArray));
+			GL(glGetIntegerv(GL_VERTEX_ARRAY_BUFFER_BINDING, &currentVertexBuffer));
 
-			glBindVertexArray(vertexArrayId);
-			glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
+			GL(glBindVertexArray(vertexArrayId));
+			GL(glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId));
 			setupAttributes();
 
 			if (stride != sizeof(T)) {
-				glDeleteVertexArrays(1, &vertexArrayId);
-				glDeleteBuffers(1, &vertexBufferId);
-				glDeleteBuffers(1, &indexBufferId);
-				glBindVertexArray(currentVertexArray);
-				glBindBuffer(GL_ARRAY_BUFFER, currentVertexBuffer);
+				GL(glDeleteVertexArrays(1, &vertexArrayId));
+				GL(glDeleteBuffers(1, &vertexBufferId));
+				GL(glDeleteBuffers(1, &indexBufferId));
+				GL(glBindVertexArray(currentVertexArray));
+				GL(glBindBuffer(GL_ARRAY_BUFFER, currentVertexBuffer));
 				throw River::Exception("Size of attributes does not match size of struct");
 			}
 
@@ -90,13 +90,14 @@ namespace River {
 			unsigned int offset = 0;
 			for (int i = 0; i < attributes.size(); i++) {
 				Attribute& attribute = attributes[i];
-				glVertexAttribPointer(i, attribute.count, attribute.type, GL_FALSE, stride, (const void*)offset);
-				glEnableVertexAttribArray(i);
+				#pragma warning(suppress: 4312) // Suppress warning about casting to void*
+				GL(glVertexAttribPointer(i, attribute.count, attribute.type, GL_FALSE, stride, (void*) offset));
+				GL(glEnableVertexAttribArray(i));
 				offset += attribute.size * attribute.count;
 			}
 
-			glBindVertexArray(currentVertexArray);
-			glBindBuffer(GL_ARRAY_BUFFER, currentVertexBuffer);
+			GL(glBindVertexArray(currentVertexArray));
+			GL(glBindBuffer(GL_ARRAY_BUFFER, currentVertexBuffer));
 		}
 
 		T* nextVertices(unsigned int count) {
@@ -121,17 +122,17 @@ namespace River {
 		}
 
 		void bind() {
-			glBindVertexArray(vertexArrayId);
-			glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(T) * numVertices, (void*) vertices.data(), GL_STATIC_DRAW);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(unsigned int), (void*) indices.data(), GL_STATIC_DRAW);
+			GL(glBindVertexArray(vertexArrayId));
+			GL(glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId));
+			GL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId));
+			GL(glBufferData(GL_ARRAY_BUFFER, sizeof(T) * numVertices, (void*) vertices.data(), GL_STATIC_DRAW));
+			GL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(unsigned int), (void*) indices.data(), GL_STATIC_DRAW));
 		}
 
 		void unbind() {
-			glBindVertexArray(0);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			GL(glBindVertexArray(0));
+			GL(glBindBuffer(GL_ARRAY_BUFFER, 0));
+			GL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 		}
 
 		unsigned int getNumIndices() {

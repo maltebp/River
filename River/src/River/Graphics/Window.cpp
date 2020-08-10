@@ -2,7 +2,6 @@
 
 #include <string>
 
-#include "../Error.h"
 
 // Handles the error callback
 static int glfwErrorCode = 0;
@@ -51,7 +50,7 @@ River::Window::~Window() {
 void River::Window::clear() {
 	glfwSwapBuffers(this->glfwWindow);
 	glfwPollEvents();
-	glClear(GL_COLOR_BUFFER_BIT);
+	GL(glClear(GL_COLOR_BUFFER_BIT));
 }
 
 

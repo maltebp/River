@@ -13,7 +13,7 @@ namespace River {
 		};
 		
 	private:
-		unsigned int id;
+		unsigned int id = 0;
 		Type type;
 		std::string source;
 		bool ready = false;

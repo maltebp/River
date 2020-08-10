@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "Graphics.h"
+#include "GL.h"
 
 namespace River {
 	class Texture {

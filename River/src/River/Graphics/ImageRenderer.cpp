@@ -1,6 +1,6 @@
 #include "ImageRenderer.h"
 
-#include "Graphics.h"
+#include "GL.h"
 
 #include "Shader/Shader.h"
 #include "River/Error.h"
@@ -92,9 +92,9 @@ void River::ImageRenderer::drawImage(River::Texture *tex, float x, float y, floa
 
 
 void River::ImageRenderer::flush() {
-	glBindTexture(GL_TEXTURE_2D, texture->getId());
+	GL(glBindTexture(GL_TEXTURE_2D, texture->getId()));
 	vertexArray.bind();
-	glDrawElements(GL_TRIANGLES, vertexArray.getNumIndices(), GL_UNSIGNED_INT, 0);
+	GL(glDrawElements(GL_TRIANGLES, vertexArray.getNumIndices(), GL_UNSIGNED_INT, 0));
 	vertexArray.unbind();
 	vertexArray.clear();
 }

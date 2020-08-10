@@ -1,6 +1,6 @@
 #include "Shader.h"
 
-#include "River/Graphics/Graphics.h"
+#include "River/Graphics/GL.h"
 
 #include "River/Error.h"
 
@@ -9,25 +9,25 @@ River::Shader::Shader(Type type, const std::string& source) {
 	this->source = source;
 	
 	if( type == Type::VERTEX )
-		id = glCreateShader(GL_VERTEX_SHADER);
+		id = GL(glCreateShader(GL_VERTEX_SHADER));
 	if (type == Type::FRAGMENT)
-		id = glCreateShader(GL_FRAGMENT_SHADER);
+		id = GL(glCreateShader(GL_FRAGMENT_SHADER));
 
 	const char* cSource = source.c_str();
-	glShaderSource(id, 1, &cSource, nullptr );
+	GL(glShaderSource(id, 1, &cSource, nullptr ));
 
 	// Compile shader
-	glCompileShader(id);
+	GL(glCompileShader(id));
 	int compileStatus;
-	glGetShaderiv(id, GL_COMPILE_STATUS, &compileStatus);
+	GL(glGetShaderiv(id, GL_COMPILE_STATUS, &compileStatus));
 	if (compileStatus != GL_TRUE) {
 		int messageLength;
-		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &messageLength);
-		char* message = (char*) malloc(sizeof(char) * messageLength);
-		glGetShaderInfoLog(id, messageLength, NULL, message);
+		GL(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &messageLength));
+		GLchar* message = (GLchar*) malloc(sizeof(GLchar) * (messageLength));
+		GL(glGetShaderInfoLog(id, messageLength, NULL, message));
 		std::string stringMessage = message;
 		free(message);
-		glDeleteShader(id);
+		GL(glDeleteShader(id));
 		throw River::ShaderException("Shader compilation failed with the message '" + stringMessage + "'");
 	}
 
@@ -35,8 +35,8 @@ River::Shader::Shader(Type type, const std::string& source) {
 }
 
 River::Shader::~Shader() {
-	if (glIsShader(id) == GL_TRUE) {
-		glDeleteShader(id);
+	if(glIsShader(id) == GL_TRUE) { // glIsShader doesn't give error
+		GL(glDeleteShader(id));
 	}
 }
 

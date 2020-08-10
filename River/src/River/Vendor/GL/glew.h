@@ -154,6 +154,7 @@
 #    define CALLBACK __stdcall
 #  else
 #    define CALLBACK
+#    define CALLBACK
 #  endif
 #endif
 /* <wingdi.h> and <winnt.h> */
