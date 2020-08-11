@@ -5,98 +5,116 @@
 #include "Shader/Shader.h"
 #include "River/Error.h"
 
-std::string vertexShaderSource = R"(
-#version 330 core
-layout (location = 0) in vec2 aPos;
-layout (location = 1) in vec2 aTexCoord;
+namespace River{
+	static std::string vertexShaderSource = R"(
+		#version 330 core
+		layout (location = 0) in vec2 aPos;
+		layout (location = 1) in float a_TexSlot;
+		layout (location = 2) in vec2 a_TexCoord;
 
-out vec2 TexCoord;
+		out float o_TexSlot;
+		out vec2 o_TexCoord;
 
-void main()
-{
-    gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);
-    TexCoord = aTexCoord;
-}
-)";
+		void main()
+		{
+			gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);
+			o_TexCoord = a_TexCoord;
+			o_TexSlot = a_TexSlot;
+		}
+	)";
 
-std::string fragmentShaderSource = R"(
-#version 330 core
-out vec4 FragColor;
+	static std::string fragmentShaderSource = R"(
+		#version 330 core
+		out vec4 FragColor;
   
-in vec2 TexCoord;
+		in vec2 o_TexCoord;
+		in float o_TexSlot;
 
-uniform sampler2D ourTexture;
+		uniform sampler2D u_Textures[32];
 
-void main()
-{
-    FragColor = texture(ourTexture, TexCoord);
-}
-)";
+		void main()
+		{
+			int index = int(o_TexSlot);
+			FragColor = texture(u_Textures[index], o_TexCoord);
+		}
+	)";
 
-//
+	ImageRenderer::ImageRenderer(River::Window* window) :
+		River::Renderer(window),
+		textureBinder(window->getNumTextureSlots(), true)
+	{
+		// Shader program
+		Shader vertexShader(Shader::Type::VERTEX, vertexShaderSource);
+		Shader fragmentShader(Shader::Type::FRAGMENT, fragmentShaderSource);
 
+		shaderProgram = new ShaderProgram();
+		shaderProgram->setVertexShader(&vertexShader);
+		shaderProgram->setFragmentShader(&fragmentShader);
+		shaderProgram->build();
 
-River::Texture* texture;
-
-River::ImageRenderer::ImageRenderer(River::Window *window) : River::Renderer(window) {
-	// Shader program
-	Shader vertexShader(Shader::Type::VERTEX, vertexShaderSource);
-	Shader fragmentShader(Shader::Type::FRAGMENT, fragmentShaderSource);
-
-	shaderProgram = new ShaderProgram();
-	shaderProgram->setVertexShader(&vertexShader);
-	shaderProgram->setFragmentShader(&fragmentShader);
-	shaderProgram->build();
-
-	vertexArray.initialize();
-}
-
-
-void River::ImageRenderer::drawImage(River::Texture *tex, float x, float y, float width, float height) {
-
-	shaderProgram->use();
-	texture = tex;
-
-	unsigned int verticesOffset = vertexArray.getNumVertices();
-	ImageVertex* vertices = vertexArray.nextVertices(4);
-
-	vertices[0].x = x;
-	vertices[0].y = y + height;
-	vertices[0].texX = 0.0f;
-	vertices[0].texY = 1.0f;
-
-	vertices[1].x = x + width;
-	vertices[1].y = y + height;
-	vertices[1].texX = 1.0f;
-	vertices[1].texY = 1.0f;
-
-	vertices[2].x = x;
-	vertices[2].y = y;
-	vertices[2].texX = 0.0f;
-	vertices[2].texY = 0.0f;
-	
-	vertices[3].x = x + width;
-	vertices[3].y = y;
-	vertices[3].texX = 1.0f;
-	vertices[3].texY = 0.0f;
-
-	unsigned int* indices = vertexArray.nextIndices(6);
-	indices[0] = verticesOffset + 0;
-	indices[1] = verticesOffset + 1;
-	indices[2] = verticesOffset + 2;
-	indices[3] = verticesOffset + 1;
-	indices[4] = verticesOffset + 2;
-	indices[5] = verticesOffset + 3;
-
-}
+		vertexArray.initialize();
+	}
 
 
-void River::ImageRenderer::flush() {
-	GL(glBindTexture(GL_TEXTURE_2D, texture->getId()));
-	vertexArray.bind();
-	GL(glDrawElements(GL_TRIANGLES, vertexArray.getNumIndices(), GL_UNSIGNED_INT, 0));
-	vertexArray.unbind();
-	vertexArray.clear();
+	void ImageRenderer::drawImage(River::Texture* texture, float x, float y, float width, float height){
+
+		//// TODO: Fix this shit	
+		//if( textureBinder.isFull() )
+		//	flush();
+
+		unsigned int textureSlot = textureBinder.addTexture(texture);
+
+		unsigned int verticesOffset = vertexArray.getNumVertices();
+		ImageVertex* vertices = vertexArray.nextVertices(4);
+
+		vertices[0].x = x;
+		vertices[0].y = y + height;
+		vertices[0].textureSlot = textureSlot;
+		vertices[0].textureX = 0.0f;
+		vertices[0].textureY = 1.0f;
+
+
+		vertices[1].x = x + width;
+		vertices[1].y = y + height;
+		vertices[1].textureSlot = textureSlot;
+		vertices[1].textureX = 1.0f;
+		vertices[1].textureY = 1.0f;
+
+		vertices[2].x = x;
+		vertices[2].y = y;
+		vertices[2].textureSlot = textureSlot;
+		vertices[2].textureX = 0.0f;
+		vertices[2].textureY = 0.0f;
+
+		vertices[3].x = x + width;
+		vertices[3].y = y;
+		vertices[3].textureSlot = textureSlot;
+		vertices[3].textureX = 1.0f;
+		vertices[3].textureY = 0.0f;
+
+		unsigned int* indices = vertexArray.nextIndices(6);
+		indices[0] = verticesOffset + 0;
+		indices[1] = verticesOffset + 1;
+		indices[2] = verticesOffset + 2;
+		indices[3] = verticesOffset + 1;
+		indices[4] = verticesOffset + 2;
+		indices[5] = verticesOffset + 3;
+
+	}
+
+
+	void ImageRenderer::onFlush(){
+		shaderProgram->use();
+		textureBinder.bind(shaderProgram);
+
+		vertexArray.bind();
+		GL(glDrawElements(GL_TRIANGLES, vertexArray.getNumIndices(), GL_UNSIGNED_INT, 0));
+		vertexArray.unbind();
+		vertexArray.clear();
+
+		textureBinder.clear();
+	}
+
 }
 
 

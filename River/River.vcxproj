@@ -102,6 +102,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\Graphics\TextureBinder.h" />
     <ClInclude Include="src\River\Layer\Layer.h" />
     <ClInclude Include="src\River\Vendor\stb_image\stb_image.h" />
     <ClInclude Include="src\River\Graphics\Shader\ShaderProgram.h" />
@@ -118,6 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\River\Graphics\GL.cpp" />
+    <ClCompile Include="src\River\Graphics\TextureBinder.cpp" />
     <ClCompile Include="src\River\Layer\Layer.cpp" />
     <ClCompile Include="src\River\Vendor\stb_image\stb_image.cpp" />
     <ClCompile Include="src\River\Graphics\Shader\ShaderProgram.cpp" />

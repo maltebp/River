@@ -42,6 +42,10 @@ namespace River {
 			addAttribute({ GL_FLOAT, count, sizeof(GLfloat) });
 		}
 
+		void addAttributeUInt(unsigned int count){
+			addAttribute({ GL_UNSIGNED_INT, count, sizeof(GLuint) });
+		}
+
 	private:
 		void addAttribute(Attribute attribute) {
 			attributes.push_back(attribute);

@@ -9,27 +9,31 @@
 
 namespace River {
 
+	// Vertex Array ------------------------------------------
 	struct ImageVertex {
-		GLfloat x, y, texX, texY;
+		GLfloat x, y;
+		GLfloat textureSlot;
+		GLfloat textureX, textureY;
 	};
 
 	class ImageVertexArray : public VertexArray<ImageVertex> {
-
 	protected:
 		void setupAttributes() override {
 			addAttributeFloat(2); // Position
+			addAttributeFloat(1);
 			addAttributeFloat(2); // Tex position
 		}
 	};
 
 
-	
+	// ImageRenderer -----------------------------------------
 	class ImageRenderer : public Renderer {
 
 	private:
 		ImageVertexArray vertexArray;
 
 		ShaderProgram* shaderProgram;
+		TextureBinder textureBinder;
 
 	public:
 
@@ -37,7 +41,7 @@ namespace River {
 
 		void drawImage(Texture *texture, float x, float y, float width, float height);
 
-		void flush();
+		void onFlush();
 
 		// TODO: Function -> Draw rotated texture
 

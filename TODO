@@ -1,27 +1,25 @@
 Setup with: Visual Studio Code using extension https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-todo-plus
 
 Today:
-    ✔ Fix glew header reference
-    ✔ Add index buffer to rendering
-    ✔ Create ShaderProgram class
-    ✔ Implement Layer
-    ☐ Create VertexArray class
-
-First thing next time:
-    ☐ Figure out how to access renderer
-    ☐ Create GL error handling
+    ☐ Implement Texture loading correctly (channels, size etc.)
+    ☐ Handle correct initialization of GLEW
+    ☐ Use all texture units for batch rendering
+    ☐ Use depth buffer
 
 
-All:
-    ☐ Create OpenGL buffer abstraction
-    ☐ Layer system (figure out how to do it)
 
-    Text Rendering:
-        ☐ Setup FreeType library
-        ☐ Render text
+☐ Move Shader (textured quad shader) as a singleton
+☐ FPS measurement
+☐ Implement instrumentation
+☐ ImGUI ? (Perhaps implement for easier testing)
 
 
-    ☐ Create ShaderLoader class
-    ☐ Circle renderer
-    ☐ Line renderer
-    ☐ Implement depth
+Text Rendering:
+    ☐ Setup FreeType library
+    ☐ Render text
+
+
+☐ Create ShaderLoader class
+☐ Circle renderer
+☐ Line renderer
+☐ Implement depth

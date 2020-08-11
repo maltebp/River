@@ -10,6 +10,19 @@
 
 River::Game::Game(std::string title) {
 	this->title = title;
+
+	this->window = new Window(this->title);
+
+	// Initialize glew
+	const GLenum glewResult = glewInit();
+	if( glewResult != GLEW_OK ){
+		std::stringstream msgStream;
+		msgStream << "GLEW initialization error '" << glewGetErrorString(glewResult) << "'";
+		throw River::Exception(msgStream.str());
+	}
+
+	std::cout << "GLEW initialized" << std::endl;
+	std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
 }
 
 
@@ -45,16 +58,6 @@ void River::Game::start() {
 
 	printf("Starting River game loop\n");
 	
-	this->window = new Window(this->title);
-
-	// Initialize glew
-	const GLenum glewResult = glewInit();
-	if (glewResult != GLEW_OK) {
-		std::stringstream msgStream;
-		msgStream << "GLEW initialization error '" << glewGetErrorString(glewResult) << "'";
-		throw River::Exception(msgStream.str());
-	}
-
 	onInitialization();
 
 	printf("Starting game loop\n");

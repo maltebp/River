@@ -1,5 +1,6 @@
 #include "GL.h"
 
+#include <iostream>
 #include <vector>
 #include <sstream>
 #include <iomanip>
@@ -17,6 +18,7 @@ namespace River {
 		void glCheckError() {
 			GLenum err = glGetError();
 			if (err == GL_NO_ERROR) return;
+			std::cout << "GL ERROR!" << std::endl; // TODO: REmove this
 
 			// Get all errors
 			std::vector<GLenum> errors;

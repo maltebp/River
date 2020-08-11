@@ -1,7 +1,9 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
+#include "River/Graphics/GL.h"
 #include "Shader.h"
 #include "River/Error.h"
 
@@ -31,7 +33,7 @@ namespace River {
 		void setFragmentShader(Shader* shader);
 		void setVertexShader(Shader* shader);
 
-	
+		
 		/*
 			@throws River::ShaderException
 		*/
@@ -40,9 +42,16 @@ namespace River {
 		void use();
 
 
-		// TODO: Create setUniform--() functions when needed
+		// Uniforms -----------------------------------------------------------------
+		//void setUniformFloat(const std::string& name, float value);
+		void setIntArray(const std::string& name, int* values, int numValues);
 
-		
+		bool hasUniform(const std::string& name);
+	private:
+		/**
+		 * @throws	River::ShaderException	 Thrown if the given uniform doesn't exist
+		*/
+		GLint getUniformLocation(const std::string &name);
 	};
 }
 

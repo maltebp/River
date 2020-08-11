@@ -1,6 +1,14 @@
 #include "Renderer.h"
 
 
-River::Renderer::Renderer(River::Window* window) {
-	this->window = window;
+namespace River {
+	Renderer::Renderer(River::Window* window) {
+		this->window = window;
+	}
+
+	void Renderer::flush(){
+		onFlush();
+	}
 }
+
+

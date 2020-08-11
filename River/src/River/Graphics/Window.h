@@ -27,7 +27,7 @@ namespace River {
 		void clear();
 		void clearDepth();
 		bool shouldClose();
-
+		unsigned int getNumTextureSlots();
 	};
 
 }

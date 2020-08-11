@@ -9,6 +9,7 @@ private:
 	
 	River::ImageRenderer* imageRenderer = nullptr;
 	River::Texture* image_coffee = nullptr;
+	River::Texture* image_llama = nullptr;
 
 	float x = 0;
 

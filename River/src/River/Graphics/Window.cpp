@@ -2,63 +2,74 @@
 
 #include <string>
 
+#include <iostream>
 
-// Handles the error callback
-static int glfwErrorCode = 0;
-static std::string glfwErrorMsg;
-static void glfwErrorCallback(int errCode, const char* errStr) {
-	glfwErrorCode = errCode;
-	glfwErrorMsg = std::string(errStr);
-}
+namespace River {
 
-
-River::Window::Window(std::string title) {
-	this->title = title;
-
-	// TODO: Make the user able to adjust this
-	width = 1280;
-	height = 720;
-
-	// Initialize glfw
-	if (!glfwInit()) {
-		throw River::Exception("GLFW initialization error '" + glfwErrorMsg + "'" + " (code: " + std::to_string(glfwErrorCode) + ")");
+	// GLFW error callback
+	static int glfwErrorCode = 0;
+	static std::string glfwErrorMsg;
+	static void glfwErrorCallback(int errCode, const char* errStr) {
+		glfwErrorCode = errCode;
+		glfwErrorMsg = std::string(errStr);
 	}
 
 
-	glfwSetErrorCallback(glfwErrorCallback);
-	glfwWindowHint(GLFW_SAMPLES, 16);
-	glfwWindow = glfwCreateWindow(width, height, this->title.c_str(), NULL, NULL);
-	if (!glfwWindow) {
-		glfwTerminate();
-		throw River::Exception("GLFW initialization error '" + glfwErrorMsg + "'" + " (code: " + std::to_string(glfwErrorCode) + ")");
+	Window::Window(std::string title) {
+		this->title = title;
+
+		// TODO: Make the user able to adjust this
+		width = 1280;
+		height = 720;
+
+		// Initialize glfw
+		if (!glfwInit()) {
+			throw River::Exception("GLFW initialization error '" + glfwErrorMsg + "'" + " (code: " + std::to_string(glfwErrorCode) + ")");
+		}
+
+
+		glfwSetErrorCallback(glfwErrorCallback);
+		glfwWindowHint(GLFW_SAMPLES, 16);
+		glfwWindow = glfwCreateWindow(width, height, this->title.c_str(), NULL, NULL);
+		if (!glfwWindow) {
+			glfwTerminate();
+			throw River::Exception("GLFW initialization error '" + glfwErrorMsg + "'" + " (code: " + std::to_string(glfwErrorCode) + ")");
+		}
+
+		// Set window to current
+		glfwMakeContextCurrent(glfwWindow);
+
+		// Get number of texture slots
+		numTextureSlots = 32;
+		//GL(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextureSlots));
 	}
 
-	// Set window to current
-	glfwMakeContextCurrent(glfwWindow);
 
-	// Get number of texture slots
-	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextureSlots);
-}
-
-
-River::Window::~Window() {
-
-}
+	Window::~Window() { }
 
 
 
-void River::Window::clear() {
-	glfwSwapBuffers(this->glfwWindow);
-	glfwPollEvents();
-	GL(glClear(GL_COLOR_BUFFER_BIT));
-}
+	void Window::clear() {
+		glfwSwapBuffers(this->glfwWindow);
+		glfwPollEvents();
+		GL(glClear(GL_COLOR_BUFFER_BIT));
+	}
 
 
-bool River::Window::shouldClose() {
-	return glfwWindowShouldClose(glfwWindow);
-}
+	bool Window::shouldClose() {
+		return glfwWindowShouldClose(glfwWindow);
+	}
 
 
-void River::Window::clearDepth() {
-	// TODO: Implement depth buffer stuff here
+	void Window::clearDepth() {
+		// TODO: Implement depth buffer stuff here
+	}
+
+	unsigned int Window::getNumTextureSlots() {
+		if (numTextureSlots == 0)
+			throw River::Exception("Number of texture slots is 0");
+		return numTextureSlots;
+	}
+
+
 }
