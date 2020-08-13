@@ -1,9 +1,9 @@
 Setup with: Visual Studio Code using extension https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-todo-plus
 
 Today:
+    ✔ Use all texture units for batch rendering
     ☐ Implement Texture loading correctly (channels, size etc.)
     ☐ Handle correct initialization of GLEW
-    ☐ Use all texture units for batch rendering
     ☐ Use depth buffer
 
 

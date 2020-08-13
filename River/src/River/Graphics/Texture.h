@@ -15,19 +15,24 @@ namespace River {
 	
 		// OpenGL texture id
 		unsigned int id;
-		std::string filePath;
+		std::string filePath = "Unknown path";
 
 		int width;
 		int height;
 		int channels;
 
+	private:
+		void createGLTexture(void* data);
+
+		// Prevent copying and assignemnt 
+		Texture(const Texture& temp_obj){}
+		Texture& operator=(const Texture& temp_obj){}
+
+
 	public:
 		Texture(std::string filePath);
-		Texture(unsigned int width, unsigned int height, void* data);
+		Texture(unsigned int width, unsigned int height, unsigned int channels, void* data);
 		~Texture();
-
-		Texture(const Texture& temp_obj){ std::cout << "ASsignment" << std::endl; }
-		Texture& operator=(const Texture& temp_obj){ std::cout << "ASsignment" << std::endl; }
 
 
 		void bind(unsigned int textureSlot);

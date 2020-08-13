@@ -18,9 +18,16 @@ namespace River {
 
 	};
 
-	class AssetNotFoundException : public Exception {
+	class AssetException : public Exception{
+	protected:
+		AssetException(const std::string& exceptionName, const std::string& message) : Exception(exceptionName, message) {}
 	public:
-		AssetNotFoundException(const std::string& assetName) : Exception("AssetNotFoundException", "The asset '" + assetName + "' could not be found") {}
+		AssetException(const std::string& message) : Exception("AssetException", message) {}
+	};
+
+	class AssetNotFoundException : public AssetException {
+	public:
+		AssetNotFoundException(const std::string& assetName) : AssetException("AssetNotFoundException", "The asset '" + assetName + "' could not be found") {}
 	};
 
 	class ShaderException : public Exception {
