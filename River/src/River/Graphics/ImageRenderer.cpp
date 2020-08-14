@@ -57,38 +57,40 @@ namespace River{
 
 
 	void ImageRenderer::drawImage(River::Texture* texture, float x, float y, float width, float height){
-
-		//// TODO: Fix this shit	
-		//if( textureBinder.isFull() )
-		//	flush();
-
-		unsigned int textureSlot = textureBinder.addTexture(texture);
+		
+		unsigned int textureSlot;
+		try{
+			textureSlot = textureBinder.addTexture(texture);
+		} catch(NoTextureSlotException e){
+			flush();
+			textureSlot = textureBinder.addTexture(texture);
+		}
 
 		unsigned int verticesOffset = vertexArray.getNumVertices();
 		ImageVertex* vertices = vertexArray.nextVertices(4);
 
 		vertices[0].x = x;
 		vertices[0].y = y + height;
-		vertices[0].textureSlot = textureSlot;
+		vertices[0].textureSlot = (GLfloat) textureSlot;
 		vertices[0].textureX = 0.0f;
 		vertices[0].textureY = 1.0f;
 
 
 		vertices[1].x = x + width;
 		vertices[1].y = y + height;
-		vertices[1].textureSlot = textureSlot;
+		vertices[1].textureSlot = (GLfloat) textureSlot;
 		vertices[1].textureX = 1.0f;
 		vertices[1].textureY = 1.0f;
 
 		vertices[2].x = x;
 		vertices[2].y = y;
-		vertices[2].textureSlot = textureSlot;
+		vertices[2].textureSlot = (GLfloat) textureSlot;
 		vertices[2].textureX = 0.0f;
 		vertices[2].textureY = 0.0f;
 
 		vertices[3].x = x + width;
 		vertices[3].y = y;
-		vertices[3].textureSlot = textureSlot;
+		vertices[3].textureSlot = (GLfloat) textureSlot;
 		vertices[3].textureX = 1.0f;
 		vertices[3].textureY = 0.0f;
 

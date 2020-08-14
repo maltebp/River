@@ -40,8 +40,7 @@ namespace River {
 		glfwMakeContextCurrent(glfwWindow);
 
 		// Get number of texture slots
-		numTextureSlots = 32;
-		//GL(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextureSlots));
+		GL(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextureSlots));
 	}
 
 

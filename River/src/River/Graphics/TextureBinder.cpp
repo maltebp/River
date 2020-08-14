@@ -27,7 +27,7 @@ namespace River{
 				return i;
 
 		if( numTextures == numSlots )
-			throw River::Exception("TextureBinder is full (" + std::to_string(numSlots) + " slots)");
+			throw new NoTextureSlotException();
 
 		textures[numTextures] = texture;
 		numTextures++;
@@ -50,12 +50,12 @@ namespace River{
 		}
 
 		std::vector<int> textureSamples(numTextures);
-		for( int i = 0; i < numTextures; i++ ){
-			textureSamples[i] = i;
+		for( unsigned int i = 0; i < numTextures; i++ ){
+			textureSamples[i] = (int) i;
 		}
 		shaderProgram->setIntArray(uniformSamplerName, textureSamples.data(), numTextures);
 
-		for( int j = 0; j < numTextures; j++ ){
+		for( unsigned int j = 0; j < numTextures; j++ ){
 			textures[j]->bind(j);
 		}
 	}

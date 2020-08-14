@@ -5,6 +5,7 @@
 #include "River/Error.h"
 
 namespace River {
+
 	Texture* Texture::whiteTexture = nullptr;
 
 	Texture::Texture(std::string filePath){
