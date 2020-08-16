@@ -27,8 +27,7 @@ River::Shader::Shader(Type type, const std::string& source) {
 		GL(glGetShaderInfoLog(id, messageLength, NULL, message));
 		std::string stringMessage = message;
 		free(message);
-		GL(glDeleteShader(id));
-		throw River::ShaderException("Shader compilation failed with the message '" + stringMessage + "'");
+		GL(glDeleteShader(id));		throw River::ShaderException("Shader compilation failed with the message '" + stringMessage + "'");
 	}
 
 	ready = true;

@@ -41,6 +41,11 @@ namespace River {
 
 		// Get number of texture slots
 		GL(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextureSlots));
+	
+		GL(
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LESS);
+		);
 	}
 
 
@@ -51,7 +56,7 @@ namespace River {
 	void Window::clear() {
 		glfwSwapBuffers(this->glfwWindow);
 		glfwPollEvents();
-		GL(glClear(GL_COLOR_BUFFER_BIT));
+		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 	}
 
 

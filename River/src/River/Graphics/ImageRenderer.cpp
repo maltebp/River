@@ -8,7 +8,7 @@
 namespace River{
 	static std::string vertexShaderSource = R"(
 		#version 330 core
-		layout (location = 0) in vec2 aPos;
+		layout (location = 0) in vec3 aPos;
 		layout (location = 1) in float a_TexSlot;
 		layout (location = 2) in vec2 a_TexCoord;
 
@@ -17,7 +17,7 @@ namespace River{
 
 		void main()
 		{
-			gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);
+			gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
 			o_TexCoord = a_TexCoord;
 			o_TexSlot = a_TexSlot;
 		}
@@ -39,6 +39,7 @@ namespace River{
 		}
 	)";
 
+
 	ImageRenderer::ImageRenderer(River::Window* window) :
 		River::Renderer(window),
 		textureBinder(window->getNumTextureSlots(), true)
@@ -53,10 +54,12 @@ namespace River{
 		shaderProgram->build();
 
 		vertexArray.initialize();
+
+		std::cout << "Size of struct: " << sizeof(ImageVertex) << std::endl;
 	}
 
 
-	void ImageRenderer::drawImage(River::Texture* texture, float x, float y, float width, float height){
+	void ImageRenderer::drawImage(River::Texture* texture, float x, float y, float z, float width, float height){
 		
 		unsigned int textureSlot;
 		try{
@@ -71,6 +74,7 @@ namespace River{
 
 		vertices[0].x = x;
 		vertices[0].y = y + height;
+		vertices[0].z = z;
 		vertices[0].textureSlot = (GLfloat) textureSlot;
 		vertices[0].textureX = 0.0f;
 		vertices[0].textureY = 1.0f;
@@ -78,18 +82,21 @@ namespace River{
 
 		vertices[1].x = x + width;
 		vertices[1].y = y + height;
+		vertices[1].z = z;
 		vertices[1].textureSlot = (GLfloat) textureSlot;
 		vertices[1].textureX = 1.0f;
 		vertices[1].textureY = 1.0f;
 
 		vertices[2].x = x;
 		vertices[2].y = y;
+		vertices[2].z = z;
 		vertices[2].textureSlot = (GLfloat) textureSlot;
 		vertices[2].textureX = 0.0f;
 		vertices[2].textureY = 0.0f;
 
 		vertices[3].x = x + width;
 		vertices[3].y = y;
+		vertices[3].z = z;
 		vertices[3].textureSlot = (GLfloat) textureSlot;
 		vertices[3].textureX = 1.0f;
 		vertices[3].textureY = 0.0f;
