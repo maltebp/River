@@ -19,8 +19,8 @@ namespace River {
 		this->title = title;
 
 		// TODO: Make the user able to adjust this
-		this->width = 1280;
-		this->height = 720;
+		this->width = width;
+		this->height = height;
 
 		// Initialize glfw
 		if (!glfwInit()) {

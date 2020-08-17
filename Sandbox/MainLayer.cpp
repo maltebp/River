@@ -5,15 +5,19 @@ void MainLayer::onInitialization() {
 	image_coffee = new River::Texture("assets/coffee.jpg");
 	image_llama = new River::Texture("assets/llama.jpg");
 
-	camera = new River::Camera();
-	//camera->setRotation(2);
-	//camera->setPosition(-0.5, -0.5, 0);
-	camera->setZoom(2);
+	camera = new River::Camera(1280, 720);
+	// camera->setRotation(0.40);
+    // camera->setPosition( -100, -100, 0);
+	// camera->setZoom(1.5);
 }
 
+
+
 void MainLayer::onUpdate() {
+	camera->adjustRotation(0.010);
+
 	imageRenderer->setCamera(camera);
-	imageRenderer->drawImage(image_coffee, 0.25,  0.25, 0.5, 0.5, 0.5);
-	imageRenderer->drawImage(image_llama, -0.75, -0.75, 0, 0.5, 0.5);
+	imageRenderer->drawImage(image_coffee, 0, 0, 0.0f, 300, 175, 480);
+	imageRenderer->drawImage(image_llama, -50, -25, 0.25f, 300, 175, 45);
 	imageRenderer->flush();
 }

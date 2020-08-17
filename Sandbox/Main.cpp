@@ -15,9 +15,8 @@ private:
 	
 
 public:
-
 	SandboxGame() : Game("Sandbox Game") {
-	
+		
 	}
 
 	void onInitialization() override {

@@ -12,6 +12,7 @@ private:
 	River::Texture* image_llama = nullptr;
 
 	float x = 0;
+	float rotation = 0;
 
 public:
 

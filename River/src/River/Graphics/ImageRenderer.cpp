@@ -1,7 +1,9 @@
 #include "ImageRenderer.h"
 
-#include "GL.h"
+#include <River/Vendor/glm/gtc/matrix_transform.hpp>
+#include <River/Vendor/glm/glm.hpp>
 
+#include "GL.h"
 #include "Shader/Shader.h"
 #include "River/Error.h"
 
@@ -42,6 +44,8 @@ namespace River{
 	)";
 
 
+
+
 	ImageRenderer::ImageRenderer(River::Window* window) :
 		River::Renderer(window),
 		textureBinder(window->getNumTextureSlots(), true)
@@ -61,7 +65,7 @@ namespace River{
 	}
 
 
-	void ImageRenderer::drawImage(River::Texture* texture, float x, float y, float z, float width, float height){
+	void ImageRenderer::drawImage(River::Texture* texture, float x, float y, float z, float width, float height, float rotation){
 		
 		unsigned int textureSlot;
 		try{
@@ -74,30 +78,42 @@ namespace River{
 		unsigned int verticesOffset = vertexArray.getNumVertices();
 		ImageVertex* vertices = vertexArray.nextVertices(4);
 
-		vertices[0].x = x;
-		vertices[0].y = y + height;
+		// Variables for translation and rotation
+		float halfWidth = width / 2.0f;
+		float halfHeight = height / 2.0f;
+		float sin = glm::sin(glm::radians(-rotation));
+		float cos = glm::cos(glm::radians(-rotation));
+		glm::mat3x2 transform = {{ cos, sin }, { -sin, cos }, { x, y }};
+
+		glm::vec2 position;
+
+		position = transform * glm::vec3(-halfWidth, halfHeight, 1);
+		vertices[0].x = position.x;
+		vertices[0].y = position.y;
 		vertices[0].z = z;
 		vertices[0].textureSlot = (GLfloat) textureSlot;
 		vertices[0].textureX = 0.0f;
 		vertices[0].textureY = 1.0f;
 
-
-		vertices[1].x = x + width;
-		vertices[1].y = y + height;
+		position = transform * glm::vec3(halfWidth, halfHeight, 1);
+		vertices[1].x = position.x;
+		vertices[1].y = position.y;
 		vertices[1].z = z;
 		vertices[1].textureSlot = (GLfloat) textureSlot;
 		vertices[1].textureX = 1.0f;
 		vertices[1].textureY = 1.0f;
 
-		vertices[2].x = x;
-		vertices[2].y = y;
+		position = transform * glm::vec3(-halfWidth, -halfHeight, 1);
+		vertices[2].x = position.x;
+		vertices[2].y = position.y;
 		vertices[2].z = z;
 		vertices[2].textureSlot = (GLfloat) textureSlot;
 		vertices[2].textureX = 0.0f;
 		vertices[2].textureY = 0.0f;
 
-		vertices[3].x = x + width;
-		vertices[3].y = y;
+		position = transform * glm::vec3(halfWidth, -halfHeight, 1);
+		vertices[3].x = position.x;
+		vertices[3].y = position.y;
 		vertices[3].z = z;
 		vertices[3].textureSlot = (GLfloat) textureSlot;
 		vertices[3].textureX = 1.0f;
@@ -117,7 +133,7 @@ namespace River{
 	void ImageRenderer::onFlush(){
 		shaderProgram->use();
 		textureBinder.bind(shaderProgram);
-		shaderProgram->setFloatMatrix("u_viewMatrix", 4, glm::value_ptr(camera->getViewMatrix()) );
+		shaderProgram->setFloatMatrix("u_viewMatrix", 4, glm::value_ptr(camera->getCameraMatrix()) );
 		vertexArray.bind();
 		GL(glDrawElements(GL_TRIANGLES, vertexArray.getNumIndices(), GL_UNSIGNED_INT, 0));
 		vertexArray.unbind();

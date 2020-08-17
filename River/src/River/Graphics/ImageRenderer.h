@@ -39,7 +39,7 @@ namespace River {
 
 		ImageRenderer(Window *window);
 
-		void drawImage(Texture *texture, float x, float y, float z, float width, float height);
+		void drawImage(Texture *texture, float x, float y, float z, float width, float height, float rotation);
 
 		void onFlush();
 

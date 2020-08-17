@@ -5,11 +5,12 @@ Kenney Jam:
         
         Transformation/Cameras/Coordinate-systems:
             ✔ Include GLM
-            ☐ View matrix (cameras)
-            ☐ Model-matrix
+            ✔ View matrix (cameras)
+            ✔ Model-matrix
 
-        ☐ Textureatlas
         ☐ Event system       
+        ☐ Setup timestep
+        ☐ Textureatlas
         ☐ Text Rendering
         ☐ Test on seperate computer
         ☐ Setup renderer system in Game class
@@ -37,4 +38,8 @@ Text Rendering:
 ☐ Line renderer
 
 
+☐ Create proper time stepping
+https://gafferongames.com/post/fix_your_timestep/
+
 ☐ Camera linear zoom
+Make the zoom on the camera linear, such that negative values is a zoom out, and positive are zoom in, and each value zooms the same amount.
