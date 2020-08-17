@@ -12,12 +12,14 @@ namespace River{
 		layout (location = 1) in float a_TexSlot;
 		layout (location = 2) in vec2 a_TexCoord;
 
+		uniform mat4 u_viewMatrix;
+
 		out float o_TexSlot;
 		out vec2 o_TexCoord;
 
 		void main()
 		{
-			gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+			gl_Position = u_viewMatrix * vec4(aPos.x, aPos.y, aPos.z, 1.0);
 			o_TexCoord = a_TexCoord;
 			o_TexSlot = a_TexSlot;
 		}
@@ -115,7 +117,7 @@ namespace River{
 	void ImageRenderer::onFlush(){
 		shaderProgram->use();
 		textureBinder.bind(shaderProgram);
-
+		shaderProgram->setFloatMatrix("u_viewMatrix", 4, glm::value_ptr(camera->getViewMatrix()) );
 		vertexArray.bind();
 		GL(glDrawElements(GL_TRIANGLES, vertexArray.getNumIndices(), GL_UNSIGNED_INT, 0));
 		vertexArray.unbind();

@@ -1,17 +1,28 @@
 #include "Layer.h"
 
-void River::Layer::initialize() {
-	// TODO: Implement
-	onInitialization();
-}
+namespace River{
+	void Layer::initialize(){
+		// TODO: Implement
+		onInitialization();
+	}
 
 
-void River::Layer::update() {
-	// TODO: Implement (like updating ECS)
-	onUpdate();
+	void Layer::update(){
+		// TODO: Implement (like updating ECS)
+		onUpdate();
+	}
+
+	void Layer::terminate(){
+		// TODO: Implement
+		onTermination();
+	}
+
+	void Layer::setCamera(Camera *camera){
+		this->camera = camera;
+	}
+
+	Camera* Layer::getCamera(){
+		return camera;
+	}
 }
 
-void River::Layer::terminate() {
-	// TODO: Implement
-	onTermination();
-}

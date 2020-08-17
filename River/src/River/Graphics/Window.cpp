@@ -15,12 +15,12 @@ namespace River {
 	}
 
 
-	Window::Window(std::string title) {
+	Window::Window(std::string title, unsigned int width, unsigned int height) {
 		this->title = title;
 
 		// TODO: Make the user able to adjust this
-		width = 1280;
-		height = 720;
+		this->width = 1280;
+		this->height = 720;
 
 		// Initialize glfw
 		if (!glfwInit()) {

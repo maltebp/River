@@ -21,7 +21,7 @@ namespace River {
 
 	public:
 
-		Window(std::string title);
+		Window(std::string title, unsigned int width, unsigned int height);
 		~Window();
 
 		void clear();

@@ -46,6 +46,12 @@ namespace River {
 		//void setUniformFloat(const std::string& name, float value);
 		void setIntArray(const std::string& name, int* values, int numValues);
 
+		/**
+		 * @brief Matrix is column-major order (see GLM documentation)
+		 * @param	The number of columns and rows in the matrix
+		*/
+		void setFloatMatrix(const std::string &name, int size, float *values);
+
 		bool hasUniform(const std::string& name);
 	private:
 		/**

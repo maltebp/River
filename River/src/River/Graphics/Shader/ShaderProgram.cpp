@@ -93,6 +93,14 @@ namespace River{
 		GL(glUniform1iv(location, count, values));
 	}
 
+	void ShaderProgram::setFloatMatrix(const std::string &name, int size, float *matrix){
+		auto location = getUniformLocation(name);
+		switch( size ){
+		case 4:
+			GL(glUniformMatrix4fv(location, 1, GL_FALSE, matrix));
+		}
+	}
+
 	bool ShaderProgram::hasUniform(const std::string& name){
 		GLint location = GL(glGetUniformLocation(id, name.c_str()));
 		return location != -1;

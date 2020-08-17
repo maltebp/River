@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "Camera/Camera.h"
 #include "Window.h"
 #include "TextureBinder.h"
 
@@ -10,15 +11,16 @@ namespace River {
 
 
 	protected:
-		Window *window;
-		Renderer(Window* window);
+		Window *window = nullptr;
+		Camera *camera = nullptr;
+		
+		Renderer(Window *window);
 
 	public:
-
-		
  		void flush();
 		virtual void onFlush(){ };
-
+	
+		void setCamera(Camera *camera);
 	};
 }
 

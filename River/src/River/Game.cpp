@@ -11,7 +11,7 @@
 River::Game::Game(std::string title) {
 	this->title = title;
 
-	this->window = new Window(this->title);
+	this->window = new Window(this->title, 1280, 720);
 
 	// Initialize glew
 	const GLenum glewResult = glewInit();
@@ -67,6 +67,7 @@ void River::Game::start() {
 		for( auto &layer : layers ) {
 			layer->update();
 		}
+
 		for (auto& overlay : overlays) {
 			overlay->update();
 		}
