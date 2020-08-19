@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+
+
 namespace River {
 
 	// GLFW error callback
@@ -14,6 +16,9 @@ namespace River {
 		glfwErrorMsg = std::string(errStr);
 	}
 
+	std::unordered_map<GLFWwindow*, Window*> Window::glfwWindowMap;
+
+
 
 	Window::Window(std::string title, unsigned int width, unsigned int height) {
 		this->title = title;
@@ -23,10 +28,9 @@ namespace River {
 		this->height = height;
 
 		// Initialize glfw
-		if (!glfwInit()) {
+		if (!glfwInit()) {   
 			throw River::Exception("GLFW initialization error '" + glfwErrorMsg + "'" + " (code: " + std::to_string(glfwErrorCode) + ")");
 		}
-
 
 		glfwSetErrorCallback(glfwErrorCallback);
 		glfwWindowHint(GLFW_SAMPLES, 16);
@@ -35,6 +39,10 @@ namespace River {
 			glfwTerminate();
 			throw River::Exception("GLFW initialization error '" + glfwErrorMsg + "'" + " (code: " + std::to_string(glfwErrorCode) + ")");
 		}
+
+		glfwSetKeyCallback(glfwWindow, glfwKeyCallback);
+
+		glfwWindowMap[glfwWindow] = this;
 
 		// Set window to current
 		glfwMakeContextCurrent(glfwWindow);
@@ -74,6 +82,36 @@ namespace River {
 			throw River::Exception("Number of texture slots is 0");
 		return numTextureSlots;
 	}
+
+	void Window::glfwKeyCallback(GLFWwindow *glfwWindow, int glfwKey, int scancode, int glfwAction, int mods){
+		Window *window = glfwWindowMap[glfwWindow];
+
+		Key key = (Key) glfwKey;
+
+		KeyEvent::Action action;
+		switch( glfwAction ){
+		case GLFW_PRESS:
+			action = KeyEvent::Action::DOWN;
+			break;
+		case GLFW_RELEASE:
+			action = KeyEvent::Action::UP;
+			break;
+		case GLFW_REPEAT: return; // We don't use this
+		default:
+			// TODO: Implement correct logging
+			std::cout << "WARNING: GLFW action '" << glfwAction << "' is not handled!" << std::endl;
+			return;
+		}
+
+		window->keyEventController.registerEvent(key, action);
+	}
+
+
+	std::vector<KeyEvent> Window::getKeyEvents(){
+		return keyEventController.getEvents();
+	}
+
+
 
 
 }

@@ -12,6 +12,10 @@ namespace River{
 		onUpdate();
 	}
 
+	void Layer::keyEvent(KeyEvent &e){
+		onKeyEvent(e);
+	}
+
 	void Layer::terminate(){
 		// TODO: Implement
 		onTermination();

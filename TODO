@@ -38,8 +38,27 @@ Text Rendering:
 ☐ Line renderer
 
 
+☐ Collision system
+Maybe part of the ECS?
+
 ☐ Create proper time stepping
 https://gafferongames.com/post/fix_your_timestep/
 
 ☐ Camera linear zoom
 Make the zoom on the camera linear, such that negative values is a zoom out, and positive are zoom in, and each value zooms the same amount.
+
+
+
+
+
+Event system notes:
+
+KeyCode
+
+KeyAction
+    Key Down
+    Key Up
+    Key Pressed
+
+    
+    

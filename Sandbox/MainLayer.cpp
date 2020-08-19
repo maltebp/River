@@ -21,3 +21,8 @@ void MainLayer::onUpdate() {
 	imageRenderer->drawImage(image_llama, -50, -25, 0.25f, 300, 175, 45);
 	imageRenderer->flush();
 }
+
+
+void MainLayer::onKeyEvent(River::KeyEvent &e){
+	std::cout << "KeyEvent: " << (int) e.key << " " << (int) e.action << std::endl;
+}

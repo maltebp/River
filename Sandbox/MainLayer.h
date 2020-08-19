@@ -22,5 +22,7 @@ public:
 	
 	void onUpdate() override;
 
+	void onKeyEvent(River::KeyEvent &e) override;
+
 };
 

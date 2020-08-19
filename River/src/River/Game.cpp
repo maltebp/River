@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "Game.h"
 #include <stdio.h>
 #include <iostream>
@@ -54,6 +53,8 @@ River::Window* River::Game::getWindow() {
 
 
 
+
+
 void River::Game::start() {
 
 	printf("Starting River game loop\n");
@@ -64,6 +65,18 @@ void River::Game::start() {
 	while( !window->shouldClose() ) {
 		window->clear();
 
+		auto keyEvents = window->getKeyEvents();
+		for( auto &keyEvent : keyEvents ){
+			for( auto it = overlays.rbegin(); it != overlays.rend(); it++ ){
+				if( keyEvent.isConsumed() ) break;
+				(*it)->keyEvent(keyEvent);
+			}
+			for( auto it = layers.rbegin(); it != layers.rend(); it++ ){
+				if( keyEvent.isConsumed() ) break;
+				(*it)->keyEvent(keyEvent);
+			}
+		}
+
 		for( auto &layer : layers ) {
 			layer->update();
 		}
@@ -71,6 +84,10 @@ void River::Game::start() {
 		for (auto& overlay : overlays) {
 			overlay->update();
 		}
+
+
+		
+		
 	}
 
 	printf("Game loop stopped\n");

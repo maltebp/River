@@ -102,6 +102,10 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\Event\KeyEvent\KeyEventController.h" />
+    <ClInclude Include="src\River\Event\CharEvent.h" />
+    <ClInclude Include="src\River\Event\KeyEvent\KeyEvent.h" />
+    <ClInclude Include="src\River\Event\Event.h" />
     <ClInclude Include="src\River\Graphics\Camera\Camera.h" />
     <ClInclude Include="src\River\Graphics\TextureBinder.h" />
     <ClInclude Include="src\River\Layer\Layer.h" />
@@ -119,6 +123,11 @@
     <ClInclude Include="src\River\Graphics\VertexArray.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\River\Event\KeyEvent\KeyEventController.cpp" />
+    <ClCompile Include="src\River\Event\CharEvent.cpp" />
+    <ClCompile Include="src\River\Event\KeyEvent\KeyEvent.cpp" />
+    <ClCompile Include="src\River\Event\Event.cpp" />
+    <ClCompile Include="src\River\Event\KeyEvent\Key.h" />
     <ClCompile Include="src\River\Graphics\Camera\Camera.cpp" />
     <ClCompile Include="src\River\Graphics\GL.cpp" />
     <ClCompile Include="src\River\Graphics\TextureBinder.cpp" />
