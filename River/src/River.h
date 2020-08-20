@@ -5,3 +5,5 @@
 
 #include "River/Graphics/ImageRenderer.h"
 
+#include "River/Graphics/Texture/Sprite.h"
+#include "River/Graphics/Texture/Texture.h"

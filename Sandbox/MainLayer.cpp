@@ -1,9 +1,15 @@
 #include "MainLayer.h"
 
+#include <iostream>
+
+#include "River/Graphics/Text/FontLoader.h"
+
 void MainLayer::onInitialization() {
 	imageRenderer = new River::ImageRenderer(game->getWindow());
-	image_coffee = new River::Texture("assets/coffee.jpg");
-	image_llama = new River::Texture("assets/llama.jpg");
+	image_coffee = new River::Sprite("assets/coffee.jpg", 100, 100, 760.0/2.0, 506.0/2.0);
+	image_llama = new River::Sprite("assets/A.png");
+	//image_glyph = River::FontLoader::loadGlyph("assets/arial.ttf", 'A');
+
 
 	camera = new River::Camera(1280, 720);
 	// camera->setRotation(0.40);
@@ -14,11 +20,11 @@ void MainLayer::onInitialization() {
 
 
 void MainLayer::onUpdate() {
-	camera->adjustRotation(0.010);
+	//camera->adjustRotation(0.010);
 
 	imageRenderer->setCamera(camera);
-	imageRenderer->drawImage(image_coffee, 0, 0, 0.0f, 300, 175, 480);
-	imageRenderer->drawImage(image_llama, -50, -25, 0.25f, 300, 175, 45);
+	imageRenderer->drawSprite(image_coffee, 0, 0, 0.25f, 300, 175, 0);
+	imageRenderer->drawSprite(image_llama, -100, -100, 0.0f, 50, 70, 0);
 	imageRenderer->flush();
 }
 

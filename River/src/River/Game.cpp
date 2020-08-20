@@ -1,11 +1,13 @@
 #pragma once
 
 #include "Game.h"
+
 #include <stdio.h>
 #include <iostream>
 #include <string>
 #include <sstream>
 
+#include "River/Graphics/Text/FontLoader.h"
 
 River::Game::Game(std::string title) {
 	this->title = title;

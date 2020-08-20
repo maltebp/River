@@ -8,8 +8,9 @@ private:
 	River::Game* game;
 	
 	River::ImageRenderer* imageRenderer = nullptr;
-	River::Texture* image_coffee = nullptr;
-	River::Texture* image_llama = nullptr;
+	River::Sprite* image_coffee = nullptr;
+	River::Sprite* image_llama = nullptr;
+	River::Sprite *image_glyph = nullptr;
 
 	float x = 0;
 	float rotation = 0;

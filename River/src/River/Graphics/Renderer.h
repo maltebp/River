@@ -4,7 +4,6 @@
 
 #include "Camera/Camera.h"
 #include "Window.h"
-#include "TextureBinder.h"
 
 namespace River {
 	class Renderer {

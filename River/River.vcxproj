@@ -59,7 +59,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\lib\glfw\include;$(ProjectDir)\lib\glew\include;$(ProjectDir)\lib\stb_image</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\lib\glfw\include;$(ProjectDir)\lib\glew\include;$(ProjectDir)lib\freetype\include;$(ProjectDir)\lib\stb_image</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ProgramDataBaseFileName>$(OutDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
     </ClCompile>
@@ -69,11 +69,14 @@
       <AdditionalLibraryDirectories>C:\Users\Malte\Projects\River\x64\Debug</AdditionalLibraryDirectories>
     </Link>
     <Lib>
-      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;freetype.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib\glew\lib\$(Configuration)\$(Platform)\;$(ProjectDir)lib\glfw\lib-vc2019\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib\glew\lib\$(Configuration)\$(Platform)\;$(ProjectDir)lib\glfw\lib-vc2019\;$(ProjectDir)lib\freetype\lib\</AdditionalLibraryDirectories>
     </Lib>
+    <PostBuildEvent>
+      <Command>xcopy /y /d  "$(ProjectDir)lib\freetype\bin\*.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -83,7 +86,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\lib\glfw\include;$(ProjectDir)\lib\glew\include;$(ProjectDir)\lib\stb_image</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\lib\glfw\include;$(ProjectDir)lib\freetype\include;$(ProjectDir)\lib\glew\include;$(ProjectDir)\lib\stb_image</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ProgramDataBaseFileName>$(OutDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
     </ClCompile>
@@ -100,14 +103,20 @@
       <AdditionalLibraryDirectories>$(ProjectDir)lib\glew\lib\$(Configuration)\$(Platform)\;$(ProjectDir)lib\glfw\lib-vc2019\</AdditionalLibraryDirectories>
       <AdditionalOptions>/verbose:lib %(AdditionalOptions)</AdditionalOptions>
     </Lib>
+    <PostBuildEvent>
+      <Command>xcopy /y /d  "$(ProjectDir)lib\freetype\bin\*.dll" "$(ProjectDir)$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\Graphics\Texture\Sprite.h" />
+    <ClInclude Include="src\River\Graphics\Texture\Texture.h" />
+    <ClInclude Include="src\River\Graphics\Text\FontLoader.h" />
     <ClInclude Include="src\River\Event\KeyEvent\KeyEventController.h" />
     <ClInclude Include="src\River\Event\CharEvent.h" />
     <ClInclude Include="src\River\Event\KeyEvent\KeyEvent.h" />
     <ClInclude Include="src\River\Event\Event.h" />
     <ClInclude Include="src\River\Graphics\Camera\Camera.h" />
-    <ClInclude Include="src\River\Graphics\TextureBinder.h" />
+    <ClInclude Include="src\River\Graphics\Texture\TextureBinder.h" />
     <ClInclude Include="src\River\Layer\Layer.h" />
     <ClInclude Include="src\River\Vendor\stb_image\stb_image.h" />
     <ClInclude Include="src\River\Graphics\Shader\ShaderProgram.h" />
@@ -118,11 +127,14 @@
     <ClInclude Include="src\River\Game.h" />
     <ClInclude Include="src\River.h" />
     <ClInclude Include="src\River\Error.h" />
-    <ClInclude Include="src\River\Graphics\Texture.h" />
     <ClInclude Include="src\River\Graphics\ImageRenderer.h" />
     <ClInclude Include="src\River\Graphics\VertexArray.h" />
+    <ClInclude Include="src\River\Graphics\Text\TextRenderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\River\Graphics\Texture\Sprite.cpp" />
+    <ClCompile Include="src\River\Graphics\Texture\Texture.cpp" />
+    <ClCompile Include="src\River\Graphics\Text\FontLoader.cpp" />
     <ClCompile Include="src\River\Event\KeyEvent\KeyEventController.cpp" />
     <ClCompile Include="src\River\Event\CharEvent.cpp" />
     <ClCompile Include="src\River\Event\KeyEvent\KeyEvent.cpp" />
@@ -130,7 +142,7 @@
     <ClCompile Include="src\River\Event\KeyEvent\Key.h" />
     <ClCompile Include="src\River\Graphics\Camera\Camera.cpp" />
     <ClCompile Include="src\River\Graphics\GL.cpp" />
-    <ClCompile Include="src\River\Graphics\TextureBinder.cpp" />
+    <ClCompile Include="src\River\Graphics\Texture\TextureBinder.cpp" />
     <ClCompile Include="src\River\Layer\Layer.cpp" />
     <ClCompile Include="src\River\Vendor\stb_image\stb_image.cpp" />
     <ClCompile Include="src\River\Graphics\Shader\ShaderProgram.cpp" />
@@ -138,9 +150,9 @@
     <ClCompile Include="src\River\Graphics\Renderer.cpp" />
     <ClCompile Include="src\River\Graphics\Window.cpp" />
     <ClCompile Include="src\River\Game.cpp" />
-    <ClCompile Include="src\River\Graphics\Texture.cpp" />
     <ClCompile Include="src\River\Graphics\ImageRenderer.cpp" />
     <ClCompile Include="src\River\Graphics\VertexArray.cpp" />
+    <ClCompile Include="src\River\Graphics\Text\TextRenderer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

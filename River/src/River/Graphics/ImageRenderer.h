@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Renderer.h"
-#include "Texture.h"
+#include "Texture/Sprite.h"
+#include "Texture/Texture.h"
+#include "Texture/TextureBinder.h"
 #include "Window.h"
 #include "Shader/ShaderProgram.h"
 #include "VertexArray.h"
@@ -14,6 +16,7 @@ namespace River {
 		GLfloat x, y, z;
 		GLfloat textureSlot;
 		GLfloat textureX, textureY;
+		GLfloat numTextureChannels; // Consider to move this to a uniform
 	};
 
 	class ImageVertexArray : public VertexArray<ImageVertex> {
@@ -22,6 +25,7 @@ namespace River {
 			addAttributeFloat(3); // Position
 			addAttributeFloat(1);  // Texture slot
 			addAttributeFloat(2); // Tex position
+			addAttributeFloat(1); // Num channels
 		}
 	};
 
@@ -39,7 +43,7 @@ namespace River {
 
 		ImageRenderer(Window *window);
 
-		void drawImage(Texture *texture, float x, float y, float z, float width, float height, float rotation);
+		void drawSprite(Sprite *sprite, float x, float y, float z, float width, float height, float rotation);
 
 		void onFlush();
 

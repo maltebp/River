@@ -8,15 +8,20 @@ Kenney Jam:
             ✔ View matrix (cameras)
             ✔ Model-matrix
 
-        ☐ Event system       
-        ☐ Setup timestep
-        ☐ Textureatlas
-        ☐ Text Rendering
+        ✔ Keyboard events
+
+        Text Rendering:
+            ✔ Setup FreeType library
+            ☐ Test simple font rendering
+
+
         ☐ Test on seperate computer
         ☐ Setup renderer system in Game class
+        ☐ Textureatlas
         ☐ Licenses
 
     Nice to have:
+        ☐ Setup timestep (temporary)
         ☐ Particle system (simple version)
         ☐ Sound system
         ☐ FPS measurement
@@ -30,8 +35,6 @@ Kenney Jam:
 ☐ Proper logging
 
 Text Rendering:
-    ☐ Setup FreeType library
-    ☐ Render text
 
 ☐ Create ShaderLoader class
 ☐ Circle renderer

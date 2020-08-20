@@ -50,6 +50,7 @@ namespace River {
 			addAttribute({ GL_INT, count, sizeof(GLint) });
 		}
 
+
 	private:
 		void addAttribute(Attribute attribute) {
 			attributes.push_back(attribute);

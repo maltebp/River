@@ -3,7 +3,7 @@
 #include <string>
 
 #include "Texture.h"
-#include "Shader/ShaderProgram.h"
+#include "../Shader/ShaderProgram.h"
 #include "River/Error.h"
 
 namespace River{
