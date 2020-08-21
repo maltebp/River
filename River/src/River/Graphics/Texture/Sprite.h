@@ -7,19 +7,11 @@
 namespace River {
 
 	class Sprite {
-	public:
-		// Holds data about which part of the texture is to be sampled
-		struct TextureCoordinates {
-			float x1; // Left
-			float y1; // Top
-			float x2; // Right
-			float y2; // Bottom
-		};
 	
 	private:
 		Texture *texture;
 		bool dedicatedTexture = false;
-		TextureCoordinates textureCoordinates;
+		Texture::SampleCoordinates textureCoordinates;
 
 		unsigned int width, height;
 
@@ -55,7 +47,7 @@ namespace River {
 		*/
 		bool hasDedicatedTexture();
 
-		const TextureCoordinates& getTextureCoordinates() const;
+		const Texture::SampleCoordinates& getTextureCoordinates() const;
 	};
 
 }

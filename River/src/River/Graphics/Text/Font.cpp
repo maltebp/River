@@ -8,7 +8,7 @@
 namespace River{
 
 	Font::Font(unsigned int size, void* nativeFontType) :
-		size(size), nativeFontType(nativeFontType)
+		size(size), height(((FT_Face)nativeFontType)->size->metrics.height), nativeFontType(nativeFontType)
 	{   
         glyphMap.reserve(sizeof(Glyph)*93);
         // Range is all printable ASCII characters
@@ -18,10 +18,7 @@ namespace River{
 	}
 
 
-	const Font::Glyph& Font::getGlyph(const std::string &character) {
-        // TODO: Create conversion from unicode codepoints to value
-        unsigned int characterValue = character[0];
-        
+	const Font::Glyph& Font::getGlyph(unsigned int characterValue) {    
         auto it = glyphMap.find(characterValue);
         if( it != glyphMap.end() ) return it->second;
         return createGlyph(characterValue);
@@ -47,7 +44,8 @@ namespace River{
             Glyph{
                 new Sprite(new Texture(texture.width, texture.rows, 1, 1, texture.buffer)),
                 face->glyph->bitmap_left, face->glyph->bitmap_top,
-                face->glyph->advance.x
+                face->glyph->advance.x >> 6,
+                face->glyph->bitmap_top,  face->glyph->bitmap_top-((int)texture.rows)
             }
         );
 
@@ -55,7 +53,21 @@ namespace River{
     }
 
 
-	unsigned int Font::calculateLength(const std::string &text) {
-        throw new River::NotImplementedException("Font::calculateLength has not been implemented yet");
+    Font::TextSize Font::calculateTextSize(const std::string &text) {
+        unsigned int minY = 0, maxY = 0, length = 0, glyphMinY, glyphMaxY;
+
+        TextSize size;
+        for( const char& c : text ) {
+            if( c < 32 ) throw new River::Exception("Control characters cannot be rendered");
+            if( c < 0 ) throw new River::NotImplementedException("Font::calculateTextLength: Non-ASCII characters are not supported yet");
+            
+            const Glyph& glyph = getGlyph(c);
+            length += glyph.advance;
+
+            if( glyph.yMax > maxY ) maxY = glyph.yMax;
+            if( glyph.yMin < minY ) minY = glyph.yMin;
+        }
+        if( minY < 0 ) minY *= -1;
+        return TextSize{ length, maxY + minY };
 	}
 }

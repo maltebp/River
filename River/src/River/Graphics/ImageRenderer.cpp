@@ -13,12 +13,14 @@ namespace River{
 	static std::string vertexShaderSource = R"(
 		#version 330 core
 		layout (location = 0) in vec3 aPos;
-		layout (location = 1) in float a_TexSlot;
-		layout (location = 2) in vec2 a_TexCoord;
-		layout (location = 3) in float a_NumTextureChannels;
+		layout (location = 1) in vec4 a_Color;
+		layout (location = 2) in float a_TexSlot;
+		layout (location = 3) in vec2 a_TexCoord;
+		layout (location = 4) in float a_NumTextureChannels;
 
 		uniform mat4 u_viewMatrix;
 
+		out vec4 o_Color;
 		out float o_TexSlot;
 		out vec2 o_TexCoord;
 		out float o_NumTextureChannels;
@@ -29,6 +31,7 @@ namespace River{
 			o_TexCoord = a_TexCoord;
 			o_TexSlot = a_TexSlot;
 			o_NumTextureChannels = a_NumTextureChannels;
+			o_Color = a_Color;
 		}
 	)";
 
@@ -36,6 +39,7 @@ namespace River{
 		#version 330 core
 		out vec4 FragColor;
   
+		in vec4 o_Color;
 		in vec2 o_TexCoord;	
 		in float o_TexSlot;
 		in float o_NumTextureChannels;
@@ -43,14 +47,19 @@ namespace River{
 		uniform sampler2D u_Textures[32];
 
 		void main() {
-			int index = int(o_TexSlot);
-			vec4 color = texture(u_Textures[index], o_TexCoord);
+			vec4 textureColor;
+			if( o_TexSlot < 0 ) {
+				textureColor = vec4(1.0);
+			} else {
+				textureColor = texture(u_Textures[int(o_TexSlot)], o_TexCoord);
+			}
 
-			if( int(o_NumTextureChannels) == 1 )
-				FragColor = vec4(1.0, 1.0, 1.0, color.r);
-			else
-				FragColor = color;
-
+			if( int(o_NumTextureChannels) == 1 ){
+				FragColor = o_Color;
+				FragColor.a *= textureColor.r;
+			}else{
+				FragColor = textureColor * o_Color;
+			}	
 		}
 	)";
 
@@ -64,7 +73,7 @@ namespace River{
 
 	ImageRenderer::ImageRenderer(River::Window* window) :
 		River::Renderer(window),
-		textureBinder(window->getNumTextureSlots(), true)
+		textureBinder(window->getNumTextureSlots())
 	{
 		// Shader program
 		Shader vertexShader(Shader::Type::VERTEX, vertexShaderSource);
@@ -76,71 +85,96 @@ namespace River{
 		shaderProgram->build();
 
 		vertexArray.initialize();
-
-		std::cout << "Size of struct: " << sizeof(ImageVertex) << std::endl;
 	}
 
 
-	void ImageRenderer::drawSprite(const Sprite* sprite, float x, float y, float z, float width, float height, float rotation){
-		
-		Texture *texture = sprite->getTexture();
-		auto &textureCoordinates = sprite->getTextureCoordinates();
+	void ImageRenderer::drawRectangle(const TransformData& transformData) {
+		drawTexture({}, transformData);
+	}
 
-		unsigned int textureSlot;
-		try{
-			textureSlot = textureBinder.addTexture(texture);
-		} catch(NoTextureSlotException e){
-			flush();
-			textureSlot = textureBinder.addTexture(texture);
+	void ImageRenderer::drawSprite(const Sprite* sprite, const TransformData& transformData){
+		ImageRenderer::TextureData textureData{ sprite->getTexture(), sprite->getTextureCoordinates() };
+		drawTexture(textureData, transformData);
+	}
+
+
+	void ImageRenderer::drawTexture(const ImageRenderer::TextureData& textureData, const ImageRenderer::TransformData& transformData) {
+
+		int textureSlot = -1; // -1 is no texture (just color)
+		unsigned int numTextureChannels = 0;
+		if( textureData.texture != nullptr ) {
+			try {
+				textureSlot = textureBinder.addTexture(textureData.texture);
+			} catch( NoTextureSlotException e ) {
+				flush();
+				textureSlot = textureBinder.addTexture(textureData.texture);
+			}
+			numTextureChannels = textureData.texture->getNumChannels();
 		}
-
+		
 		unsigned int verticesOffset = vertexArray.getNumVertices();
 		ImageVertex* vertices = vertexArray.nextVertices(4);
 
 		// Variables for translation and rotation
-		float halfWidth = width / 2.0f;
-		float halfHeight = height / 2.0f;
-		float sin = glm::sin(glm::radians(-rotation));
-		float cos = glm::cos(glm::radians(-rotation));
-		glm::mat3x2 transform = {{ cos, sin }, { -sin, cos }, { x, y }};
+		float halfWidth = transformData.width / 2.0f;
+		float halfHeight = transformData.height / 2.0f;
+		float sin = glm::sin(glm::radians(-transformData.rotation));
+		float cos = glm::cos(glm::radians(-transformData.rotation));
+		glm::mat3x2 transform = { { cos, sin }, { -sin, cos }, { transformData.x, transformData.y } };
 
 		glm::vec2 position;
 
 		position = transform * glm::vec3(-halfWidth, halfHeight, 1);
 		vertices[0].x = position.x;
 		vertices[0].y = position.y;
-		vertices[0].z = z;
+		vertices[0].z = transformData.z;
+		vertices[0].r = transformData.color.r;
+		vertices[0].g = transformData.color.g;
+		vertices[0].b = transformData.color.b;
+		vertices[0].a = transformData.color.a;
 		vertices[0].textureSlot = (GLfloat) textureSlot;
-		vertices[0].textureX = textureCoordinates.x1;
-		vertices[0].textureY = textureCoordinates.y1;
-		vertices[0].numTextureChannels = texture->getNumChannels();
+		vertices[0].textureX = textureData.textureCoordinates.x1;
+		vertices[0].textureY = textureData.textureCoordinates.y1;
+		vertices[0].numTextureChannels = numTextureChannels;
 
 		position = transform * glm::vec3(halfWidth, halfHeight, 1);
 		vertices[1].x = position.x;
 		vertices[1].y = position.y;
-		vertices[1].z = z;
-		vertices[1].textureSlot = (GLfloat) textureSlot;
-		vertices[1].textureX = textureCoordinates.x2;
-		vertices[1].textureY = textureCoordinates.y1;
-		vertices[1].numTextureChannels = texture->getNumChannels();
+		vertices[1].z = transformData.z;
+		vertices[1].r = transformData.color.r;
+		vertices[1].g = transformData.color.g;
+		vertices[1].b = transformData.color.b;
+		vertices[1].a = transformData.color.a;
+		vertices[1].textureSlot = (GLfloat)textureSlot;
+		vertices[1].textureX = textureData.textureCoordinates.x2;
+		vertices[1].textureY = textureData.textureCoordinates.y1;
+		vertices[1].numTextureChannels = numTextureChannels;
 
 		position = transform * glm::vec3(-halfWidth, -halfHeight, 1);
 		vertices[2].x = position.x;
 		vertices[2].y = position.y;
-		vertices[2].z = z;
-		vertices[2].textureSlot = (GLfloat) textureSlot;
-		vertices[2].textureX = textureCoordinates.x1;
-		vertices[2].textureY = textureCoordinates.y2;
-		vertices[2].numTextureChannels = texture->getNumChannels();
+		vertices[2].z = transformData.z;
+		vertices[2].r = transformData.color.r;
+		vertices[2].g = transformData.color.g;
+		vertices[2].b = transformData.color.b;
+		vertices[2].a = transformData.color.a;
+		vertices[2].textureSlot = (GLfloat)textureSlot;
+		vertices[2].textureX = textureData.textureCoordinates.x1;
+		vertices[2].textureY = textureData.textureCoordinates.y2;
+		vertices[2].numTextureChannels = numTextureChannels;
 
 		position = transform * glm::vec3(halfWidth, -halfHeight, 1);
 		vertices[3].x = position.x;
 		vertices[3].y = position.y;
-		vertices[3].z = z;
+		vertices[3].z = transformData.z;
+		vertices[3].r = transformData.color.r;
+		vertices[3].g = transformData.color.g;
+		vertices[3].b = transformData.color.b;
+		vertices[3].a = transformData.color.a;
 		vertices[3].textureSlot = (GLfloat) textureSlot;
-		vertices[3].textureX = textureCoordinates.x2;
-		vertices[3].textureY = textureCoordinates.y2;
-		vertices[3].numTextureChannels = texture->getNumChannels();
+		vertices[3].textureX = textureData.textureCoordinates.x2;
+		vertices[3].textureY = textureData.textureCoordinates.y2;
+		vertices[3].numTextureChannels = numTextureChannels;
 
 
 		unsigned int* indices = vertexArray.nextIndices(6);
@@ -150,7 +184,6 @@ namespace River{
 		indices[3] = verticesOffset + 1;
 		indices[4] = verticesOffset + 2;
 		indices[5] = verticesOffset + 3;
-
 	}
 
 

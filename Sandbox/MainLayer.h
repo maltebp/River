@@ -7,6 +7,7 @@ class MainLayer : public River::Layer {
 private:
 	River::Game* game;
 	
+	River::TextRenderer* textRenderer = nullptr;
 	River::ImageRenderer* imageRenderer = nullptr;
 	River::Sprite* image_coffee = nullptr;
 	River::Sprite* image_llama = nullptr;

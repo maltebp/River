@@ -45,7 +45,7 @@ namespace River {
 		return dedicatedTexture;
 	}
 
-	const Sprite::TextureCoordinates& Sprite::getTextureCoordinates() const {
+	const Texture::SampleCoordinates& Sprite::getTextureCoordinates() const {
 		return textureCoordinates;
 	}
 

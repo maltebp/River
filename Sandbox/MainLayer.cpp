@@ -6,6 +6,7 @@
 void MainLayer::onInitialization() {
 
 	imageRenderer = new River::ImageRenderer(game->getWindow());
+	textRenderer = new River::TextRenderer(game->getWindow());
 	
 	River::FontController::setFontFolder("assets");
 	font = River::FontController::getFont("arial", 50);
@@ -24,9 +25,13 @@ void MainLayer::onUpdate() {
 	//camera->adjustRotation(0.010);
 
 	imageRenderer->setCamera(camera);
-	imageRenderer->drawSprite(font->getGlyph("a").sprite, 0, 0, 0.25f, 300, 175, 0);
-	//imageRenderer->drawSprite(image_glyph, -100, -100, 0.0f, 50, 70, 0);
+	textRenderer->setCamera(camera);
+	textRenderer->drawText("Hello", font, River::Colors::RED, 100, 100, 0.0f);
+	//imageRenderer->drawSprite(font->getGlyph("x").sprite, 0, 0, 0.25f, 300, 175, 0);
+	imageRenderer->drawSprite(image_coffee, { 100, 100, 0.0f, 20, 20, 0., {} });
+	imageRenderer->drawRectangle({ -100, -100, 0.0f, 100, 100, 0, { 0, 1, 0, 1 } });
 	imageRenderer->flush();
+	textRenderer->flush();
 }
 
 

@@ -28,7 +28,7 @@ Kenney Jam:
         ☐ FPS measurement
         ☐ Debug log?
 
-
+☐ Change coordinate system direction so positive y-axis is down
 ☐ Move Shader (textured quad shader) as a singleton
 ☐ FPS measurement
 ☐ Implement instrumentation

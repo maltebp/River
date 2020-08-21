@@ -7,6 +7,14 @@
 namespace River {
 
 	class Texture {
+	public:
+		struct SampleCoordinates {
+			float x1; // Left
+			float y1; // Top
+			float x2; // Right
+			float y2; // Bottom
+		};
+
 
 	private:
 

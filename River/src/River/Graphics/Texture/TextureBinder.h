@@ -11,7 +11,6 @@ namespace River{
 	class TextureBinder{
 	
 	private:
-		bool addWhiteTexture;
 		Texture** textures;
 		unsigned int numTextures = 0; // White is first texture
 		unsigned int numSlots = 0;
@@ -20,9 +19,8 @@ namespace River{
 	public:
 		/**
 		 * @param numSlots	Number of slots the TextureBinder may bind textures to
-		 * @param addWhiteTexture	Whether or not to add a white texture at index 0 (this will automatically be re-added after being cleared)
 		*/
-		TextureBinder(unsigned int numSlots, bool addWhiteTexture);
+		TextureBinder(unsigned int numSlots);
 		~TextureBinder();
 
 		/**

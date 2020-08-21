@@ -8,26 +8,32 @@
 namespace River {
 
 	class Font {
+	public:
 		struct Glyph {
-			const Sprite * const sprite;
+			Sprite* const sprite;
 			const int bearingX, bearingY;
 			const int advance;
+			const int yMax, yMin;
 
-			Glyph(Sprite* sprite, int bearingX, int bearingY, int advance)
-			:	sprite(sprite), bearingX(bearingX), bearingY(bearingY), advance(advance) { }
+			Glyph(Sprite* sprite, int bearingX, int bearingY, int advance, int yMax, int yMin)
+				: sprite(sprite), bearingX(bearingX), bearingY(bearingY), advance(advance), yMax(yMax), yMin(yMin) {
+			}
 		};
 
+	private:
 		const void *nativeFontType;
 		const unsigned int size;
+		const unsigned int height;
 		std::unordered_map<unsigned int, Glyph> glyphMap;
 
 
 	public:
 		Font(unsigned int size, void* nativeFontType);
 
-		const Glyph &getGlyph(const std::string &character); 
+		const Glyph &getGlyph(unsigned int characterValue); 
 
-		unsigned int calculateLength(const std::string &text);
+		struct TextSize { unsigned int width = 0, height = 0; };
+		TextSize calculateTextSize(const std::string& text);
 	
 	
 	private:

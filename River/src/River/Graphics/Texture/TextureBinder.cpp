@@ -5,16 +5,10 @@
 
 namespace River{
 
-	TextureBinder::TextureBinder(unsigned int numSlots, bool addWhiteTexture){
+	TextureBinder::TextureBinder(unsigned int numSlots){
 		this->numSlots = numSlots;
-		this->addWhiteTexture = addWhiteTexture;
 
 		textures = (Texture**) malloc(sizeof(Texture*) * numSlots);
-		
-		if( addWhiteTexture ){
-			numTextures = 1;
-			textures[0] = Texture::getWhiteTexture();
-		}
 	}
 	
 	TextureBinder::~TextureBinder(){
@@ -61,8 +55,7 @@ namespace River{
 	}
 
 	void TextureBinder::clear(){
-		if( addWhiteTexture ) numTextures = 1;
-		else numTextures = 0;
+		numTextures = 0;
 	}
 
 	int TextureBinder::getNumTextures(){
