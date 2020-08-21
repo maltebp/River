@@ -18,6 +18,13 @@ namespace River {
 
 	};
 
+
+	class NotImplementedException : public Exception {
+	public:
+		NotImplementedException(const std::string &message) : Exception("NotImplementedException", message) { }
+	};
+
+
 	class AssetException : public Exception{
 	protected:
 		AssetException(const std::string& exceptionName, const std::string& message) : Exception(exceptionName, message) {}

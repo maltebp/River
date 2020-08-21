@@ -43,7 +43,7 @@ namespace River {
 
 		ImageRenderer(Window *window);
 
-		void drawSprite(Sprite *sprite, float x, float y, float z, float width, float height, float rotation);
+		void drawSprite(const Sprite *sprite, float x, float y, float z, float width, float height, float rotation);
 
 		void onFlush();
 

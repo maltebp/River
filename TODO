@@ -12,15 +12,16 @@ Kenney Jam:
 
         Text Rendering:
             ✔ Setup FreeType library
+            ✔ Textureatlas
             ☐ Test simple font rendering
 
-
+        
         ☐ Test on seperate computer
         ☐ Setup renderer system in Game class
-        ☐ Textureatlas
         ☐ Licenses
 
     Nice to have:
+        ☐ Mouse event
         ☐ Setup timestep (temporary)
         ☐ Particle system (simple version)
         ☐ Sound system
@@ -33,6 +34,7 @@ Kenney Jam:
 ☐ Implement instrumentation
 ☐ ImGUI ? (Perhaps implement for easier testing)
 ☐ Proper logging
+☐ Font atlas
 
 Text Rendering:
 
@@ -52,16 +54,14 @@ Make the zoom on the camera linear, such that negative values is a zoom out, and
 
 
 
+Notes:
 
+    - Text
+        - Font
+        - Position
+        - Text
 
-Event system notes:
+    renderText(string text, string font, unsigned int size, float x, float y, HorizontalAlignment alignement, VerticalAlignment alignment ){
 
-KeyCode
-
-KeyAction
-    Key Down
-    Key Up
-    Key Pressed
-
-    
+    }
     

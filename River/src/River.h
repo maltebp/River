@@ -7,3 +7,5 @@
 
 #include "River/Graphics/Texture/Sprite.h"
 #include "River/Graphics/Texture/Texture.h"
+
+#include "River/Graphics/Text/FontController.h"

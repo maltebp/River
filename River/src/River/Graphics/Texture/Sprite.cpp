@@ -2,8 +2,9 @@
 
 namespace River {
 
-	Sprite::Sprite(Texture *texture, unsigned int textureOffsetX, unsigned int textureOffsetY, unsigned int textureWidth, unsigned int textureHeight) {
+	Sprite::Sprite(Texture *texture, unsigned int textureOffsetX, unsigned int textureOffsetY, unsigned int textureWidth, unsigned int textureHeight, bool dedicatedTexture) {
 		this->texture = texture;
+		this->dedicatedTexture = dedicatedTexture;
 		
 		if( textureWidth == 0 ) textureWidth = texture->getWidth();
 		if( textureHeight == 0 ) textureHeight = texture->getHeight();
@@ -36,7 +37,7 @@ namespace River {
 		return height;
 	}
 
-	Texture *Sprite::getTexture() {
+	Texture *Sprite::getTexture() const {
 		return texture;
 	}
 

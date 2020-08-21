@@ -11,6 +11,7 @@ private:
 	River::Sprite* image_coffee = nullptr;
 	River::Sprite* image_llama = nullptr;
 	River::Sprite *image_glyph = nullptr;
+	River::Font* font = nullptr;
 
 	float x = 0;
 	float rotation = 0;

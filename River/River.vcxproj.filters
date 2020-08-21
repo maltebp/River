@@ -66,12 +66,6 @@
     <ClInclude Include="src\River\Event\KeyEvent\KeyEventController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\River\Graphics\Text\FontLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\River\Graphics\Text\TextRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\River\Graphics\Texture\Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -79,6 +73,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\River\Graphics\Texture\TextureBinder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Graphics\Text\FontController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Graphics\Text\Font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Graphics\Text\FontType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -131,12 +134,6 @@
     <ClCompile Include="src\River\Event\KeyEvent\KeyEventController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\River\Graphics\Text\FontLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\River\Graphics\Text\TextRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\River\Graphics\Texture\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -144,6 +141,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\River\Graphics\Texture\TextureBinder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\River\Graphics\Text\FontController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\River\Graphics\Text\Font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\River\Graphics\Text\FontType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -108,9 +108,11 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\Graphics\Text\FontType.h" />
+    <ClInclude Include="src\River\Graphics\Text\Font.h" />
+    <ClInclude Include="src\River\Graphics\Text\FontController.h" />
     <ClInclude Include="src\River\Graphics\Texture\Sprite.h" />
     <ClInclude Include="src\River\Graphics\Texture\Texture.h" />
-    <ClInclude Include="src\River\Graphics\Text\FontLoader.h" />
     <ClInclude Include="src\River\Event\KeyEvent\KeyEventController.h" />
     <ClInclude Include="src\River\Event\CharEvent.h" />
     <ClInclude Include="src\River\Event\KeyEvent\KeyEvent.h" />
@@ -129,12 +131,13 @@
     <ClInclude Include="src\River\Error.h" />
     <ClInclude Include="src\River\Graphics\ImageRenderer.h" />
     <ClInclude Include="src\River\Graphics\VertexArray.h" />
-    <ClInclude Include="src\River\Graphics\Text\TextRenderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\River\Graphics\Text\FontType.cpp" />
+    <ClCompile Include="src\River\Graphics\Text\Font.cpp" />
+    <ClCompile Include="src\River\Graphics\Text\FontController.cpp" />
     <ClCompile Include="src\River\Graphics\Texture\Sprite.cpp" />
     <ClCompile Include="src\River\Graphics\Texture\Texture.cpp" />
-    <ClCompile Include="src\River\Graphics\Text\FontLoader.cpp" />
     <ClCompile Include="src\River\Event\KeyEvent\KeyEventController.cpp" />
     <ClCompile Include="src\River\Event\CharEvent.cpp" />
     <ClCompile Include="src\River\Event\KeyEvent\KeyEvent.cpp" />
@@ -152,7 +155,6 @@
     <ClCompile Include="src\River\Game.cpp" />
     <ClCompile Include="src\River\Graphics\ImageRenderer.cpp" />
     <ClCompile Include="src\River\Graphics\VertexArray.cpp" />
-    <ClCompile Include="src\River\Graphics\Text\TextRenderer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

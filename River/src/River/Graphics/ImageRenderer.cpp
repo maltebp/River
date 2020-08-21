@@ -81,7 +81,7 @@ namespace River{
 	}
 
 
-	void ImageRenderer::drawSprite(Sprite* sprite, float x, float y, float z, float width, float height, float rotation){
+	void ImageRenderer::drawSprite(const Sprite* sprite, float x, float y, float z, float width, float height, float rotation){
 		
 		Texture *texture = sprite->getTexture();
 		auto &textureCoordinates = sprite->getTextureCoordinates();
