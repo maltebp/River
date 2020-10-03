@@ -85,7 +85,7 @@ namespace River{
 		drawTexture({}, transformData);
 	}
 
-	void ImageRenderer::drawSprite(const Sprite* sprite, const TransformData& transformData){
+	void ImageRenderer::drawSprite(const SubTexture* sprite, const TransformData& transformData){
 		ImageRenderer::TextureData textureData{ sprite->getTexture(), sprite->getTextureCoordinates() };
 		drawTexture(textureData, transformData);
 	}

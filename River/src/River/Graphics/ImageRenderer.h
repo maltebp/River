@@ -60,7 +60,7 @@ namespace River {
 		ImageRenderer(Window *window);
 
 		void drawRectangle(const TransformData& transformData);
-		void drawSprite(const Sprite *sprite, const TransformData& transformData);
+		void drawSprite(const SubTexture *sprite, const TransformData& transformData);
 		void drawTexture(const TextureData& textureData, const TransformData& transformData);
 
 		void onFlush();

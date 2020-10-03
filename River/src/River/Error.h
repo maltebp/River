@@ -19,6 +19,12 @@ namespace River {
 	};
 
 
+	class InvalidArgumentException : public Exception {
+	public:
+		InvalidArgumentException(const std::string& message) : Exception("InvalidArgumentException", message) {}
+	};
+
+
 	class NotImplementedException : public Exception {
 	public:
 		NotImplementedException(const std::string &message) : Exception("NotImplementedException", message) { }
