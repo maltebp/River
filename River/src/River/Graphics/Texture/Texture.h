@@ -16,6 +16,11 @@ namespace River {
 		};
 
 
+		enum class FilterMode {
+			LINEAR, NEAREST
+		};
+
+
 	private:
 
 		static Texture *whiteTexture;
@@ -52,6 +57,9 @@ namespace River {
 
 		unsigned int getWidth();
 		unsigned int getHeight();
+
+		void setFilterMode(FilterMode filter);
+		
 
 		/**
 		 * @brief Normalizes the x-coordinate into the OpenGL coordinates (ranging from 0 to 1);

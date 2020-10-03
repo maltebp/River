@@ -8,8 +8,13 @@
 namespace River{
 
 	Font::Font(unsigned int size, void* nativeFontType) :
-		size(size), height(((FT_Face)nativeFontType)->size->metrics.height), nativeFontType(nativeFontType)
+		size(size), nativeFontType(nativeFontType)
 	{   
+
+        FT_Face face = (FT_Face)nativeFontType; 
+        FT_Set_Pixel_Sizes(face, 0, size);
+        height = size;//  (face->size->metrics.ascender >> 6) - (face->size->metrics.descender >> 6); // face->size->metrics.height >> 6;
+
         glyphMap.reserve(sizeof(Glyph)*93);
         // Range is all printable ASCII characters
         for( unsigned int  characterValue = 33;  characterValue < 126;  characterValue++ ) {
@@ -58,8 +63,8 @@ namespace River{
 
         TextSize size;
         for( const char& c : text ) {
-            if( c < 32 ) throw new River::Exception("Control characters cannot be rendered");
             if( c < 0 ) throw new River::NotImplementedException("Font::calculateTextLength: Non-ASCII characters are not supported yet");
+            if( c < 32 ) throw new River::Exception("Control characters cannot be rendered");
             
             const Glyph& glyph = getGlyph(c);
             length += glyph.advance;
@@ -70,4 +75,8 @@ namespace River{
         if( minY < 0 ) minY *= -1;
         return TextSize{ length, maxY + minY };
 	}
+
+    unsigned int Font::getHeight() {
+        return height;
+    }
 }

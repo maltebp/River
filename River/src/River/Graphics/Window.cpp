@@ -33,7 +33,10 @@ namespace River {
 		}
 
 		glfwSetErrorCallback(glfwErrorCallback);
-		glfwWindowHint(GLFW_SAMPLES, 16);
+
+		// TODO: Figure out to handle sampling per texture
+		//glfwWindowHint(GLFW_SAMPLES, 16);
+
 		glfwWindow = glfwCreateWindow(width, height, this->title.c_str(), NULL, NULL);
 		if (!glfwWindow) {
 			glfwTerminate();
@@ -56,6 +59,11 @@ namespace River {
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LESS);
 		);
+
+		// TODO: Move this into a seperate function
+		GL( glClearColor(0.15f, 0.9f, 0.15f, 1.0f) );
+
+		previousFpsTime = glfwGetTime();
 	}
 
 
@@ -63,12 +71,29 @@ namespace River {
 
 
 
-	void Window::clear() {
+	void Window::clear() {	
+
+		// Measure speed
+		double currentTime = glfwGetTime();
+		frameCount++;
+		// If a second has passed.
+		double timePassed = currentTime - previousFpsTime;
+		if( timePassed >= 1.0 ) {
+			fps = frameCount / timePassed;
+
+			frameCount = 0;
+			previousFpsTime = currentTime;
+		}
+
 		glfwSwapBuffers(this->glfwWindow);
 		glfwPollEvents();
 		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 	}
 
+
+	void Window::close() {
+		glfwSetWindowShouldClose(glfwWindow, GL_TRUE);
+	}
 
 	bool Window::shouldClose() {
 		return glfwWindowShouldClose(glfwWindow);
@@ -76,6 +101,7 @@ namespace River {
 
 
 	void Window::clearDepth() {
+		GL(glClear(GL_DEPTH_BUFFER_BIT));
 		// TODO: Implement depth buffer stuff here
 	}
 
@@ -114,6 +140,9 @@ namespace River {
 	}
 
 
+	double Window::getFps() {
+		return fps;
+	}
 
 
 }

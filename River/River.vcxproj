@@ -62,6 +62,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\lib\glfw\include;$(ProjectDir)\lib\glew\include;$(ProjectDir)lib\freetype\include;$(ProjectDir)\lib\stb_image</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ProgramDataBaseFileName>$(OutDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -69,10 +70,10 @@
       <AdditionalLibraryDirectories>C:\Users\Malte\Projects\River\x64\Debug</AdditionalLibraryDirectories>
     </Link>
     <Lib>
-      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;freetype.lib;</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;freetype.lib;RiverECS\lib\$(Configuration)-$(Platform)\RiverECS.lib</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib\glew\lib\$(Configuration)\$(Platform)\;$(ProjectDir)lib\glfw\lib-vc2019\;$(ProjectDir)lib\freetype\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib\;$(ProjectDir)lib\glew\lib\$(Configuration)\$(Platform)\;$(ProjectDir)lib\glfw\lib-vc2019\;$(ProjectDir)lib\freetype\lib\</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
       <Command>xcopy /y /d  "$(ProjectDir)lib\freetype\bin\*.dll" "$(OutDir)"</Command>
@@ -89,6 +90,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\lib\glfw\include;$(ProjectDir)lib\freetype\include;$(ProjectDir)\lib\glew\include;$(ProjectDir)\lib\stb_image</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ProgramDataBaseFileName>$(OutDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -108,6 +110,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\Graphics\SpriteAnimation\AnimationSequence.h" />
     <ClInclude Include="src\River\Graphics\Color.h" />
     <ClInclude Include="src\River\Graphics\Alignment.h" />
     <ClInclude Include="src\River\Graphics\Text\FontType.h" />
@@ -136,6 +139,7 @@
     <ClInclude Include="src\River\Graphics\TextRenderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\River\Graphics\SpriteAnimation\AnimationSequence.cpp" />
     <ClCompile Include="src\River\Graphics\Text\FontType.cpp" />
     <ClCompile Include="src\River\Graphics\Text\Font.cpp" />
     <ClCompile Include="src\River\Graphics\Text\FontController.cpp" />

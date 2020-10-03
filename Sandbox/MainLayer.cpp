@@ -26,10 +26,15 @@ void MainLayer::onUpdate() {
 
 	imageRenderer->setCamera(camera);
 	textRenderer->setCamera(camera);
-	textRenderer->drawText("Hello", font, River::Colors::RED, 100, 100, 0.0f);
+
+	imageRenderer->drawRectangle({ 0, 0, 0.1f, 1280, 1, 0, River::Colors::RED });
+	imageRenderer->drawRectangle({ 0, 0, 0.1f, 1, 720, 0, River::Colors::RED });
+
+
+	textRenderer->drawText(std::to_string(game->getFps()), font, River::Colors::WHITE, 0, 0, 0.0f, River::Align::TOP_CENTER);
+
 	//imageRenderer->drawSprite(font->getGlyph("x").sprite, 0, 0, 0.25f, 300, 175, 0);
-	imageRenderer->drawSprite(image_coffee, { 100, 100, 0.0f, 20, 20, 0., {} });
-	imageRenderer->drawRectangle({ -100, -100, 0.0f, 100, 100, 0, { 0, 1, 0, 1 } });
+	//imageRenderer->drawSprite(image_coffee, { 100, 100, 0.0f, 20, 20, 0., {} });
 	imageRenderer->flush();
 	textRenderer->flush();
 }

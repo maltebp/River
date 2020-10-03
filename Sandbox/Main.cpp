@@ -11,7 +11,7 @@
 class SandboxGame : public River::Game {
 
 private:
-
+	River::ECS::Domain domain;
 	
 
 public:

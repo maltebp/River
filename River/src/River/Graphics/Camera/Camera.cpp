@@ -75,7 +75,7 @@ namespace River{
 
 	glm::mat4& Camera::getCameraMatrix(){
 		if( dirty ){
-			cameraMatrix = glm::mat4(1.0f); // Identity matrix (diagonal is 1's)
+			cameraMatrix = glm::mat4(1.0f); // Identit	y matrix (diagonal is 1's)
 			cameraMatrix = glm::rotate(cameraMatrix, glm::radians(rotation), glm::vec3(0, 0, 1));
 			cameraMatrix = glm::translate(cameraMatrix, glm::vec3(-x, -y,  0.0f));
 			cameraMatrix = glm::scale(cameraMatrix, glm::vec3(zoom, zoom, 1));

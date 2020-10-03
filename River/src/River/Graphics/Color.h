@@ -14,18 +14,14 @@ namespace River {
 	
 		Color() {}
 		Color(float r, float g, float b, float a) : r(r),  b(b), g(g), a(a) {}
-		Color(float r, float g, float b ) : r(r),  b(b), g(g) {}
-
-
-
-		
-	
+		Color(float r, float g, float b ) : r(r),  b(b), g(g) {}	
 	
 		// TODO: Create proper operator overloads
 	};
 	
 
 	namespace Colors {
+		const Color BLACK		(0.0, 0.0, 0.0);
 		const Color WHITE		(1.0, 1.0, 1.0);
 		const Color RED			(1.0, 0.0, 0.0);
 	}

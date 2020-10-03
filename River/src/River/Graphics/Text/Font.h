@@ -23,7 +23,7 @@ namespace River {
 	private:
 		const void *nativeFontType;
 		const unsigned int size;
-		const unsigned int height;
+		unsigned int height;
 		std::unordered_map<unsigned int, Glyph> glyphMap;
 
 
@@ -34,6 +34,12 @@ namespace River {
 
 		struct TextSize { unsigned int width = 0, height = 0; };
 		TextSize calculateTextSize(const std::string& text);
+
+
+		/**
+		 * @brief Returns the Font's Height. Note: some glyphs may go beyond this height
+		*/
+		unsigned int getHeight();
 	
 	
 	private:

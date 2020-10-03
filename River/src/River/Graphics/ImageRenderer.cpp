@@ -63,13 +63,6 @@ namespace River{
 		}
 	)";
 
-	/*
-	
-		
-	*/
-
-
-
 
 	ImageRenderer::ImageRenderer(River::Window* window) :
 		River::Renderer(window),
@@ -175,7 +168,6 @@ namespace River{
 		vertices[3].textureX = textureData.textureCoordinates.x2;
 		vertices[3].textureY = textureData.textureCoordinates.y2;
 		vertices[3].numTextureChannels = numTextureChannels;
-
 
 		unsigned int* indices = vertexArray.nextIndices(6);
 		indices[0] = verticesOffset + 0;

@@ -6,10 +6,11 @@
 namespace River {
 	class Layer {
 
-	protected:
-		Layer(){}
+		// TODO: Make layer receive game or window at creation
 
-		Camera *camera;
+	protected:
+
+		Camera *camera = nullptr;
 
 		virtual void onInitialization(){}
 		virtual void onUpdate(){}

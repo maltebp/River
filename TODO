@@ -35,6 +35,7 @@ Kenney Jam:
 ☐ ImGUI ? (Perhaps implement for easier testing)
 ☐ Proper logging
 ☐ Font atlas
+☐ Draw Sprite rotated and flipped
 
 Text Rendering:
 

@@ -6,136 +6,177 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
-River::Game::Game(std::string title) {
-	this->title = title;
-
-	this->window = new Window(this->title, 1280, 720);
-
-	// Initialize glew
-	const GLenum glewResult = glewInit();
-	if( glewResult != GLEW_OK ){
-		std::stringstream msgStream;
-		msgStream << "GLEW initialization error '" << glewGetErrorString(glewResult) << "'";
-		throw River::Exception(msgStream.str());
-	}
-
-	std::cout << "GLEW initialized" << std::endl;
-	std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
-}
-
-
-River::Game::~Game() {
-	clearLayers();
-	clearOverlays();
-}
-
-static int glfwErrorCode = 0;
-static std::string glfwErrorMsg;
-
-static void glfwErrorCallback(int errCode, const char* errStr) {
-	glfwErrorCode = errCode;
-	glfwErrorMsg = std::string(errStr);
-}
-
-static void printGLErrors() {
-	GLenum err;
-	while ((err = glGetError()) != GL_NO_ERROR)
-	{
-		std::cout << "GL ERROR: " << std::hex << err << std::endl;
-	}
-}
-
-
-River::Window* River::Game::getWindow() {
-	return window;
-}
-
-
-
-
-
-void River::Game::start() {
-
-	printf("Starting River game loop\n");
+namespace River {
 	
-	onInitialization();
+	// The current game
+	Game* Game::game = nullptr;
 
-	printf("Starting game loop\n");
-	while( !window->shouldClose() ) {
-		window->clear();
+	Game* Game::getGame() {
+		return game;
+	}
 
-		auto keyEvents = window->getKeyEvents();
-		for( auto &keyEvent : keyEvents ){
-			for( auto it = overlays.rbegin(); it != overlays.rend(); it++ ){
-				if( keyEvent.isConsumed() ) break;
-				(*it)->keyEvent(keyEvent);
+	River::Game::Game(std::string title) {
+		this->title = title;
+
+		if( game != nullptr )
+			throw new River::Exception("A game has already been created!");
+		game = this;
+
+		this->window = new Window(this->title, 1280, 720);
+
+		// Initialize glew
+		const GLenum glewResult = glewInit();
+		if( glewResult != GLEW_OK ) {
+			std::stringstream msgStream;
+			msgStream << "GLEW initialization error '" << glewGetErrorString(glewResult) << "'";
+			throw River::Exception(msgStream.str());
+		}
+
+		std::cout << "GLEW initialized" << std::endl;
+		std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
+		std::cout << "Graphics card: " << glGetString(GL_RENDERER)<<std::endl;
+	}
+
+
+	River::Game::~Game() {
+		clearLayers();
+		clearOverlays();
+	}
+
+	static int glfwErrorCode = 0;
+	static std::string glfwErrorMsg;
+
+	static void glfwErrorCallback(int errCode, const char* errStr) {
+		glfwErrorCode = errCode;
+		glfwErrorMsg = std::string(errStr);
+	}
+
+	static void printGLErrors() {
+		GLenum err;
+		while( (err = glGetError()) != GL_NO_ERROR ) {
+			std::cout << "GL ERROR: " << std::hex << err << std::endl;
+		}
+	}
+
+
+	River::Window* River::Game::getWindow() {
+		return window;
+	}
+
+
+	double Game::getFps() {
+		return window->getFps();
+	}
+
+
+
+
+
+	void River::Game::start() {
+
+		printf("Starting River game loop\n");
+
+		onInitialization();
+
+		printf("Starting game loop\n");
+		while( !window->shouldClose() ) {
+			window->clear();
+
+			for( auto layer : layersToAdd ) {
+				layers.push_back(layer);
+				layer->initialize();
 			}
-			for( auto it = layers.rbegin(); it != layers.rend(); it++ ){
-				if( keyEvent.isConsumed() ) break;
-				(*it)->keyEvent(keyEvent);
+			layersToAdd.clear();
+
+			for( auto layer : layersToRemove ) {
+				auto iterator = std::find(layers.begin(), layers.end(), layer);
+				layers.erase(iterator);
+				layer->terminate();
+				delete layer;
 			}
+			layersToRemove.clear();
+
+			auto keyEvents = window->getKeyEvents();
+			for( auto& keyEvent : keyEvents ) {
+				for( auto it = overlays.rbegin(); it != overlays.rend(); it++ ) {
+					if( keyEvent.isConsumed() ) break;
+					(*it)->keyEvent(keyEvent);
+				}
+				for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
+					if( keyEvent.isConsumed() ) break;
+					(*it)->keyEvent(keyEvent);
+				}
+			}
+
+			for( auto& layer : layers ) {
+				layer->update();
+				window->clearDepth();
+			}
+
+			for( auto& overlay : overlays ) {
+				overlay->update();
+				window->clearDepth();
+			}
+
+
+
+
 		}
 
-		for( auto &layer : layers ) {
-			layer->update();
+		printf("Game loop stopped\n");
+	}
+
+
+
+	void River::Game::pushLayer(Layer* layer) {
+		layersToAdd.push_back(layer);
+	}
+
+	void River::Game::popLayer() {
+		if( !layers.empty() ) {
+			Layer* layer = layers.back();
+			removeLayer(layer);
 		}
+	}
 
-		for (auto& overlay : overlays) {
-			overlay->update();
+	void River::Game::removeLayer(Layer* layer) {
+		layersToRemove.push_back(layer);
+	}
+
+	void River::Game::clearLayers() {
+		for( auto layer : layers )
+			layersToRemove.push_back(layer);
+	}
+
+
+
+	void River::Game::pushOverlay(Layer* overlay) {
+		overlays.push_back(overlay);
+		overlay->initialize();
+	}
+
+	void River::Game::popOverlay() {
+		if( !overlays.empty() ) {
+			Layer* overlay = overlays.back();
+			overlays.pop_back();
+			overlay->terminate();
+			delete overlay;
 		}
-
-
-		
-		
 	}
 
-	printf("Game loop stopped\n");
-}
+	void River::Game::clearOverlays() {
+		for( auto& overlay : overlays ) {
+			overlay->terminate();
+			delete overlay;
+		}
+		overlays.clear();
+	}
 
 
 
-void River::Game::pushLayer(Layer* layer){
-	layers.push_back(layer);
-	layer->initialize();
-}
-
-void River::Game::popLayer(){
-	if (!layers.empty()) {
-		Layer* layer = layers.back();
-		layers.pop_back();
-		layer->terminate();
-		delete layer;
+	void Game::exit() {
+		window->close();
 	}
 }
-
-void River::Game::clearLayers(){
-	for (auto& layer : layers) {
-		layer->terminate();
-		delete layer;
-	}
-	layers.clear();
-}
-
-void River::Game::pushOverlay(Layer* overlay){
-	overlays.push_back(overlay);
-	overlay->initialize();
-}
-
-void River::Game::popOverlay() {
-	if (!overlays.empty()) {
-		Layer* overlay = overlays.back();
-		overlays.pop_back();
-		overlay->terminate();
-		delete overlay;
-	}
-}
-
-void River::Game::clearOverlays(){
-	for (auto& overlay : overlays) {
-		overlay->terminate();
-		delete overlay;
-	}
-	overlays.clear();
-}
-

@@ -1,5 +1,6 @@
 #include "Renderer.h"
 
+#include <iostream>
 
 namespace River {
 	Renderer::Renderer(River::Window *window) {

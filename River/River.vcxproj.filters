@@ -93,6 +93,9 @@
     <ClInclude Include="src\River\Graphics\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\River\Graphics\SpriteAnimation\AnimationSequence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\River\Game.cpp">
@@ -159,6 +162,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\River\Graphics\Text\FontType.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\River\Graphics\SpriteAnimation\AnimationSequence.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

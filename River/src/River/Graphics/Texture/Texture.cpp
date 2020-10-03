@@ -52,7 +52,7 @@ namespace River {
 		// Texture filtering/wrap options
 		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP));
 		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP));
-		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
+		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)); // GL_LINEAR_MIPMAP_LINEAR));
 		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 
 		GLenum format;
@@ -76,7 +76,7 @@ namespace River {
 		// Set data
 		GL(glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data));
 
-		GL(glGenerateMipmap(GL_TEXTURE_2D));
+		//GL(glGenerateMipmap(GL_TEXTURE_2D));
 
 		GL(glBindTexture(GL_TEXTURE_2D, 0));
 	}
@@ -90,6 +90,25 @@ namespace River {
 		);
 	}
 
+
+
+	void Texture::setFilterMode(FilterMode mode) {
+		GLint currentTexture = 0;
+		GL(glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture));
+
+		GL(glBindTexture(GL_TEXTURE_2D, id));
+		if( mode == FilterMode::LINEAR ) {
+			GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+			GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+		}
+		if( mode == FilterMode::NEAREST ) {
+			GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+			GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+		}
+
+		GL(glBindTexture(GL_TEXTURE_2D, currentTexture));
+	}
+	
 
 	unsigned int Texture::getNumChannels() {
 		return channels;

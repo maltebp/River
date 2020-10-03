@@ -1,0 +1,81 @@
+
+
+
+
+The Cursed Wand
+
+    Your wand is cursed, and periodically changes its power
+
+    Item bases:
+        - Food: Heals You
+
+        - Potion: Heals you
+
+        - Gem 1: Blue -> Changes your effect to previous effect
+        - Gem 2: Red -> Changes to new effect
+        - Gem 3: Changes the effect to the color it matches
+
+
+    Base items: Weapon, potions and amulets
+
+
+    Color codes:
+        - Red: Deals more damage to enemies, but you take damage periodically
+            
+        - Green: Heals you and target hit
+            
+        - Blue: Freezes enemies, but you are slowed as well
+
+        - Purple: Projectile passes through enemies, but it fires the wrong way
+
+        - Yellow: Slow attack speed, but fast movement speed
+
+
+
+
+
+
+Kenney Game Jam
+
+Theme: Cursed
+
+
+Cursed items / objects
+
+
+
+
+    - Item's curse is detectable from its effects (color etc)
+
+    
+
+The player is cursed with something:
+    - Explodes
+    - Takes damage over time
+
+Cursed gun:
+    - Your weapon lives its own life, so you have to adhere to it's will
+        - Shoots in wrong direction
+        - Shoots slowly
+        - Bullets fly very slow
+        - Explodes
+
+Princess / frog? 
+
+Curse words
+
+
+
+Cursing spells
+    - Cursing effects on the player, causing it to become harder?
+
+
+
+Ghosts
+
+
+
+
+
+
+Rentity

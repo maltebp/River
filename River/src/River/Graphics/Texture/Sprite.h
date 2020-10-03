@@ -12,13 +12,19 @@ namespace River {
 		Texture *texture;
 		bool dedicatedTexture = false;
 		Texture::SampleCoordinates textureCoordinates;
+		Texture::SampleCoordinates flippedCoordinates;
 
 		unsigned int width, height;
+
+		bool verticallyFlipped = false;
+		bool horizontallyFlipped = false;
 
 		
 	private:
 		Sprite(const Sprite &other);
 		Sprite &operator=(const Sprite &);
+		
+		void updateAdjustedCoordinates();
 
 	public:
 		Sprite(Texture *texture, unsigned int textureOffsetX = 0, unsigned int textureOffsetY = 0, unsigned int textureWidth = 0, unsigned int textureHeight = 0, bool dedicatedTexture=false);
@@ -41,13 +47,22 @@ namespace River {
 		
 		Texture* getTexture() const;
 
+
+		void flipVertically();
+
+		void flipHorizontally();
+
+		void rotate(int times);
+
+		const Texture::SampleCoordinates& getTextureCoordinates() const;
+
 		/**
 		 * @brief	Whether or not this Sprite's texture is only used by this Sprite. If so, the texture will be deleted
 					with this Sprite
 		*/
 		bool hasDedicatedTexture();
 
-		const Texture::SampleCoordinates& getTextureCoordinates() const;
+		
 	};
 
 }

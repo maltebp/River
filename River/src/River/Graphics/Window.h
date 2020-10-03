@@ -25,6 +25,10 @@ namespace River {
 		/* The number of texture slots (or units) accessible from the fragment shader */
 		int numTextureSlots;
 
+		
+		double fps = 0;
+		double previousFpsTime;
+		unsigned int frameCount;
 
 		KeyEventController keyEventController;
 
@@ -38,8 +42,10 @@ namespace River {
 		void clear();
 		void clearDepth();
 		bool shouldClose();
+		void close();
 		unsigned int getNumTextureSlots();
 		std::vector<KeyEvent> getKeyEvents();
+		double getFps();
 	};
 
 }

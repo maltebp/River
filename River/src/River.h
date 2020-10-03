@@ -11,3 +11,5 @@
 
 #include "River/Graphics/Text/FontController.h"
 #include "River/Graphics/Alignment.h"
+
+#include "River/Vendor/RiverECS/ECS.h"
