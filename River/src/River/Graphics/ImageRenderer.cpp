@@ -85,7 +85,7 @@ namespace River{
 		drawTexture({}, transformData);
 	}
 
-	void ImageRenderer::drawSprite(const SubTexture* sprite, const TransformData& transformData){
+	void ImageRenderer::drawSprite(const Texture* sprite, const TransformData& transformData){
 		ImageRenderer::TextureData textureData{ sprite->getTexture(), sprite->getTextureCoordinates() };
 		drawTexture(textureData, transformData);
 	}
@@ -97,10 +97,10 @@ namespace River{
 		unsigned int numTextureChannels = 0;
 		if( textureData.texture != nullptr ) {
 			try {
-				textureSlot = textureBinder.addTexture(textureData.texture);
+				textureSlot = textureBinder.addImage(textureData.texture);
 			} catch( NoTextureSlotException e ) {
 				flush();
-				textureSlot = textureBinder.addTexture(textureData.texture);
+				textureSlot = textureBinder.addImage(textureData.texture);
 			}
 			numTextureChannels = textureData.texture->getNumChannels();
 		}

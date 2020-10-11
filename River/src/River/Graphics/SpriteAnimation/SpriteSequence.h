@@ -17,7 +17,7 @@ namespace River {
 		template <typename ... Sprites>
 		SpriteSequence(Sprites ... sprites) {
 			numSprites = sizeof...(Sprites);
-			spriteList = new SubTexture*[numSprites];
+			spriteList = new Texture*[numSprites];
 
 			// Populate array
 			int i = 0;
@@ -30,7 +30,7 @@ namespace River {
 		}
 
 
-		const SubTexture* operator[](unsigned int index) {
+		const Texture* operator[](unsigned int index) {
 			return spriteList[index];
 		}
 
@@ -45,7 +45,7 @@ namespace River {
 		SpriteSequence& operator=(const SpriteSequence&) = delete;
 
 	private:
-		SubTexture** spriteList;
+		Texture** spriteList;
 		unsigned int numSprites;
 	};
 

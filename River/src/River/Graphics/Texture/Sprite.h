@@ -2,16 +2,21 @@
 
 #include "River/Vendor/RiverECS/ECS.h"
 
-#include "SubTexture.h"
+#include "Texture.h"
+#include "River/Primitives/Color.h"
 
 namespace River::ECS {
 
+	/**
+	 * @brief	Component which contains information about drawing a texture to the screen.
+     *			It doesn't contain a position, as this should be defined externally.
+	*/
 	struct Sprite : Component {
-		// TODO: Remove position from this component
-		float x = 0;
-		float y = 0; 
-		const SubTexture* texture = nullptr;
-
+		const Texture* texture = nullptr;
+		double rotation = 0;
+		double offsetX, offsetY;
+		Color tint;
+		// Tint mode?
 	};
 
 }

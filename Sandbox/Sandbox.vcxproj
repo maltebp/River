@@ -99,9 +99,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MainLayer.cpp" />
-    <ClCompile Include="Settings.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\MainLayer.cpp" />
+    <ClCompile Include="src\Settings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\River\River.vcxproj">
@@ -109,10 +109,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Init.h" />
-    <ClInclude Include="MainLayer.h" />
-    <ClInclude Include="RenderSystem.h" />
-    <ClInclude Include="Settings.h" />
+    <ClInclude Include="src\Components\Transform.h" />
+    <ClInclude Include="src\Init.h" />
+    <ClInclude Include="src\MainLayer.h" />
+    <ClInclude Include="src\RenderSystem.h" />
+    <ClInclude Include="src\Settings.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -54,11 +54,15 @@ namespace River {
 		GL(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextureSlots));
 	
 		GL(
+			glEnable(GL_ALPHA_TEST);
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LESS);
 		);
+
+		// This enable binary alpha blending
+		glAlphaFunc(GL_GREATER, 0);
 
 		// TODO: Move this into a seperate function
 		GL( glClearColor(0.15f, 0.9f, 0.15f, 1.0f) );

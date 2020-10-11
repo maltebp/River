@@ -10,7 +10,9 @@
 #include "River/Graphics/Texture/Texture.h"
 
 #include "River/Graphics/Text/FontController.h"
-#include "River/Graphics/Alignment.h"
+
+#include "River/Primitives/Alignment.h"
+#include "River/Primitives/Color.h"
 
 #include "River/Vendor/RiverECS/ECS.h"
 

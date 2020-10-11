@@ -2,75 +2,73 @@
 
 #include <string>
 
-#include "../GL.h"
+#include "Image.h"
 
 namespace River {
 
+
+	/**
+	 * @brief	A Texture defines a drawable part of some image. This can be the enitre image or just a specified region of it.
+	*/
 	class Texture {
-	public:
-		struct SampleCoordinates {
-			float x1; // Left
-			float y1; // Top
-			float x2; // Right
-			float y2; // Bottom
-		};
-
-
-		enum class FilterMode {
-			LINEAR, NEAREST
-		};
-
-
+	
 	private:
+		Image *texture;
+		bool dedicatedTexture = false;
+		Image::SampleCoordinates textureCoordinates;
+		Image::SampleCoordinates flippedCoordinates;
 
-		static Texture *whiteTexture;
+		unsigned int width, height;
 
-		// OpenGL texture id
-		unsigned int id;
-		std::string filePath = "Unknown path";
+		bool verticallyFlipped = false;
+		bool horizontallyFlipped = false;
 
-		int width;
-		int height;
-		int channels;
-		int rowAlignment;
-
+		
 	private:
-		void createGLTexture(void *data);
-
-		// Prevent copying and assignemnt 
-		Texture(const Texture &temp_obj);
-		Texture &operator=(const Texture &temp_obj);
-
+		Texture(const Texture &other);
+		Texture &operator=(const Texture &);
+		
+		void updateAdjustedCoordinates();
 
 	public:
-		Texture(std::string filePath);
-		Texture(unsigned int width, unsigned int height, unsigned int channels, unsigned int rowAlignment, void *data);
+		Texture(Image *texture, unsigned int textureOffsetX = 0, unsigned int textureOffsetY = 0, unsigned int textureWidth = 0, unsigned int textureHeight = 0, bool dedicatedTexture=false);
+		
+		/**
+		 * @brief	Creates a new Texture with a dedicated Image (texture is owned, and only used by this sprite).
+		*/
+		Texture(const std::string &texturePath, unsigned int textureOffsetX = 0, unsigned int textureOffsetY = 0, unsigned int textureWidth = 0, unsigned int textureHeight = 0);
 		~Texture();
 
-
-		void bind(unsigned int textureSlot);
-		unsigned int getId() { return id; }
-
-		unsigned int getNumChannels();
-
-		static Texture *getWhiteTexture();
-
-		unsigned int getWidth();
-		unsigned int getHeight();
-
-		void setFilterMode(FilterMode filter);
-		
-
 		/**
-		 * @brief Normalizes the x-coordinate into the OpenGL coordinates (ranging from 0 to 1);
+		 * @brief The non-normalized Texture width
 		*/
-		float normalizeX(unsigned int coordinate);
+		unsigned int getWidth();
 
 		/**
-	 * @brief Normalizes the x-coordinate into the OpenGL coordinates (ranging from 0 to 1);
-	*/
-		float normalizeY(unsigned int coordinate);
+		 * @brief The non-normalized Texture width
+		*/
+		unsigned int getHeight();
+		
+		Image* getTexture() const;
+
+
+		void flipVertically();
+
+		void flipHorizontally();
+
+		void rotate(int times);
+
+		const Image::SampleCoordinates& getTextureCoordinates() const;
+
+		/**
+		 * @brief	Whether or not this Texture's texture is only used by this Texture. If so, the texture will be deleted
+					with this Texture
+		*/
+		bool hasDedicatedTexture();
+
+		
 	};
+
 }
 
 

@@ -3,7 +3,7 @@
 #include "Window.h"
 #include "ImageRenderer.h"
 #include "Text/Font.h"
-#include "Alignment.h"
+#include "River/Primitives/Alignment.h"
 
 namespace River {
 	

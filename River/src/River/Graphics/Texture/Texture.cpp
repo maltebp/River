@@ -1,117 +1,33 @@
 #include "Texture.h"
 
-#include <River/Vendor/stb_image/stb_image.h>
-#include "../GL.h"
-#include "River/Error.h"
-
 namespace River {
 
-	Texture *Texture::whiteTexture = nullptr;
+	Texture::Texture(Image *texture, unsigned int textureOffsetX, unsigned int textureOffsetY, unsigned int textureWidth, unsigned int textureHeight, bool dedicatedTexture) {
+		this->texture = texture;
+		this->dedicatedTexture = dedicatedTexture;
+		
+		if( textureWidth == 0 ) textureWidth = texture->getWidth();
+		if( textureHeight == 0 ) textureHeight = texture->getHeight();
 
-	Texture::Texture(std::string filePath) {
-		this->filePath = filePath;
+		textureCoordinates = {
+			texture->normalizeX(textureOffsetX),
+			texture->normalizeY(textureOffsetY),
+			texture->normalizeX(textureOffsetX+textureWidth),
+			texture->normalizeY(textureOffsetY+textureHeight)
+		};
+		updateAdjustedCoordinates(); 
 
-		// TODO: Determine the correct alignment from the image
-		rowAlignment = 4;
-
-		// Load image file
-		//stbi_set_flip_vertically_on_load(true);
-		unsigned char *data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
-		if( !data ) {
-			throw new River::AssetNotFoundException(filePath);
-		}
-
-		createGLTexture(data);
-		stbi_image_free(data);
+		this->width = textureWidth;
+		this->height = textureHeight;
 	}
 
-
-	Texture::Texture(unsigned int width, unsigned int height, unsigned int channels, unsigned int rowAlignment, void *data) {
-		this->width = width;
-		this->height = height;
-		this->channels = channels;
-		this->rowAlignment = rowAlignment;
-
-		createGLTexture(data);
-	}
+	Texture::Texture(const std::string &texturePath, unsigned int textureOffsetX, unsigned int textureOffsetY, unsigned int textureWidth, unsigned int textureHeight) :
+		Texture(new Image(texturePath), textureOffsetX, textureOffsetY, textureWidth, textureHeight)
+	{}
 
 	Texture::~Texture() {
-		if( glIsTexture(id) == GL_TRUE )
-			GL(glDeleteTextures(1, &id));
-		// Automatically unbinds the texture as well
-	}
-
-
-	void Texture::createGLTexture(void *data) {
-
-		GL(glPixelStorei(GL_UNPACK_ALIGNMENT, rowAlignment));
-
-		GL(glGenTextures(1, &id));
-		GL(glBindTexture(GL_TEXTURE_2D, id));
-
-		// Texture filtering/wrap options
-		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP));
-		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP));
-		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)); // GL_LINEAR_MIPMAP_LINEAR));
-		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-
-		GLenum format;
-		GLint internalFormat;
-
-		if( channels != 1 && channels != 3 && channels != 4 )
-			throw new River::AssetException("Texture does not have 3 or 4 channels, but " + channels);
-		if( channels == 1 ) {
-			format = GL_RED;
-			internalFormat = GL_RED;
-		}
-		if( channels == 3 ) {
-			format = GL_RGB;
-			internalFormat = GL_RGB8;
-		}
-		if( channels == 4 ) {
-			format = GL_RGBA;
-			internalFormat = GL_RGBA8;
-		}
-
-		// Set data
-		GL(glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data));
-
-		//GL(glGenerateMipmap(GL_TEXTURE_2D));
-
-		GL(glBindTexture(GL_TEXTURE_2D, 0));
-	}
-
-
-	void Texture::bind(unsigned int textureSlot) {
-		// Note: Not using glBindTextureUnit as this is only available from 4.5 and onwards
-		GL(
-			glActiveTexture(GL_TEXTURE0 + textureSlot);
-		glBindTexture(GL_TEXTURE_2D, id);
-		);
-	}
-
-
-
-	void Texture::setFilterMode(FilterMode mode) {
-		GLint currentTexture = 0;
-		GL(glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture));
-
-		GL(glBindTexture(GL_TEXTURE_2D, id));
-		if( mode == FilterMode::LINEAR ) {
-			GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-			GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-		}
-		if( mode == FilterMode::NEAREST ) {
-			GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-			GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-		}
-
-		GL(glBindTexture(GL_TEXTURE_2D, currentTexture));
-	}
-	
-
-	unsigned int Texture::getNumChannels() {
-		return channels;
+		if( dedicatedTexture )
+			delete texture;
 	}
 
 	unsigned int Texture::getWidth() {
@@ -122,19 +38,46 @@ namespace River {
 		return height;
 	}
 
-	Texture *Texture::getWhiteTexture() {
-		if( whiteTexture == nullptr ) {
-			unsigned char data = 0xFF;
-			whiteTexture = new Texture(1, 1, 1, 1, &data);
+	Image *Texture::getTexture() const {
+		return texture;
+	}
+
+
+	void Texture::flipVertically() {
+		verticallyFlipped = true;
+		updateAdjustedCoordinates();
+	}
+
+	void Texture::flipHorizontally() {
+		horizontallyFlipped = true;
+		updateAdjustedCoordinates();
+	}
+
+	void Texture::updateAdjustedCoordinates() {
+
+		if( horizontallyFlipped ) {
+			flippedCoordinates.x1 = textureCoordinates.x2;
+			flippedCoordinates.x2 = textureCoordinates.x1;
+		} else {  
+			flippedCoordinates.x1 = textureCoordinates.x1;
+			flippedCoordinates.x2 = textureCoordinates.x2;
+		}		   
+		if( verticallyFlipped ) {
+			flippedCoordinates.y1 = textureCoordinates.y2;
+			flippedCoordinates.y2 = textureCoordinates.y1;
+		}else {	 
+			flippedCoordinates.y1 = textureCoordinates.y1;
+			flippedCoordinates.y2 = textureCoordinates.y2;
 		}
-		return whiteTexture;
 	}
 
-	float Texture::normalizeX(unsigned int coordinate) {
-		return (float) coordinate / (float) width;
+	bool Texture::hasDedicatedTexture() {
+		return dedicatedTexture;
 	}
 
-	float Texture::normalizeY(unsigned int coordinate) {
-		return (float) coordinate / (float) height;
+	const Image::SampleCoordinates& Texture::getTextureCoordinates() const {
+		return flippedCoordinates;
 	}
+
+
 }

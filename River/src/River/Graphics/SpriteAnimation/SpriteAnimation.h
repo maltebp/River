@@ -10,7 +10,7 @@ namespace River {
 	// TODO: Split correctly to cpp file
 	
 	/**
-	 * @brief	Holds information about a specific SpriteAnimation.
+	 * @brief	Holds information about a specific SpriteAnimation
 				This includes the speed of the information, and may in the future include more options.
 	*/
 	class SpriteAnimation {
@@ -26,17 +26,17 @@ namespace River {
 
 
 		/**
-		 * @brief	Returns the animation SubTexture with the given index in the animation sequence
+		 * @brief	Returns the animation Texture with the given index in the animation sequence
 		*/
-		const SubTexture* getSprite(unsigned int index) {
+		const Texture* getSprite(unsigned int index) {
 			return sequence[index];
 		}
 		
 
 		/**
-		 * @return	The SubTexture at the given time in the animation
+		 * @return	The Texture at the given time in the animation
 		*/
-		const SubTexture* getSpriteAtTime(float time) {
+		const Texture* getSpriteAtTime(float time) {
 			return sequence[(int) std::fmod(length, time)];
 		}
 

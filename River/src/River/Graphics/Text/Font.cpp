@@ -47,7 +47,7 @@ namespace River{
         auto it = glyphMap.emplace(
             characterValue,
             Glyph{
-                new SubTexture(new Texture(texture.width, texture.rows, 1, 1, texture.buffer)),
+                new Texture(new Image(texture.width, texture.rows, 1, 1, texture.buffer)),
                 face->glyph->bitmap_left, face->glyph->bitmap_top,
                 face->glyph->advance.x >> 6,
                 face->glyph->bitmap_top,  face->glyph->bitmap_top-((int)texture.rows)

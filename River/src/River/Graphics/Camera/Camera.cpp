@@ -14,7 +14,7 @@ namespace River{
 		this->z = z;
 		dirty = true;
 	}
-	
+		
 	void Camera::setX(float x){
 		this->x = x;
 		dirty = true;

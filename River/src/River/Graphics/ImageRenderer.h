@@ -3,11 +3,11 @@
 #include "Renderer.h"
 #include "Texture/Sprite.h"
 #include "Texture/Texture.h"
-#include "Texture/TextureBinder.h"
+#include "Texture/ImageBinder.h"
 #include "Window.h"
 #include "Shader/ShaderProgram.h"
 #include "VertexArray.h"
-#include "Color.h"
+#include "River/Primitives/Color.h"
 
 
 namespace River {
@@ -26,7 +26,7 @@ namespace River {
 		void setupAttributes() override {
 			addAttributeFloat(3); // Position
 			addAttributeFloat(4); // Color
-			addAttributeFloat(1);  // Texture slot
+			addAttributeFloat(1);  // Image slot
 			addAttributeFloat(2); // Tex position
 			addAttributeFloat(1); // Num channels
 		}
@@ -38,8 +38,8 @@ namespace River {
 	public:
 
 		struct TextureData {
-			Texture* texture = nullptr;
-			Texture::SampleCoordinates textureCoordinates = { 0, 0, 1, 1 };
+			Image* texture = nullptr;
+			Image::SampleCoordinates textureCoordinates = { 0, 0, 1, 1 };
 		};
 
 		struct TransformData {
@@ -53,14 +53,14 @@ namespace River {
 		ImageVertexArray vertexArray;
 
 		ShaderProgram* shaderProgram;
-		TextureBinder textureBinder;
+		ImageBinder textureBinder;
 
 	public:
 
 		ImageRenderer(Window *window);
 
 		void drawRectangle(const TransformData& transformData);
-		void drawSprite(const SubTexture *sprite, const TransformData& transformData);
+		void drawSprite(const Texture *sprite, const TransformData& transformData);
 		void drawTexture(const TextureData& textureData, const TransformData& transformData);
 
 		void onFlush();
