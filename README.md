@@ -5,7 +5,7 @@ A hobby-level, one-man 2D game framework written as a C++17 dynamic library.
 The framework is under constant development, but as of now the following features are included:
 
  - Rendering of textures/sprites
- - Dedicated ECS system (see [River ECS](github.com/maltebp/RiverECS))
+ - Dedicated ECS system (see [River ECS](https://github.com/maltebp/RiverECS))
  - Rendering of variable sized texts using TrueType fonts
  - Core game loop management
  - Rendering/logic layers
