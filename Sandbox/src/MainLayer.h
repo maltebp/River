@@ -35,14 +35,14 @@ private:
 public:
 
 	MainLayer(River::Game* game) : game(game), santa { 
-		new River::Texture("assets/santa/Jump (1).png", false),
-		new River::Texture("assets/santa/Jump (2).png", false),
-		new River::Texture("assets/santa/Jump (3).png", false),
-		new River::Texture("assets/santa/Jump (4).png", false),
-		new River::Texture("assets/santa/Jump (5).png", false),
-		new River::Texture("assets/santa/Jump (6).png", false),
-		new River::Texture("assets/santa/Jump (7).png", false),
-		new River::Texture("assets/santa/Jump (8).png", false)
+		new River::Texture("assets/santa/Jump (1).png", true),
+		new River::Texture("assets/santa/Jump (2).png", true),
+		new River::Texture("assets/santa/Jump (3).png", true),
+		new River::Texture("assets/santa/Jump (4).png", true),
+		new River::Texture("assets/santa/Jump (5).png", true),
+		new River::Texture("assets/santa/Jump (6).png", true),
+		new River::Texture("assets/santa/Jump (7).png", true),
+		new River::Texture("assets/santa/Jump (8).png", true)
 	} {}
 
 	void onInitialization() override;
@@ -51,5 +51,7 @@ public:
 
 	void onKeyEvent(River::KeyEvent &e) override;
 
+private:
+	void createSanta(double x, double y, unsigned int depth);
 };
 

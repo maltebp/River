@@ -192,7 +192,7 @@ namespace River{
 			// We expect things to be drawn in order when blending
 			GL(glEnable(GL_BLEND));
 			GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-			GL(glDepthMask(GL_FALSE)); // Disable writing to depth buffer
+			GL(glDepthMask(GL_FALSE)); // Disable writing to depth buffer 
 		} else {
 			GL(glDisable(GL_BLEND));
 			GL(glDepthMask(GL_TRUE)); // Enable writing to depth buffer

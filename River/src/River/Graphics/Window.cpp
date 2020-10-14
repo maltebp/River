@@ -58,14 +58,14 @@ namespace River {
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			glEnable(GL_DEPTH_TEST);
-			glDepthFunc(GL_LESS);
+			glDepthFunc(GL_LESS); // TODO: This is redundandt (GL_LESS is default)
 		);
 
 		// This enable binary alpha blending
 		glAlphaFunc(GL_GREATER, 0);
 
 		// TODO: Move this into a seperate function
-		GL( glClearColor(0.15f, 0.9f, 0.15f, 1.0f) );
+		GL( glClearColor(0.15f, 0.8f, 0.15f, 1.0f) );
 
 		previousFpsTime = glfwGetTime();
 	}
@@ -91,6 +91,7 @@ namespace River {
 
 		glfwSwapBuffers(this->glfwWindow);
 		glfwPollEvents();
+		GL(glDepthMask(GL_TRUE)); // We must be able to write to the depth buffer in order to clear the bit
 		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 	}
 

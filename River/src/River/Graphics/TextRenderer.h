@@ -13,7 +13,7 @@ namespace River {
 	
 	public:
 		TextRenderer(Window* window) : ImageRenderer(window) {
-			
+			//enableBlending();
 		}
 
 		void drawText(const std::string& text, Font* font, const Color& color, float x, float y, float z, Alignment alignment = Align::CENTER_LEFT) {
