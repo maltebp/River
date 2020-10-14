@@ -21,30 +21,19 @@ namespace River {
 		};
 
 
-	private:
-
-		static Image *whiteTexture;
-
-		// OpenGL texture id
-		unsigned int id;
-		std::string filePath = "Unknown path";
-
-		int width;
-		int height;
-		int channels;
-		int rowAlignment;
+	
 
 	private:
 		void createGLTexture(void *data);
 
 		// Prevent copying and assignemnt 
-		Image(const Image &temp_obj);
-		Image &operator=(const Image &temp_obj);
+		Image(const Image &temp_obj) = delete;
+		Image &operator=(const Image &temp_obj) = delete;
 
 
 	public:
-		Image(std::string filePath);
-		Image(unsigned int width, unsigned int height, unsigned int channels, unsigned int rowAlignment, void *data);
+		Image(std::string filePath, bool partiallyTransparent);
+		Image(unsigned int width, unsigned int height, unsigned int channels, bool partiallyTransparent, unsigned int rowAlignment, void *data);
 		~Image();
 
 
@@ -66,10 +55,31 @@ namespace River {
 		*/
 		float normalizeX(unsigned int coordinate);
 
+
 		/**
-	 * @brief Normalizes the x-coordinate into the OpenGL coordinates (ranging from 0 to 1);
-	*/
+		 * @brief Normalizes the x-coordinate into the OpenGL coordinates (ranging from 0 to 1);
+		*/
 		float normalizeY(unsigned int coordinate);
+	
+
+	private:
+		static Image* whiteTexture;
+
+		// OpenGL texture id
+		unsigned int id;
+		std::string filePath = "Unknown path";
+
+		int width;
+		int height;
+		int channels;
+		int rowAlignment;
+
+		/**
+		 * @brief	Whether or not this texture contains any partially transparent pixels. Curently, it's up to the user to
+		 *			decide when constructing an texture
+		*/
+		bool partiallyTransparent;
+	
 	};
 }
 

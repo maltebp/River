@@ -30,10 +30,10 @@ namespace River{
 		 * @return	The texture slot index, in which the texture will be placed in, or already has been placed in
 		 * @throws  River::Exception	Thrown if there is no slots available
 		*/
-		unsigned int addImage(Image* image);
+		unsigned int addImage(Image* texture);
 
 		/**
-		 * @brief	Binds the image to a given ShaderProgram. The program must be bound beforehand
+		 * @brief	Binds the texture to a given ShaderProgram. The program must be bound beforehand
 		*/
 		void bind(ShaderProgram* shaderProgram);
 

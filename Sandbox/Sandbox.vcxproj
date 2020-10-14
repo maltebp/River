@@ -109,7 +109,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Components\Transform.h" />
     <ClInclude Include="src\Init.h" />
     <ClInclude Include="src\MainLayer.h" />
     <ClInclude Include="src\RenderSystem.h" />

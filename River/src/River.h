@@ -6,6 +6,8 @@
 #include "River/Graphics/ImageRenderer.h"
 #include "River/Graphics/TextRenderer.h"
 
+#include "River/Graphics/Transform.h"
+
 #include "River/Graphics/Texture/Sprite.h"
 #include "River/Graphics/Texture/Texture.h"
 
@@ -19,3 +21,5 @@
 #include "River/Graphics/SpriteAnimation/SpriteSequence.h"
 #include "River/Graphics/SpriteAnimation/AnimatedSprite.h"
 #include "River/Graphics/SpriteAnimation/SpriteAnimationSystem.h"
+
+#include "River/Graphics/SpriteRenderingSystem.h"

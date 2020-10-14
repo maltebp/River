@@ -8,13 +8,13 @@ namespace River {
 
 	Image *Image::whiteTexture = nullptr;
 
-	Image::Image(std::string filePath) {
+	Image::Image(std::string filePath, bool partiallyTransparent) {
 		this->filePath = filePath;
 
-		// TODO: Determine the correct alignment from the image
+		// TODO: Determine the correct alignment from the texture
 		rowAlignment = 4;
 
-		// Load image file
+		// Load texture file
 		//stbi_set_flip_vertically_on_load(true);
 		unsigned char *data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
 		if( !data ) {
@@ -23,14 +23,17 @@ namespace River {
 
 		createGLTexture(data);
 		stbi_image_free(data);
+	
+		this->partiallyTransparent = this->channels == 4 && partiallyTransparent;
 	}
 
 
-	Image::Image(unsigned int width, unsigned int height, unsigned int channels, unsigned int rowAlignment, void *data) {
+	Image::Image(unsigned int width, unsigned int height, unsigned int channels, bool partiallyTransparent, unsigned int rowAlignment, void *data) {
 		this->width = width;
 		this->height = height;
 		this->channels = channels;
 		this->rowAlignment = rowAlignment;
+		this->partiallyTransparent = channels == 4 && partiallyTransparent;
 
 		createGLTexture(data);
 	}
@@ -122,10 +125,11 @@ namespace River {
 		return height;
 	}
 
+
 	Image *Image::getWhiteTexture() {
 		if( whiteTexture == nullptr ) {
 			unsigned char data = 0xFF;
-			whiteTexture = new Image(1, 1, 1, 1, &data);
+			whiteTexture = new Image(1, 1, 1, false, 1, &data);
 		}
 		return whiteTexture;
 	}

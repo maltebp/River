@@ -13,7 +13,12 @@ namespace River {
 		Color() {}
 		Color(float r, float g, float b, float a) : r(r),  b(b), g(g), a(a) {}
 		Color(float r, float g, float b ) : r(r),  b(b), g(g) {}	
-	
+
+
+		bool isPartiallyTransparent() const {
+			return a > 0.0 && a < 1.0;
+		}
+
 		// TODO: Create proper operator overloads
 	};
 	

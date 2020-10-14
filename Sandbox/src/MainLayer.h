@@ -16,6 +16,8 @@ private:
 	River::Texture* image_coffee = nullptr;
 	River::Texture* image_llama = nullptr;
 	River::Texture *image_glyph = nullptr;
+	River::Texture *image_blue_circle = nullptr;
+	River::Texture *image_purple_circle = nullptr;
 	River::Font* font = nullptr;
 
 
@@ -33,14 +35,14 @@ private:
 public:
 
 	MainLayer(River::Game* game) : game(game), santa { 
-		new River::Texture("assets/santa/Jump (1).png"),
-		new River::Texture("assets/santa/Jump (2).png"),
-		new River::Texture("assets/santa/Jump (3).png"),
-		new River::Texture("assets/santa/Jump (4).png"),
-		new River::Texture("assets/santa/Jump (5).png"),
-		new River::Texture("assets/santa/Jump (6).png"),
-		new River::Texture("assets/santa/Jump (7).png"),
-		new River::Texture("assets/santa/Jump (8).png")
+		new River::Texture("assets/santa/Jump (1).png", false),
+		new River::Texture("assets/santa/Jump (2).png", false),
+		new River::Texture("assets/santa/Jump (3).png", false),
+		new River::Texture("assets/santa/Jump (4).png", false),
+		new River::Texture("assets/santa/Jump (5).png", false),
+		new River::Texture("assets/santa/Jump (6).png", false),
+		new River::Texture("assets/santa/Jump (7).png", false),
+		new River::Texture("assets/santa/Jump (8).png", false)
 	} {}
 
 	void onInitialization() override;

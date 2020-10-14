@@ -57,5 +57,11 @@ namespace River {
 	public:
 		NoTextureSlotException() : Exception("NoTextureSlotException", "No texture slot is available") {}
 	};
+
+
+	class AlreadyInitializedException : public Exception {
+	public:
+		AlreadyInitializedException(const std::string& objectName) : Exception("'" + objectName + "' has already been initialize"){}
+	};
 }
 

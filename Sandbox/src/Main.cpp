@@ -20,6 +20,7 @@ public:
 	}
 
 	void onInitialization() override {
+		River::SpriteRenderingSystem::initialize(window);
 		pushLayer(new MainLayer(this));
 	}
 };

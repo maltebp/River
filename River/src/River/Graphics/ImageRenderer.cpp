@@ -86,7 +86,7 @@ namespace River{
 	}
 
 	void ImageRenderer::drawSprite(const Texture* sprite, const TransformData& transformData){
-		ImageRenderer::TextureData textureData{ sprite->getTexture(), sprite->getTextureCoordinates() };
+		ImageRenderer::TextureData textureData{ sprite->getImage(), sprite->getTextureCoordinates() };
 		drawTexture(textureData, transformData);
 	}
 
@@ -116,6 +116,8 @@ namespace River{
 		glm::mat3x2 transform = { { cos, sin }, { -sin, cos }, { transformData.x, transformData.y } };
 
 		glm::vec2 position;
+
+		// TODO: Fix correct color tinting
 
 		position = transform * glm::vec3(-halfWidth, halfHeight, 1);
 		vertices[0].x = position.x;
@@ -180,9 +182,25 @@ namespace River{
 
 
 	void ImageRenderer::onFlush(){
+
+		// Enable alpha testing, and discarding any fragment, which has an alpha of 0
+		GL(glEnable(GL_ALPHA_TEST));
+		GL(glAlphaFunc(GL_GREATER, 0));
+		GL(glEnable(GL_DEPTH_TEST));
+		
+		if( blending ) {
+			// We expect things to be drawn in order when blending
+			GL(glEnable(GL_BLEND));
+			GL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+			GL(glDepthMask(GL_FALSE)); // Disable writing to depth buffer
+		} else {
+			GL(glDisable(GL_BLEND));
+			GL(glDepthMask(GL_TRUE)); // Enable writing to depth buffer
+		}
+
 		shaderProgram->use();
 		textureBinder.bind(shaderProgram);
-		shaderProgram->setFloatMatrix("u_viewMatrix", 4, glm::value_ptr(camera->getCameraMatrix()) );
+		shaderProgram->setFloatMatrix("u_viewMatrix", 4, glm::value_ptr(camera->getCameraMatrix()));
 		vertexArray.bind();
 		GL(glDrawElements(GL_TRIANGLES, vertexArray.getNumIndices(), GL_UNSIGNED_INT, 0));
 		vertexArray.unbind();
@@ -191,6 +209,16 @@ namespace River{
 		textureBinder.clear();
 	}
 
+
+
+	void ImageRenderer::enableBlending() {
+		blending = true;
+	}
+
+
+	void ImageRenderer::disableBlending() {
+		blending = false;
+	}
 }
 
 

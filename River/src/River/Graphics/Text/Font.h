@@ -10,13 +10,13 @@ namespace River {
 	class Font {
 	public:
 		struct Glyph {
-			Texture* const sprite;
+			Texture* const texture;
 			const int bearingX, bearingY;
 			const int advance;
 			const int yMax, yMin;
 
-			Glyph(Texture* sprite, int bearingX, int bearingY, int advance, int yMax, int yMin)
-				: sprite(sprite), bearingX(bearingX), bearingY(bearingY), advance(advance), yMax(yMax), yMin(yMin) {
+			Glyph(Texture* texture, int bearingX, int bearingY, int advance, int yMax, int yMin)
+				: texture(texture), bearingX(bearingX), bearingY(bearingY), advance(advance), yMax(yMax), yMin(yMin) {
 			}
 		};
 

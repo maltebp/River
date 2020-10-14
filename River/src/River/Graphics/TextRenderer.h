@@ -37,14 +37,22 @@ namespace River {
 			for( const char& c : text ) {
 				const Font::Glyph& glyph = font->getGlyph(c);
 				
-				float glyphX = x + glyph.sprite->getWidth() /2.0;
+				float glyphX = x + glyph.texture->getWidth() /2.0;
 				if( first ) first = false;
 				else glyphX += glyph.bearingX;
 				
-				float glyphY = y + glyph.bearingY - glyph.sprite->getHeight() /2.0;
+				float glyphY = y + glyph.bearingY - glyph.texture->getHeight() /2.0;
 				x += glyph.advance;
 
-				drawSprite(glyph.sprite, { glyphX, glyphY, z, (float) glyph.sprite->getWidth(), (float) glyph.sprite->getHeight(), 0, color });
+				drawSprite(
+					glyph.texture,
+					{
+						glyphX, glyphY, z,
+						(float)glyph.texture->getWidth(), (float)glyph.texture->getHeight(),
+						0, 
+						color.a, { color.r, color.g, color.b, 1.0 }
+					}
+				);
 			}
 
 		}

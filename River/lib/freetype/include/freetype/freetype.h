@@ -454,8 +454,8 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   A handle to a given FreeType renderer.  A renderer is a module in
-   *   charge of converting a glyph's outline image to a bitmap.  It supports
-   *   a single glyph image format, and one or more target surface depths.
+   *   charge of converting a glyph's outline texture to a bitmap.  It supports
+   *   a single glyph texture format, and one or more target surface depths.
    */
   typedef struct FT_RendererRec_*  FT_Renderer;
 
@@ -540,7 +540,7 @@ FT_BEGIN_HEADER
    *
    *   In other words, each time you call @FT_Load_Glyph or @FT_Load_Char,
    *   the slot's content is erased by the new glyph data, i.e., the glyph's
-   *   metrics, its image (bitmap or outline), and other control information.
+   *   metrics, its texture (bitmap or outline), and other control information.
    *
    * @also:
    *   See @FT_GlyphSlotRec for the publicly accessible glyph fields.
@@ -1720,7 +1720,7 @@ FT_BEGIN_HEADER
    *     function) and can be expressed either in 26.6 fractional pixels or
    *     font units.
    *
-   *     Note that even when the glyph image is transformed, the metrics are
+   *     Note that even when the glyph texture is transformed, the metrics are
    *     not.
    *
    *   linearHoriAdvance ::
@@ -1743,7 +1743,7 @@ FT_BEGIN_HEADER
    *     field.
    *
    *   format ::
-   *     This field indicates the format of the image contained in the glyph
+   *     This field indicates the format of the texture contained in the glyph
    *     slot.  Typically @FT_GLYPH_FORMAT_BITMAP, @FT_GLYPH_FORMAT_OUTLINE,
    *     or @FT_GLYPH_FORMAT_COMPOSITE, but other values are possible.
    *
@@ -1761,7 +1761,7 @@ FT_BEGIN_HEADER
    *     y~coordinates being **positive**.
    *
    *   outline ::
-   *     The outline descriptor for the current glyph image if its format is
+   *     The outline descriptor for the current glyph texture if its format is
    *     @FT_GLYPH_FORMAT_OUTLINE.  Once a glyph is loaded, `outline` can be
    *     transformed, distorted, emboldened, etc.  However, it must not be
    *     freed.
@@ -1784,7 +1784,7 @@ FT_BEGIN_HEADER
    *
    *   control_data ::
    *     Certain font drivers can also return the control data for a given
-   *     glyph image (e.g.  TrueType bytecode, Type~1 charstrings, etc.).
+   *     glyph texture (e.g.  TrueType bytecode, Type~1 charstrings, etc.).
    *     This field is a pointer to such data; it is currently internal to
    *     FreeType.
    *
@@ -1805,17 +1805,17 @@ FT_BEGIN_HEADER
    *
    * @note:
    *   If @FT_Load_Glyph is called with default flags (see @FT_LOAD_DEFAULT)
-   *   the glyph image is loaded in the glyph slot in its native format
+   *   the glyph texture is loaded in the glyph slot in its native format
    *   (e.g., an outline glyph for TrueType and Type~1 formats).  [Since 2.9]
    *   The prospective bitmap metrics are calculated according to
    *   @FT_LOAD_TARGET_XXX and other flags even for the outline glyph, even
    *   if @FT_LOAD_RENDER is not set.
    *
-   *   This image can later be converted into a bitmap by calling
+   *   This texture can later be converted into a bitmap by calling
    *   @FT_Render_Glyph.  This function searches the current renderer for the
-   *   native image's format, then invokes it.
+   *   native texture's format, then invokes it.
    *
-   *   The renderer is in charge of transforming the native image through the
+   *   The renderer is in charge of transforming the native texture through the
    *   slot's face transformation fields, then converting it into a bitmap
    *   that is returned in `slot->bitmap`.
    *
@@ -1837,7 +1837,7 @@ FT_BEGIN_HEADER
    *
    *       FT_Outline_Translate( slot->outline, origin_x & 63, 0 );
    *
-   *       <save glyph image, or render glyph, or ...>
+   *       <save glyph texture, or render glyph, or ...>
    *
    *       <compute kern between current and next glyph
    *        and add it to `origin_x'>
@@ -1869,7 +1869,7 @@ FT_BEGIN_HEADER
    *
    *       prev_rsb_delta = slot->rsb_delta;
    *
-   *       <save glyph image, or render glyph, or ...>
+   *       <save glyph texture, or render glyph, or ...>
    *
    *       origin_x += slot->advance.x;
    *     endfor
@@ -2996,10 +2996,10 @@ FT_BEGIN_HEADER
    *     Currently, this flag is only implemented for TrueType fonts.
    *
    *   FT_LOAD_BITMAP_METRICS_ONLY ::
-   *     [Since 2.7.1] Request loading of the metrics and bitmap image
+   *     [Since 2.7.1] Request loading of the metrics and bitmap texture
    *     information of a (possibly embedded) bitmap glyph without allocating
-   *     or copying the bitmap image data itself.  No effect if the target
-   *     glyph is not a bitmap image.
+   *     or copying the bitmap texture data itself.  No effect if the target
+   *     glyph is not a bitmap texture.
    *
    *     This flag unsets @FT_LOAD_RENDER.
    *
@@ -3188,7 +3188,7 @@ FT_BEGIN_HEADER
    *     A pointer to the translation vector.  Use `NULL` for the null vector.
    *
    * @note:
-   *   The transformation is only applied to scalable image formats after the
+   *   The transformation is only applied to scalable texture formats after the
    *   glyph has been loaded.  It means that hinting is unaltered by the
    *   transformation and is performed on the character size given in the
    *   last call to @FT_Set_Char_Size or @FT_Set_Pixel_Sizes.
@@ -3284,16 +3284,16 @@ FT_BEGIN_HEADER
    *   FT_Render_Glyph
    *
    * @description:
-   *   Convert a given glyph image to a bitmap.  It does so by inspecting the
-   *   glyph image format, finding the relevant renderer, and invoking it.
+   *   Convert a given glyph texture to a bitmap.  It does so by inspecting the
+   *   glyph texture format, finding the relevant renderer, and invoking it.
    *
    * @inout:
    *   slot ::
-   *     A handle to the glyph slot containing the image to convert.
+   *     A handle to the glyph slot containing the texture to convert.
    *
    * @input:
    *   render_mode ::
-   *     The render mode used to render the glyph image into a bitmap.  See
+   *     The render mode used to render the glyph texture into a bitmap.  See
    *     @FT_Render_Mode for a list of possible values.
    *
    *     If @FT_RENDER_MODE_NORMAL is used, a previous call of @FT_Load_Glyph
@@ -3363,7 +3363,7 @@ FT_BEGIN_HEADER
    *      bitmap), and
    *
    *   3. apply inverse gamma to the blended pixel and write it back to
-   *      the image.
+   *      the texture.
    *
    *   Internal testing at Adobe found that a target inverse gamma of~1.8 for
    *   step~3 gives good results across a wide range of displays with an sRGB

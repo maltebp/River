@@ -2,9 +2,10 @@
 
 namespace River {
 
-	Texture::Texture(Image *texture, unsigned int textureOffsetX, unsigned int textureOffsetY, unsigned int textureWidth, unsigned int textureHeight, bool dedicatedTexture) {
-		this->texture = texture;
-		this->dedicatedTexture = dedicatedTexture;
+
+	Texture::Texture(Image *texture, bool partiallyTransparent, unsigned int textureOffsetX, unsigned int textureOffsetY, unsigned int textureWidth, unsigned int textureHeight) {
+		this->image = texture;
+		this->dedicatedImage = false;
 		
 		if( textureWidth == 0 ) textureWidth = texture->getWidth();
 		if( textureHeight == 0 ) textureHeight = texture->getHeight();
@@ -19,15 +20,22 @@ namespace River {
 
 		this->width = textureWidth;
 		this->height = textureHeight;
+	
+		this->partiallyTransparent = partiallyTransparent;
 	}
 
-	Texture::Texture(const std::string &texturePath, unsigned int textureOffsetX, unsigned int textureOffsetY, unsigned int textureWidth, unsigned int textureHeight) :
-		Texture(new Image(texturePath), textureOffsetX, textureOffsetY, textureWidth, textureHeight)
-	{}
+
+	Texture::Texture(const std::string& imagePath, bool partiallyTransparent, unsigned int textureOffsetX, unsigned int textureOffsetY, unsigned int textureWidth, unsigned int textureHeight) :
+		Texture(new Image(imagePath, partiallyTransparent), textureOffsetX, textureOffsetY, textureWidth, textureHeight)
+	{
+		this->partiallyTransparent = partiallyTransparent;
+		dedicatedImage = true;
+	}
+
 
 	Texture::~Texture() {
-		if( dedicatedTexture )
-			delete texture;
+		if( dedicatedImage )
+			delete image;
 	}
 
 	unsigned int Texture::getWidth() {
@@ -38,8 +46,8 @@ namespace River {
 		return height;
 	}
 
-	Image *Texture::getTexture() const {
-		return texture;
+	Image *Texture::getImage() const {
+		return image;
 	}
 
 
@@ -71,13 +79,17 @@ namespace River {
 		}
 	}
 
-	bool Texture::hasDedicatedTexture() {
-		return dedicatedTexture;
+	bool Texture::hasDedicatedImage() const {
+		return dedicatedImage;
 	}
 
 	const Image::SampleCoordinates& Texture::getTextureCoordinates() const {
 		return flippedCoordinates;
 	}
 
+
+	bool Texture::isPartiallyTransparent() const {
+		return partiallyTransparent;
+	}
 
 }

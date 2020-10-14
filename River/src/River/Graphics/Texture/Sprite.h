@@ -15,8 +15,15 @@ namespace River::ECS {
 		const Texture* texture = nullptr;
 		double rotation = 0;
 		double offsetX, offsetY;
+		float opacity = 1.0;
 		Color tint;
 		// Tint mode?
+
+
+
+		bool isPartiallyTransparent() const {
+			return texture->isPartiallyTransparent() || (opacity > 0.0 && opacity < 1.0);
+		}
 	};
 
 }

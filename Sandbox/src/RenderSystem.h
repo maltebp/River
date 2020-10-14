@@ -1,14 +1,14 @@
 #pragma once
 
 #include <River.h>
-#include "Components/Transform.h"
+//#include "Components/Transform.h"
 
 using namespace River::ECS;
 
 class RenderSystem {
 
 public:
-	void update(River::ECS::Domain& domain, River::ImageRenderer* renderer) {
+	/*void update(River::ECS::Domain& domain, River::ImageRenderer* renderer) {
 		
 		domain.forEachEntity<Sprite, Transform>([&](River::ECS::Entity* entity, Sprite* sprite, Transform* transform) {
 
@@ -19,6 +19,6 @@ public:
 
 		});
 
-	}
+	}*/
 
 };
