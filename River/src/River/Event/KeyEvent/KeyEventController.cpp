@@ -16,6 +16,8 @@ namespace River {
 		auto& keyEventState = pair->second;
 		keyEventState.cacheDuration = CACHE_DURATION;
 
+		// Set key states
+
 		if( action == KeyEvent::Action::DOWN ){
 			if( keyEventState.pressed ) return;
 			keyEventState.down = true;
@@ -26,7 +28,11 @@ namespace River {
 			if( !keyEventState.pressed ) return;
 			keyEventState.up = true;				
 		}
+
+		// It's a bit weird, that the PRESSED action is not handled
+		// as it can be passed to the function?
 	}
+
 
 
 	std::vector<KeyEvent> KeyEventController::getEvents(){
@@ -47,7 +53,7 @@ namespace River {
 			keyEventState.down = false;
 			keyEventState.up = false;
 
-			// Update / check cache duration
+			// Update / check cache duration (only if the key is not pressed)
 			if( !keyEventState.pressed ){
 				keyEventState.cacheDuration--;
 				if( keyEventState.cacheDuration <= 0 ){

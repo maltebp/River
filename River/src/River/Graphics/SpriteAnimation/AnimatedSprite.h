@@ -13,8 +13,5 @@ namespace River::ECS {
 		bool paused = false;
 	};
 
-	// TODO: Consider if AnimatedSprite should have its own Sprite* and be drawn seperately for speed increase
-	// This will probably cause duplicate information in the Sprite and this component
-
 }
 

@@ -43,16 +43,6 @@ void MainLayer::onInitialization() {
 	}
 
 
-
-	/*santaEntity = domain.createEntity();
-	santaEntity->addComponent<River::ECS::Sprite>()->texture = image_purple_circle;
-	transform = santaEntity->addComponent<River::ECS::Transform>();
-	transform->x = -200;
-	transform->y = 100;
-	transform->width = 100;
-	transform->height = 100;*/
-
-
 	camera = new River::Camera(1280, 720);
 	// camera->setRotation(0.40);
     // camera->setPosition( -100, -100, 0);

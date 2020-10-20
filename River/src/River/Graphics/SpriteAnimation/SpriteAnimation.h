@@ -4,13 +4,13 @@
 
 namespace River {
 	
+
 	/**
 	 * @brief	Holds information about a specific SpriteAnimation
 				This includes the speed of the information, and may in the future include more options.
 	*/
 	class SpriteAnimation {
 	public:
-		
 
 		/**
 		 * @brief	Defines a new Sprite animation, by a sequence of textures and an animation speed.
@@ -19,7 +19,7 @@ namespace River {
 		 * @param	sprites	The textures to construct the Sprite from (must be of type River::Texture*)
 		*/
 		template<typename ... Sprites>
-		SpriteAnimation(float speed, Sprites ... sprites) : speed(speed) {
+		SpriteAnimation(float speed, Sprites ... textures) : speed(speed) {
 
 			// Asserting sprite parameters 
 			static_assert(sizeof...(Sprites) > 0, "SpriteAnimation must receieve at least one texture for its sequence");
@@ -32,7 +32,7 @@ namespace River {
 
 			// Populate array
 			int i = 0;
-			(void(spriteList[i++] = sprites), ...); // Fold expression
+			(void(spriteList[i++] = textures), ...); // Fold expression
 		
 			length = speed * numSprites;
 		}
