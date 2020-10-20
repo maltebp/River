@@ -22,7 +22,6 @@ private:
 
 
 	River::Texture* santa[8];
-	River::SpriteSequence* santaSequence;
 	River::SpriteAnimation* santaAnimation;
 
 	River::ECS::Domain domain;

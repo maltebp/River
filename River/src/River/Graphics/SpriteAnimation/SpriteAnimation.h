@@ -1,13 +1,8 @@
 #pragma once
 
-#include <cmath>
-
-#include "SpriteSequence.h"
 #include "River/Error.h"
 
 namespace River {
-	
-	// TODO: Split correctly to cpp file
 	
 	/**
 	 * @brief	Holds information about a specific SpriteAnimation
@@ -16,12 +11,30 @@ namespace River {
 	class SpriteAnimation {
 	public:
 		
-		SpriteAnimation(float speed, SpriteSequence& sequence) :
-			speed(speed),
-			sequence(sequence),
-			length(speed*sequence.getNumSprites())
-		{
+
+		/**
+		 * @brief	Defines a new Sprite animation, by a sequence of textures and an animation speed.
+		 *
+		 * @param	speed	Seconds between each texture frame
+		 * @param	sprites	The textures to construct the Sprite from (must be of type River::Texture*)
+		*/
+		template<typename ... Sprites>
+		SpriteAnimation(float speed, Sprites ... sprites) : speed(speed) {
+
+			// Asserting sprite parameters 
+			static_assert(sizeof...(Sprites) > 0, "SpriteAnimation must receieve at least one texture for its sequence");
+			static_assert(std::conjunction<std::is_same<River::Texture*, Sprites>...>::value, "Sprites must be of type River::Texture*");
+
 			if( speed <= 0 ) throw new InvalidArgumentException("Animation speed must be larger than 0");
+
+			numSprites = sizeof...(Sprites);
+			spriteList = new Texture * [numSprites];
+
+			// Populate array
+			int i = 0;
+			(void(spriteList[i++] = sprites), ...); // Fold expression
+		
+			length = speed * numSprites;
 		}
 
 
@@ -29,7 +42,7 @@ namespace River {
 		 * @brief	Returns the animation Texture with the given index in the animation sequence
 		*/
 		const Texture* getSprite(unsigned int index) {
-			return sequence[index];
+			return spriteList[index];
 		}
 		
 
@@ -37,7 +50,7 @@ namespace River {
 		 * @return	The Texture at the given time in the animation
 		*/
 		const Texture* getSpriteAtTime(float time) {
-			return sequence[(int) std::fmod(length, time)];
+			return spriteList[(int) std::fmod(length, time)];
 		}
 
 
@@ -58,12 +71,14 @@ namespace River {
 
 		
 		unsigned int getNumFrames() {
-			return sequence.getNumSprites();
+			return numSprites;
 		}
 
 
 	private:
-		SpriteSequence& sequence;
+
+		Texture** spriteList;
+		unsigned int numSprites;
 
 		/**
 		 * @brief	Time between each frame in seconds

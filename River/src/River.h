@@ -18,8 +18,7 @@
 
 #include "River/Vendor/RiverECS/ECS.h"
 
-#include "River/Graphics/SpriteAnimation/SpriteSequence.h"
-#include "River/Graphics/SpriteAnimation/AnimatedSprite.h"
+#include "River/Graphics/SpriteAnimation/AnimatedSprite.h" 
 #include "River/Graphics/SpriteAnimation/SpriteAnimationSystem.h"
 
 #include "River/Graphics/SpriteRenderingSystem.h"

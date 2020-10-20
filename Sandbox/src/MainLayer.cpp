@@ -33,8 +33,7 @@ void MainLayer::onInitialization() {
 	image_purple_circle = new River::Texture("assets/PurpleAlphaCircle.png", true);
 
 
-	santaSequence = new River::SpriteSequence(santa[0], santa[1], santa[2], santa[3], santa[4], santa[5], santa[6], santa[7]);
-	santaAnimation = new River::SpriteAnimation(0.05f, *santaSequence);
+	santaAnimation = new River::SpriteAnimation(0.05f, santa[0], santa[1], santa[2], santa[3], santa[4], santa[5], santa[6], santa[7]);
 	
 
 	for( int i = 0; i < 10; i++ ) {

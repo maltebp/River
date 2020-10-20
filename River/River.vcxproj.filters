@@ -78,9 +78,6 @@
     <ClInclude Include="src\River\Graphics\TextRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\River\Graphics\SpriteAnimation\SpriteSequence.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\River\Graphics\SpriteAnimation\AnimatedSprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>

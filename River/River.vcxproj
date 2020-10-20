@@ -114,7 +114,6 @@
     <ClInclude Include="src\River\Graphics\SpriteAnimation\SpriteAnimationSystem.h" />
     <ClInclude Include="src\River\Graphics\SpriteAnimation\AnimatedSprite.h" />
     <ClInclude Include="src\River\Graphics\SpriteAnimation\SpriteAnimation.h" />
-    <ClInclude Include="src\River\Graphics\SpriteAnimation\SpriteSequence.h" />
     <ClInclude Include="src\River\Graphics\Transform.h" />
     <ClInclude Include="src\River\Primitives\Color.h" />
     <ClInclude Include="src\River\Primitives\Alignment.h" />
