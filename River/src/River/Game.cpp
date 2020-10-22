@@ -33,10 +33,8 @@ namespace River {
 	}
 
 
-
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Game
-
 
 	void Game::start() {
 		Game::start(nullptr);
@@ -73,66 +71,33 @@ namespace River {
 		while( !window->shouldClose() ) {
 			window->clear();
 
-			for( auto layer : layersToAdd ) {
-				layers.push_back(layer);
-				layer->initialize();
-			}
-			layersToAdd.clear();
-
-			for( auto layer : layersToRemove ) {
-				auto iterator = std::find(layers.begin(), layers.end(), layer);
-				layers.erase(iterator);
-				layer->terminate();
-				delete layer;
-			}
-			layersToRemove.clear();
+			rootLayer->clean();
 
 			// Fire Key Events 
 			auto keyEvents = window->getKeyEvents();
 			for( auto& keyEvent : keyEvents ) {
-				
-				for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
-					if( keyEvent.isConsumed() ) break;
-					(*it)->onKeyEvent(keyEvent);
-				}
+				rootLayer->keyEvent(keyEvent);
 			}
 
 			// Fire Mouse Movement Events
 			if( MouseEventController::hasMovementOccured() ) {
-				auto mouseMoveEvent = MouseEventController::getMouseMoveEvent();
-		
-				for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
-					if( mouseMoveEvent.isConsumed() ) break;
-					(*it)->onMouseMoveEvent(mouseMoveEvent);
-				}
+				auto e = MouseEventController::getMouseMoveEvent();
+				rootLayer->mouseMoveEvent(e);
 			}
 
 			// Fire Mouse Scroll Events
 			if( MouseEventController::hasScrollingOccured() ) {
-				auto mouseScrollEvent = MouseEventController::getMouseScrollEvent();
-
-				for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
-					if( mouseScrollEvent.isConsumed() ) break;
-					(*it)->onMouseScrollEvent(mouseScrollEvent);
-				}
+				auto e = MouseEventController::getMouseScrollEvent();
+				rootLayer->mouseScrollEvent(e);
 			}
+
 
 			// Fire Mouse Button Events
-			for( auto& buttonEvent : MouseEventController::getMouseButtonEvents() ) {
-				
-				for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
-					if( buttonEvent.isConsumed() ) break;
-					(*it)->onMouseButtonEvent(buttonEvent);
-				}
-			}
-			
+			for( auto& buttonEvent : MouseEventController::getMouseButtonEvents() )
+				rootLayer->mouseButtonEvent(buttonEvent);
 
 
-			for( auto& layer : layers ) {
-				layer->update();
-				window->clearDepth();
-			}
-
+			rootLayer->update();
 		}
 
 		printf("Game loop stopped\n");
@@ -163,24 +128,17 @@ namespace River {
 	}
 
 
-	void Game::pushLayer(Layer* layer) {
-		layersToAdd.push_back(layer);
+	Layer* Game::pushLayer() {
+		return rootLayer->pushLayer();
 	}
 
-	void Game::popLayer() {
-		if( !layers.empty() ) {
-			Layer* layer = layers.back();
-			removeLayer(layer);
-		}
-	}
 
 	void Game::removeLayer(Layer* layer) {
-		layersToRemove.push_back(layer);
+		rootLayer->removeLayer(layer);
 	}
 
 	void Game::clearLayers() {
-		for( auto layer : layers )
-			layersToRemove.push_back(layer);
+		rootLayer->clearLayers();
 	}
 
 	void Game::exit() {

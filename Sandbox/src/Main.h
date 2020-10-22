@@ -16,7 +16,7 @@ void main() {
 
 	Game::start([]() {
 		River::SpriteRenderingSystem::initialize(Game::getWindow());
-		Game::pushLayer(new MainLayer());
+		new MainScene(Game::pushLayer());
 	});
 
 

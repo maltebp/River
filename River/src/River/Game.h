@@ -28,9 +28,7 @@ namespace River {
 		static Window* getWindow();
 
 
-		static void pushLayer(Layer* layer);
-
-		static void popLayer();
+		static Layer* pushLayer();
 
 		static void clearLayers();
 
@@ -45,9 +43,6 @@ namespace River {
 
 	private:
 
-		static inline std::vector<Layer*> layers;
-		static inline std::vector<Layer*> layersToAdd;
-		static inline std::vector<Layer*> layersToRemove;
 
 		static inline std::function<void()> initCallback = nullptr;
 
@@ -57,5 +52,10 @@ namespace River {
 
 		static inline unsigned int windowWidth	= 1280;
 		static inline unsigned int windowHeight = 720;
+
+		/**
+		 * @brief	An "abstract" layer in that it has no callback, only serves as a container for sub layers and will never be deleted
+		*/
+		static inline Layer* rootLayer = new Layer(nullptr);
 	};
 }

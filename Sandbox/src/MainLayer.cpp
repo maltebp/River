@@ -2,9 +2,42 @@
 
 #include <iostream>
 
+MainScene::MainScene(River::Layer* layer) 
+	: layer(layer), santa{
+		new River::Texture("assets/santa/Jump (1).png", true),
+		new River::Texture("assets/santa/Jump (2).png", true),
+		new River::Texture("assets/santa/Jump (3).png", true),
+		new River::Texture("assets/santa/Jump (4).png", true),
+		new River::Texture("assets/santa/Jump (5).png", true),
+		new River::Texture("assets/santa/Jump (6).png", true),
+		new River::Texture("assets/santa/Jump (7).png", true),
+		new River::Texture("assets/santa/Jump (8).png", true)
+	}
+{
+	layer->onUpdate([this]() {this->update();  });
+	layer->onCreate([this]() {this->initialize();  });
 
 
-void MainLayer::createSanta( double x, double y, unsigned int depth) {
+	// event printing functions
+	layer->onKeyEvent([](auto e) {
+		std::cout << "KeyEvent: " << (int) e.key << " " << (int) e.action << std::endl;
+	});
+
+	layer->onMouseMoveEvent([](auto e) {
+		std::cout << "MouseMove: " << (double)e.movementX << " " << (double)e.positionY << std::endl;
+	});
+
+	layer->onMouseScrollEvent([](auto e) {
+		std::cout << "MouseScroll: " << (double)e.amount << std::endl;
+	});
+
+	layer->onMouseButtonEvent([](auto e) {
+		std::cout << "MouseButton: " << e.button << " " << (int)e.action << std::endl;
+	});
+}
+
+
+void MainScene::createSanta( double x, double y, unsigned int depth) {
 	auto entity = domain.createEntity();
 	entity->addComponent<River::ECS::Sprite>()->texture = santa[0];
 	auto transform = entity->addComponent<River::ECS::Transform>();
@@ -16,7 +49,7 @@ void MainLayer::createSanta( double x, double y, unsigned int depth) {
 }
 
 
-void MainLayer::onInitialization() {
+void MainScene::initialize() {
 
 	imageRenderer = new River::ImageRenderer(River::Game::getWindow());
 	textRenderer = new River::TextRenderer(River::Game::getWindow());
@@ -51,7 +84,7 @@ void MainLayer::onInitialization() {
 }
 
 
-void MainLayer::onUpdate() {
+void MainScene::update() {
 	//camera->adjustRotation(0.010);
 
 	animationSystem->update(domain, 0.025);
@@ -74,23 +107,4 @@ void MainLayer::onUpdate() {
 	//imageRenderer->flush();
 
 	domain.clean();
-}
-
-
-void MainLayer::onKeyEvent(River::KeyEvent &e){
-	std::cout << "KeyEvent: " << (int) e.key << " " << (int) e.action << std::endl;
-}
-
-
-void MainLayer::onMouseMoveEvent(River::MouseMoveEvent &e) {
-	std::cout << "MouseMove: " << (double) e.movementX << " " << (double)e.positionY << std::endl;
-
-}
-
-void MainLayer::onMouseScrollEvent(River::MouseScrollEvent& e) {
-	std::cout << "MouseScroll: " << (double) e.amount << std::endl;
-}
-
-void MainLayer::onMouseButtonEvent(River::MouseButtonEvent& e) {
-	std::cout << "MouseButton: " << e.button << " "<< (int) e.action << std::endl;
 }

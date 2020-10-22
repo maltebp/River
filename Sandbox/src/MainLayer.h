@@ -3,18 +3,27 @@
 #include <River.h>
 
 
-class MainLayer : public River::Layer {
+
+class MainScene {
+public:
+
+	MainScene(River::Layer* layer);
+
+	void update();
+	void initialize();
 
 private:
-	
+	void createSanta(double x, double y, unsigned int depth);
+
+private:
 	River::TextRenderer* textRenderer = nullptr;
 	River::ImageRenderer* imageRenderer = nullptr;
 	River::ECS::SpriteAnimationSystem* animationSystem = nullptr;
 	River::Texture* image_coffee = nullptr;
 	River::Texture* image_llama = nullptr;
-	River::Texture *image_glyph = nullptr;
-	River::Texture *image_blue_circle = nullptr;
-	River::Texture *image_purple_circle = nullptr;
+	River::Texture* image_glyph = nullptr;
+	River::Texture* image_blue_circle = nullptr;
+	River::Texture* image_purple_circle = nullptr;
 	River::Font* font = nullptr;
 
 
@@ -24,40 +33,13 @@ private:
 	River::ECS::Domain domain;
 	River::ECS::Entity* santaEntity;
 
+	River::Camera* camera;
 
 	float x = 0;
 	float rotation = 0;
 
-public:
+	River::Layer* layer;
 
-	MainLayer() :  santa { 
-		new River::Texture("assets/santa/Jump (1).png", true),
-		new River::Texture("assets/santa/Jump (2).png", true),
-		new River::Texture("assets/santa/Jump (3).png", true),
-		new River::Texture("assets/santa/Jump (4).png", true),
-		new River::Texture("assets/santa/Jump (5).png", true),
-		new River::Texture("assets/santa/Jump (6).png", true),
-		new River::Texture("assets/santa/Jump (7).png", true),
-		new River::Texture("assets/santa/Jump (8).png", true)
-	} {}
-
-	void onInitialization() override;
-	
-	void onUpdate() override;
-
-
-	void onKeyEvent(River::KeyEvent &e) override;
-
-	void onMouseMoveEvent(River::MouseMoveEvent&) override;
-
-	void onMouseScrollEvent(River::MouseScrollEvent&) override;
-	
-	void onMouseButtonEvent(River::MouseButtonEvent&) override;
-
-
-private:
-	void createSanta(double x, double y, unsigned int depth);
 };
-
 
 
