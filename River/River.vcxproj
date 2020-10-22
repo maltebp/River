@@ -148,7 +148,6 @@
     <ClInclude Include="src\River\System\System.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\River\Event\MouseEvent\MouseMoveEvent.cpp" />
     <ClCompile Include="src\River\Event\MouseEvent\MouseEventController.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteRenderingSystem.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteAnimation\SpriteAnimationSystem.cpp" />

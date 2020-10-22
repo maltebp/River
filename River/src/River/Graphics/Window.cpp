@@ -73,7 +73,9 @@ namespace River {
 		double mouseX, mouseY;
 		glfwGetCursorPos(glfwWindow, &mouseX, &mouseY);
 		MouseEventController::initialize(mouseX, mouseY);
+
 		glfwSetCursorPosCallback(glfwWindow, glfwMousePosCallback);
+		glfwSetScrollCallback(glfwWindow, glfwMouseScrollCallback);
 	}
 
 
@@ -149,6 +151,13 @@ namespace River {
 
 	void Window::glfwMousePosCallback(GLFWwindow* glfwWindow, double mouseX, double mouseY) {
 		MouseEventController::registerMouseMovement(mouseX, mouseY);
+	}
+
+
+	void Window::glfwMouseScrollCallback(GLFWwindow* glfwWindow, double xOffset, double yOffset) {
+		MouseEventController::registerMouseScroll(yOffset);
+		// yOffset is the classic scroll direction, while xOffset is also used for controllers,
+		// which are not supported in this framework yet
 	}
 
 

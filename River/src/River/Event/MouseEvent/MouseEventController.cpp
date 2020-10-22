@@ -9,6 +9,9 @@
 namespace River {
 
 
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Movement event
+
 	void MouseEventController::initialize(double mouseX, double mouseY) {
 		if( initialized )
 			throw new AlreadyInitializedException("MouseEventController");
@@ -26,11 +29,11 @@ namespace River {
 	}
 
 
-	bool MouseEventController::mouseMovementOccured() {
+	bool MouseEventController::hasMovementOccured() {
 		return mouseMovement;
 	}
 
-	
+
 	MouseMoveEvent MouseEventController::getMouseMoveEvent() {
 		if( !mouseMovement )
 			throw new NullException("No mouse movement has been registered");
@@ -43,10 +46,34 @@ namespace River {
 		currentMouseX = newMouseX;
 		currentMouseY = newMouseY;
 
-		return {newMouseX, newMouseY, mouseMoveX, mouseMoveY};
+		return { newMouseX, newMouseY, mouseMoveX, mouseMoveY };
 	}
 
 
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Scroll event		
+	
+	void MouseEventController::registerMouseScroll(double amount) {
+		if( !initialized )
+			throw new NotInitializedException("MouseEventController");
+		mouseScrollAmount += amount;
+	}
+
+
+	bool MouseEventController::hasScrollingOccured() {
+		return mouseScrollAmount != 0;
+	}
+
+
+	MouseScrollEvent MouseEventController::getMouseScrollEvent() {
+		if( mouseScrollAmount == 0 )
+			throw new NullException("No mouse scrolling has been registered");
+
+		double scrollAmount = mouseScrollAmount;
+		mouseScrollAmount = 0;
+		return scrollAmount;
+	}
 
 
 
@@ -54,6 +81,8 @@ namespace River {
 	// Static variables
 	bool MouseEventController::initialized = false;
 	bool MouseEventController::mouseMovement = false;
+
+	double MouseEventController::mouseScrollAmount = 0;
 
 	double MouseEventController::newMouseX = 0;
 	double MouseEventController::newMouseY = 0;

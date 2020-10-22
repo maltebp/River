@@ -197,8 +197,5 @@
     <ClCompile Include="src\River\Event\MouseEvent\MouseEventController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\River\Event\MouseEvent\MouseMoveEvent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

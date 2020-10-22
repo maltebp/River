@@ -115,7 +115,7 @@ namespace River {
 			}
 
 			// Fire Mouse Movement Events
-			if( MouseEventController::mouseMovementOccured() ) {
+			if( MouseEventController::hasMovementOccured() ) {
 				auto mouseMoveEvent = MouseEventController::getMouseMoveEvent();
 				
 				for( auto it = overlays.rbegin(); it != overlays.rend(); it++ ) {
@@ -125,6 +125,20 @@ namespace River {
 				for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
 					if( mouseMoveEvent.isConsumed() ) break;
 					(*it)->onMouseMoveEvent(mouseMoveEvent);
+				}
+			}
+
+			// Fire Mouse Scroll Events
+			if( MouseEventController::hasScrollingOccured() ) {
+				auto mouseScrollEvent = MouseEventController::getMouseScrollEvent();
+
+				for( auto it = overlays.rbegin(); it != overlays.rend(); it++ ) {
+					if( mouseScrollEvent.isConsumed() ) break;
+					(*it)->onMouseScrollEvent(mouseScrollEvent);
+				}
+				for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
+					if( mouseScrollEvent.isConsumed() ) break;
+					(*it)->onMouseScrollEvent(mouseScrollEvent);
 				}
 			}
 

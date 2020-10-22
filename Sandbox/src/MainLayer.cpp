@@ -84,6 +84,10 @@ void MainLayer::onKeyEvent(River::KeyEvent &e){
 
 
 void MainLayer::onMouseMoveEvent(River::MouseMoveEvent &e) {
-	std::cout << "MouseMove: " << (double) e.movementX << " " << (double)e.movementY << std::endl;
+	std::cout << "MouseMove: " << (double) e.movementX << " " << (double)e.positionY << std::endl;
 
+}
+
+void MainLayer::onMouseScrollEvent(River::MouseScrollEvent& e) {
+	std::cout << "MouseScroll: " << (double) e.amount << std::endl;
 }
