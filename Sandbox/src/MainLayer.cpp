@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+
 MainScene::MainScene(River::Layer* layer) 
 	: layer(layer), santa{
 		new River::Texture("assets/santa/Jump (1).png", true),
