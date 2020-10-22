@@ -19,6 +19,11 @@ namespace River {
 	};
 
 
+	class NullException : public Exception {
+	public:
+		NullException(const std::string& message) : Exception("NullException", message) {}
+	};
+
 	class InvalidArgumentException : public Exception {
 	public:
 		InvalidArgumentException(const std::string& message) : Exception("InvalidArgumentException", message) {}
@@ -58,6 +63,11 @@ namespace River {
 		NoTextureSlotException() : Exception("NoTextureSlotException", "No texture slot is available") {}
 	};
 
+
+	class NotInitializedException : public Exception {
+	public:
+		NotInitializedException(const std::string& objectName) : Exception("'" + objectName + "' has not been initialized") {}
+	};
 
 	class AlreadyInitializedException : public Exception {
 	public:

@@ -57,9 +57,6 @@
     <ClInclude Include="src\River\Event\Event.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\River\Event\CharEvent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\River\Event\KeyEvent\KeyEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -114,6 +111,18 @@
     <ClInclude Include="src\River\Graphics\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\River\Event\MouseEvent\MouseEventController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Event\MouseEvent\MouseMoveEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Event\MouseEvent\MouseButtonEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Event\MouseEvent\MouseScrollEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\River\Game.cpp">
@@ -152,9 +161,6 @@
     <ClCompile Include="src\River\Event\Event.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\River\Event\CharEvent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\River\Event\KeyEvent\Key.h">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -186,6 +192,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\River\Graphics\SpriteRenderingSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\River\Event\MouseEvent\MouseEventController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\River\Event\MouseEvent\MouseMoveEvent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

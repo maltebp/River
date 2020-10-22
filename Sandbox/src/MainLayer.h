@@ -48,9 +48,14 @@ public:
 	
 	void onUpdate() override;
 
+
 	void onKeyEvent(River::KeyEvent &e) override;
+
+	void onMouseMoveEvent(River::MouseMoveEvent&) override;
 
 private:
 	void createSanta(double x, double y, unsigned int depth);
 };
+
+
 

@@ -28,12 +28,12 @@ public:
 
 
 
+void startGame() {
 
-
-int main() {	
-	
 	printf("Starting Sandbox!\n");
 
 	SandboxGame game;
-	game.start();	
+	game.start();
 }
+
+

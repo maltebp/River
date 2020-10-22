@@ -36,11 +36,11 @@ void MainLayer::onInitialization() {
 	santaAnimation = new River::SpriteAnimation(0.05f, santa[0], santa[1], santa[2], santa[3], santa[4], santa[5], santa[6], santa[7]);
 	
 
-	for( int i = 0; i < 10; i++ ) {
+	/*for( int i = 0; i < 10; i++ ) {
 		for( int j = 0; j < 10; j++ ) {
 			createSanta(-600 + i * 120, -300 + j * 70, 20);
 		}
-	}
+	}*/
 
 
 	camera = new River::Camera(1280, 720);
@@ -80,4 +80,10 @@ void MainLayer::onUpdate() {
 
 void MainLayer::onKeyEvent(River::KeyEvent &e){
 	std::cout << "KeyEvent: " << (int) e.key << " " << (int) e.action << std::endl;
+}
+
+
+void MainLayer::onMouseMoveEvent(River::MouseMoveEvent &e) {
+	std::cout << "MouseMove: " << (double) e.movementX << " " << (double)e.movementY << std::endl;
+
 }

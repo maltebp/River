@@ -11,9 +11,25 @@
 namespace River {
 
 	class Window {
+	public:
+
+		Window(std::string title, unsigned int width, unsigned int height);
+		~Window();
+
+		void clear();
+		void clearDepth();
+		bool shouldClose();
+		void close();
+		unsigned int getNumTextureSlots();
+		std::vector<KeyEvent> getKeyEvents();
+		double getFps();
+
+
+
+	private:
 		static std::unordered_map<GLFWwindow *, Window *> glfwWindowMap;
 		static void glfwKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
-
+		static void glfwMousePosCallback(GLFWwindow* window, double xpos, double ypos);
 
 	private:
 
@@ -30,24 +46,8 @@ namespace River {
 		double previousFpsTime;
 		unsigned int frameCount;
 
-		KeyEventController keyEventController;
-
-
-
-	public:
-
-		Window(std::string title, unsigned int width, unsigned int height);
-		~Window();
-
-		void clear();
-		void clearDepth();
-		bool shouldClose();
-		void close();
-		unsigned int getNumTextureSlots();
-		std::vector<KeyEvent> getKeyEvents();
-		double getFps();
+		KeyEventController keyEventController;	
 	};
-
 }
 
 

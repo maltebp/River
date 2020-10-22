@@ -8,6 +8,9 @@
 #include <sstream>
 #include <algorithm>
 
+#include "Event/MouseEvent/MouseEventController.h"
+
+
 namespace River {
 	
 	// The current game
@@ -98,15 +101,30 @@ namespace River {
 			}
 			layersToRemove.clear();
 
+			// Fire Key Events 
 			auto keyEvents = window->getKeyEvents();
 			for( auto& keyEvent : keyEvents ) {
 				for( auto it = overlays.rbegin(); it != overlays.rend(); it++ ) {
 					if( keyEvent.isConsumed() ) break;
-					(*it)->keyEvent(keyEvent);
+					(*it)->onKeyEvent(keyEvent);
 				}
 				for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
 					if( keyEvent.isConsumed() ) break;
-					(*it)->keyEvent(keyEvent);
+					(*it)->onKeyEvent(keyEvent);
+				}
+			}
+
+			// Fire Mouse Movement Events
+			if( MouseEventController::mouseMovementOccured() ) {
+				auto mouseMoveEvent = MouseEventController::getMouseMoveEvent();
+				
+				for( auto it = overlays.rbegin(); it != overlays.rend(); it++ ) {
+					if( mouseMoveEvent.isConsumed() ) break;
+					(*it)->onMouseMoveEvent(mouseMoveEvent);
+				}
+				for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
+					if( mouseMoveEvent.isConsumed() ) break;
+					(*it)->onMouseMoveEvent(mouseMoveEvent);
 				}
 			}
 
@@ -179,4 +197,19 @@ namespace River {
 	void Game::exit() {
 		window->close();
 	}
+
+
+
+	// TODO: testing new start method
+
+	
+}
+
+
+extern void startGame();
+
+int main(int argc, char** argv) {
+	startGame();
+
+	return 1;
 }

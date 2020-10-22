@@ -99,7 +99,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Main.h" />
     <ClCompile Include="src\MainLayer.cpp" />
     <ClCompile Include="src\Settings.cpp" />
   </ItemGroup>

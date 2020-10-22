@@ -110,6 +110,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\Event\MouseEvent\MouseButtonEvent.h" />
+    <ClInclude Include="src\River\Event\MouseEvent\MouseScrollEvent.h" />
+    <ClInclude Include="src\River\Event\MouseEvent\MouseMoveEvent.h" />
+    <ClInclude Include="src\River\Event\MouseEvent\MouseEventController.h" />
     <ClInclude Include="src\River\Graphics\SpriteRenderingSystem.h" />
     <ClInclude Include="src\River\Graphics\SpriteAnimation\SpriteAnimationSystem.h" />
     <ClInclude Include="src\River\Graphics\SpriteAnimation\AnimatedSprite.h" />
@@ -124,7 +128,6 @@
     <ClInclude Include="src\River\Graphics\Texture\Texture.h" />
     <ClInclude Include="src\River\Graphics\Texture\Image.h" />
     <ClInclude Include="src\River\Event\KeyEvent\KeyEventController.h" />
-    <ClInclude Include="src\River\Event\CharEvent.h" />
     <ClInclude Include="src\River\Event\KeyEvent\KeyEvent.h" />
     <ClInclude Include="src\River\Event\Event.h" />
     <ClInclude Include="src\River\Graphics\Camera\Camera.h" />
@@ -145,6 +148,8 @@
     <ClInclude Include="src\River\System\System.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\River\Event\MouseEvent\MouseMoveEvent.cpp" />
+    <ClCompile Include="src\River\Event\MouseEvent\MouseEventController.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteRenderingSystem.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteAnimation\SpriteAnimationSystem.cpp" />
     <ClCompile Include="src\River\Graphics\Text\FontType.cpp" />
@@ -153,7 +158,6 @@
     <ClCompile Include="src\River\Graphics\Texture\Texture.cpp" />
     <ClCompile Include="src\River\Graphics\Texture\Image.cpp" />
     <ClCompile Include="src\River\Event\KeyEvent\KeyEventController.cpp" />
-    <ClCompile Include="src\River\Event\CharEvent.cpp" />
     <ClCompile Include="src\River\Event\KeyEvent\KeyEvent.cpp" />
     <ClCompile Include="src\River\Event\Event.cpp" />
     <ClCompile Include="src\River\Event\KeyEvent\Key.h" />

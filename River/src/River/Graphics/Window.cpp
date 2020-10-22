@@ -1,8 +1,9 @@
 #include "Window.h"
 
 #include <string>
-
 #include <iostream>
+
+#include "River/Event/MouseEvent/MouseEventController.h"
 
 
 
@@ -68,6 +69,11 @@ namespace River {
 		GL( glClearColor(0.15f, 0.8f, 0.15f, 1.0f) );
 
 		previousFpsTime = glfwGetTime();
+
+		double mouseX, mouseY;
+		glfwGetCursorPos(glfwWindow, &mouseX, &mouseY);
+		MouseEventController::initialize(mouseX, mouseY);
+		glfwSetCursorPosCallback(glfwWindow, glfwMousePosCallback);
 	}
 
 
@@ -140,9 +146,19 @@ namespace River {
 	}
 
 
+
+	void Window::glfwMousePosCallback(GLFWwindow* glfwWindow, double mouseX, double mouseY) {
+		MouseEventController::registerMouseMovement(mouseX, mouseY);
+	}
+
+
 	std::vector<KeyEvent> Window::getKeyEvents(){
 		return keyEventController.getEvents();
 	}
+
+
+	
+
 
 
 	double Window::getFps() {

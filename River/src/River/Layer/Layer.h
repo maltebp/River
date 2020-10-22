@@ -1,7 +1,8 @@
 #pragma once
 
-#include "River/Event/KeyEvent/KeyEvent.h"
 #include "River/Graphics/Camera/Camera.h"
+#include "River/Event/MouseEvent/MouseMoveEvent.h"
+#include "River/Event/KeyEvent/KeyEvent.h"
 
 namespace River {
 	class Layer {
@@ -15,7 +16,6 @@ namespace River {
 		virtual void onInitialization(){}
 		virtual void onUpdate(){}
 		virtual void onTermination(){}
-		virtual void onKeyEvent(KeyEvent &e){}
 
 		void setCamera(Camera *camera);
 
@@ -23,7 +23,9 @@ namespace River {
 		void initialize();
 		void update();
 		void terminate();
-		void keyEvent(KeyEvent &e);
+
+		virtual void onKeyEvent(KeyEvent&) {}
+		virtual void onMouseMoveEvent(MouseMoveEvent&) {}
 
 
 		Camera * getCamera();

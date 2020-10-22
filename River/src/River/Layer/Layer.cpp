@@ -1,6 +1,6 @@
 #include "Layer.h"
 
-namespace River{
+namespace River {
 	void Layer::initialize(){
 		// TODO: Implement
 		onInitialization();
@@ -10,10 +10,6 @@ namespace River{
 	void Layer::update(){
 		// TODO: Implement (like updating ECS)
 		onUpdate();
-	}
-
-	void Layer::keyEvent(KeyEvent &e){
-		onKeyEvent(e);
 	}
 
 	void Layer::terminate(){
