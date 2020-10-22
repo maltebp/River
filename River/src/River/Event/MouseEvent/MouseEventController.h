@@ -24,7 +24,6 @@ namespace River {
 
 		static MouseMoveEvent getMouseMoveEvent();
 
-
 		static void registerMouseScroll(double amount);
 
 		/**
