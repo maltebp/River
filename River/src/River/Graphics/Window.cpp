@@ -20,6 +20,45 @@ namespace River {
 	std::unordered_map<GLFWwindow*, Window*> Window::glfwWindowMap;
 
 
+	/**
+	 * @brief	Converts a glfw mouse button code to a River::MouseButton
+	*/
+	MouseButton glfwConvertMouseButton(int glfwCode) {
+		switch( glfwCode ) {
+			case GLFW_MOUSE_BUTTON_LEFT:
+				return MouseButtons::LEFT;
+			case GLFW_MOUSE_BUTTON_RIGHT:
+				return MouseButtons::RIGHT;
+			case GLFW_MOUSE_BUTTON_MIDDLE:
+				return MouseButtons::MIDDLE;
+			case GLFW_MOUSE_BUTTON_4:
+				return MouseButtons::EXTRA1;
+			case GLFW_MOUSE_BUTTON_5:
+				return MouseButtons::EXTRA2;
+			case GLFW_MOUSE_BUTTON_6:
+				return MouseButtons::EXTRA3;
+			case GLFW_MOUSE_BUTTON_7:
+				return MouseButtons::EXTRA4;
+			case GLFW_MOUSE_BUTTON_8:
+				return MouseButtons::EXTRA5;
+		}
+		// TODO: Use logging system here (shouldn't happen)
+		std::cout << "WARNING - Unknown mouse action code: " << glfwCode << std::endl;
+		return MouseButtons::UNKNOWN;
+	}
+
+
+	/**
+	 * @brief	Converts a glfw mouse button action, to a River::MouseButtonAction
+	*/
+	MouseButtonAction glfwConvertMouseAction(int glfwCode) {
+		if( glfwCode == GLFW_PRESS ) return MouseButtonAction::DOWN;
+		if( glfwCode == GLFW_RELEASE ) return MouseButtonAction::UP;
+		// TODO: Log some  (shouldn't happen)
+		std::cout << "WARNING - Unknown mouse action code: " << glfwCode << std::endl;
+		return MouseButtonAction::UNKNOWN;
+	}
+
 
 	Window::Window(std::string title, unsigned int width, unsigned int height) {
 		this->title = title;
@@ -76,6 +115,7 @@ namespace River {
 
 		glfwSetCursorPosCallback(glfwWindow, glfwMousePosCallback);
 		glfwSetScrollCallback(glfwWindow, glfwMouseScrollCallback);
+		glfwSetMouseButtonCallback(glfwWindow, glfwMouseButtonCallback);
 	}
 
 
@@ -160,13 +200,17 @@ namespace River {
 		// which are not supported in this framework yet
 	}
 
-
-	std::vector<KeyEvent> Window::getKeyEvents(){
-		return keyEventController.getEvents();
+	void Window::glfwMouseButtonCallback(GLFWwindow* glfwWindow, int button, int action, int mode) {
+		MouseEventController::registerMouseButtonAction(
+			glfwConvertMouseButton(button),
+			glfwConvertMouseAction(action)
+		);
 	}
 
 
-	
+	std::vector<KeyEvent> Window::getKeyEvents(){
+		return keyEventController.getEvents();
+	}	
 
 
 

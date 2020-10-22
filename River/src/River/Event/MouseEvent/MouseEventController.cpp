@@ -50,7 +50,6 @@ namespace River {
 	}
 
 
-
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Scroll event		
 	
@@ -76,6 +75,46 @@ namespace River {
 	}
 
 
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Mouse Button Event
+
+	void MouseEventController::registerMouseButtonAction(MouseButton button, MouseButtonAction action) {
+
+		auto& eventState = buttonEventStates[button.code];
+
+		// Set key states
+		if( action == MouseButtonAction::DOWN ) {
+			if( eventState.pressed ) return;
+			eventState.down = true;
+			eventState.pressed = true;
+		}
+
+		if( action == MouseButtonAction::UP ) {
+			if( !eventState.pressed ) return;
+			eventState.up = true;
+		}
+	}
+
+	std::vector<MouseButtonEvent> MouseEventController::getMouseButtonEvents() {
+		std::vector<MouseButtonEvent> events;
+
+		// Create events from event states
+		for( auto& pair : buttonEventStates ) {
+			auto& buttonCode = pair.first;
+			auto& eventState = pair.second;
+
+			if( eventState.down ) events.emplace_back(MouseButton(buttonCode), MouseButtonAction::DOWN);
+			if( eventState.pressed ) events.emplace_back(MouseButton(buttonCode), MouseButtonAction::PRESSED);
+			if( eventState.up ) events.emplace_back(MouseButton(buttonCode), MouseButtonAction::UP);
+
+			// Reset event values
+			if( eventState.up ) eventState.pressed = false;
+			eventState.down = false;
+			eventState.up = false;
+		}
+
+		return events;
+	}
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Static variables
@@ -88,4 +127,6 @@ namespace River {
 	double MouseEventController::newMouseY = 0;
 	double MouseEventController::currentMouseX = 0;
 	double MouseEventController::currentMouseY = 0;
+
+	std::unordered_map<uint32_t, MouseEventController::ButtonEventState> MouseEventController::buttonEventStates;
 }

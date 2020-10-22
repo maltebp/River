@@ -31,6 +31,7 @@ namespace River {
 		static void glfwKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
 		static void glfwMousePosCallback(GLFWwindow* window, double xpos, double ypos);
 		static void glfwMouseScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
+		static void glfwMouseButtonCallback(GLFWwindow* glfwWindow, int button, int action, int mode);
 
 	private:
 

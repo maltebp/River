@@ -91,3 +91,7 @@ void MainLayer::onMouseMoveEvent(River::MouseMoveEvent &e) {
 void MainLayer::onMouseScrollEvent(River::MouseScrollEvent& e) {
 	std::cout << "MouseScroll: " << (double) e.amount << std::endl;
 }
+
+void MainLayer::onMouseButtonEvent(River::MouseButtonEvent& e) {
+	std::cout << "MouseButton: " << e.button << " "<< (int) e.action << std::endl;
+}

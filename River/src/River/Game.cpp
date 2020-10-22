@@ -142,6 +142,20 @@ namespace River {
 				}
 			}
 
+			// Fire Mouse Button Events
+			for( auto& buttonEvent : MouseEventController::getMouseButtonEvents() ) {
+				for( auto it = overlays.rbegin(); it != overlays.rend(); it++ ) {
+					if( buttonEvent.isConsumed() ) break;
+					(*it)->onMouseButtonEvent(buttonEvent);
+				}
+				for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
+					if( buttonEvent.isConsumed() ) break;
+					(*it)->onMouseButtonEvent(buttonEvent);
+				}
+			}
+			
+
+
 			for( auto& layer : layers ) {
 				layer->update();
 				window->clearDepth();

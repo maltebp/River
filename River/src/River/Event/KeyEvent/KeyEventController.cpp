@@ -10,14 +10,9 @@ namespace River {
 	void KeyEventController::registerEvent(Key key, KeyEvent::Action action){
 
 		// Fetch they KeyEventState for the key, and update cache duration
-		auto pair = keyEventStates.find(key);
-		if( pair == keyEventStates.end() )
-			pair = keyEventStates.emplace(key, KeyEventState{}).first;
-		auto& keyEventState = pair->second;
-		keyEventState.cacheDuration = CACHE_DURATION;
+		auto& keyEventState = keyEventStates[key];
 
 		// Set key states
-
 		if( action == KeyEvent::Action::DOWN ){
 			if( keyEventState.pressed ) return;
 			keyEventState.down = true;
@@ -37,8 +32,7 @@ namespace River {
 
 	std::vector<KeyEvent> KeyEventController::getEvents(){
 		std::vector<KeyEvent> events;
-		std::vector<Key> statesToRemove;
-		
+	
 		// Create events from event states
 		for( auto &pair : keyEventStates ){
 			Key key = pair.first;
@@ -52,19 +46,7 @@ namespace River {
 			if( keyEventState.up ) keyEventState.pressed = false;
 			keyEventState.down = false;
 			keyEventState.up = false;
-
-			// Update / check cache duration (only if the key is not pressed)
-			if( !keyEventState.pressed ){
-				keyEventState.cacheDuration--;
-				if( keyEventState.cacheDuration <= 0 ){
-					statesToRemove.push_back(key);
-				}
-			}
 		}
-
-		// Clear old states
-		for( Key key : statesToRemove )
-			keyEventStates.erase(key);
 
 		return events;
 	}

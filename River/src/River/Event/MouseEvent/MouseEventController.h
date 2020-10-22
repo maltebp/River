@@ -37,14 +37,24 @@ namespace River {
 		 * @throws	River::NullException	If no mouse scrolling has happened since last call to this method. Check result of hasScrollingOccured() to avoid this
 		*/
 		static MouseScrollEvent getMouseScrollEvent();
+
+
+
+		static void registerMouseButtonAction(MouseButton btn, MouseButtonAction action);
+
+		static std::vector<MouseButtonEvent> getMouseButtonEvents();
 		
+
+	public:
+		// Holds information about a key's events in this event cycle
+		struct ButtonEventState {
+			bool down = false;
+			bool up = false;
+			bool pressed = false;
+		};
 
 	private:
 		static bool initialized;
-
-		static std::vector<MouseButtonEvent> buttonEvents;
-		static MouseMoveEvent moveEvent;
-		static MouseScrollEvent scrollEvent;
 
 		static double mouseScrollAmount;
 
@@ -52,7 +62,14 @@ namespace River {
 		static bool mouseMovement;
 		static double newMouseX, newMouseY;
 		static double currentMouseX, currentMouseY;
-		
+
+		/**
+		 * @brief	Maps a MouseButton code to its event state
+		 * @details	Once an event is added to this, it will remain their for the rest of the program
+		 *			We're using the button code instead of the button object, as its comparison operator has been overloaded,
+		 *			and thus its hashing functionality is out of order (for now)
+		*/
+		static std::unordered_map<uint32_t, ButtonEventState>  buttonEventStates;
 	};
 }
 

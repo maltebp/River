@@ -54,6 +54,9 @@ public:
 	void onMouseMoveEvent(River::MouseMoveEvent&) override;
 
 	void onMouseScrollEvent(River::MouseScrollEvent&) override;
+	
+	void onMouseButtonEvent(River::MouseButtonEvent&) override;
+
 
 private:
 	void createSanta(double x, double y, unsigned int depth);

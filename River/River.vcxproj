@@ -110,6 +110,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\Primitives\MouseButton.h" />
     <ClInclude Include="src\River\Event\MouseEvent\MouseButtonEvent.h" />
     <ClInclude Include="src\River\Event\MouseEvent\MouseScrollEvent.h" />
     <ClInclude Include="src\River\Event\MouseEvent\MouseMoveEvent.h" />

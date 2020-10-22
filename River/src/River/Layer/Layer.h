@@ -3,6 +3,7 @@
 #include "River/Graphics/Camera/Camera.h"
 #include "River/Event/MouseEvent/MouseMoveEvent.h"
 #include "River/Event/MouseEvent/MouseScrollEvent.h"
+#include "River/Event/MouseEvent/MouseButtonEvent.h"
 #include "River/Event/KeyEvent/KeyEvent.h"
 
 namespace River {
@@ -28,6 +29,7 @@ namespace River {
 		virtual void onKeyEvent(KeyEvent&) {}
 		virtual void onMouseMoveEvent(MouseMoveEvent&) {}
 		virtual void onMouseScrollEvent(MouseScrollEvent&) {}
+		virtual void onMouseButtonEvent(MouseButtonEvent&) {}
 
 
 		Camera * getCamera();
