@@ -18,11 +18,10 @@ void MainLayer::createSanta( double x, double y, unsigned int depth) {
 
 void MainLayer::onInitialization() {
 
-	imageRenderer = new River::ImageRenderer(game->getWindow());
-	textRenderer = new River::TextRenderer(game->getWindow());
+	imageRenderer = new River::ImageRenderer(River::Game::getWindow());
+	textRenderer = new River::TextRenderer(River::Game::getWindow());
 
 	animationSystem = new River::ECS::SpriteAnimationSystem();
-	renderSystem = new RenderSystem();
 	
 	River::FontController::setFontFolder("assets");
 	font = River::FontController::getFont("arial", 50);
@@ -67,7 +66,7 @@ void MainLayer::onUpdate() {
 	//imageRenderer->drawRectangle({ 0, 0, 0.1f, 1280, 1, 0, River::Colors::RED });
 	//imageRenderer->drawRectangle({ 0, 0, 0.1f, 1, 720, 0, River::Colors::RED });
 
-	textRenderer->drawText(std::to_string(game->getFps()), font, River::Colors::BLACK, 0, 0, 0.0f, River::Align::TOP_CENTER);
+	textRenderer->drawText(std::to_string(River::Game::getFps()), font, River::Colors::BLACK, 0, 0, 0.0f, River::Align::TOP_CENTER);
 	textRenderer->flush();
 
 	//imageRenderer->drawSprite(font->getGlyph("x").sprite, 0, 0, 0.25f, 300, 175, 0);

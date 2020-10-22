@@ -13,43 +13,12 @@
 
 namespace River {
 	
-	// The current game
-	Game* Game::game = nullptr;
-
-	Game* Game::getGame() {
-		return game;
-	}
-
-	River::Game::Game(std::string title) {
-		this->title = title;
-
-		if( game != nullptr )
-			throw new River::Exception("A game has already been created!");
-		game = this;
-
-		this->window = new Window(this->title, 1280, 720);
-
-		// Initialize glew
-		const GLenum glewResult = glewInit();
-		if( glewResult != GLEW_OK ) {
-			std::stringstream msgStream;
-			msgStream << "GLEW initialization error '" << glewGetErrorString(glewResult) << "'";
-			throw River::Exception(msgStream.str());
-		}
-
-		std::cout << "GLEW initialized" << std::endl;
-		std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
-		std::cout << "Graphics card: " << glGetString(GL_RENDERER)<<std::endl;
-	}
-
-
-	River::Game::~Game() {
-		clearLayers();
-		clearOverlays();
-	}
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Utility functions / variables
 
 	static int glfwErrorCode = 0;
 	static std::string glfwErrorMsg;
+
 
 	static void glfwErrorCallback(int errCode, const char* errStr) {
 		glfwErrorCode = errCode;
@@ -64,24 +33,41 @@ namespace River {
 	}
 
 
-	River::Window* River::Game::getWindow() {
-		return window;
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Game
+
+
+	void Game::start() {
+		Game::start(nullptr);
 	}
 
+	void Game::start(std::function<void()> onStart) {
 
-	double Game::getFps() {
-		return window->getFps();
-	}
+		if( started )
+			throw new InvalidStateException("Game has already been started");
+
+		window = new Window(title, 1280, 720);
+
+		// Initialize glew
+		const GLenum glewResult = glewInit();
+		if( glewResult != GLEW_OK ) {
+			std::stringstream msgStream;
+			msgStream << "GLEW initialization error '" << glewGetErrorString(glewResult) << "'";
+			throw Exception(msgStream.str());
+		}
+
+		std::cout << "GLEW initialized" << std::endl;
+		std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
+		std::cout << "Graphics card: " << glGetString(GL_RENDERER) << std::endl;
 
 
+		if( onStart != nullptr ) {
+			printf("Running on start callback\n");	
+			onStart();
+		}
 
 
-
-	void River::Game::start() {
-
-		printf("Starting River game loop\n");
-
-		onInitialization();
 
 		printf("Starting game loop\n");
 		while( !window->shouldClose() ) {
@@ -104,10 +90,7 @@ namespace River {
 			// Fire Key Events 
 			auto keyEvents = window->getKeyEvents();
 			for( auto& keyEvent : keyEvents ) {
-				for( auto it = overlays.rbegin(); it != overlays.rend(); it++ ) {
-					if( keyEvent.isConsumed() ) break;
-					(*it)->onKeyEvent(keyEvent);
-				}
+				
 				for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
 					if( keyEvent.isConsumed() ) break;
 					(*it)->onKeyEvent(keyEvent);
@@ -117,11 +100,7 @@ namespace River {
 			// Fire Mouse Movement Events
 			if( MouseEventController::hasMovementOccured() ) {
 				auto mouseMoveEvent = MouseEventController::getMouseMoveEvent();
-				
-				for( auto it = overlays.rbegin(); it != overlays.rend(); it++ ) {
-					if( mouseMoveEvent.isConsumed() ) break;
-					(*it)->onMouseMoveEvent(mouseMoveEvent);
-				}
+		
 				for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
 					if( mouseMoveEvent.isConsumed() ) break;
 					(*it)->onMouseMoveEvent(mouseMoveEvent);
@@ -132,10 +111,6 @@ namespace River {
 			if( MouseEventController::hasScrollingOccured() ) {
 				auto mouseScrollEvent = MouseEventController::getMouseScrollEvent();
 
-				for( auto it = overlays.rbegin(); it != overlays.rend(); it++ ) {
-					if( mouseScrollEvent.isConsumed() ) break;
-					(*it)->onMouseScrollEvent(mouseScrollEvent);
-				}
 				for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
 					if( mouseScrollEvent.isConsumed() ) break;
 					(*it)->onMouseScrollEvent(mouseScrollEvent);
@@ -144,10 +119,7 @@ namespace River {
 
 			// Fire Mouse Button Events
 			for( auto& buttonEvent : MouseEventController::getMouseButtonEvents() ) {
-				for( auto it = overlays.rbegin(); it != overlays.rend(); it++ ) {
-					if( buttonEvent.isConsumed() ) break;
-					(*it)->onMouseButtonEvent(buttonEvent);
-				}
+				
 				for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
 					if( buttonEvent.isConsumed() ) break;
 					(*it)->onMouseButtonEvent(buttonEvent);
@@ -161,14 +133,6 @@ namespace River {
 				window->clearDepth();
 			}
 
-			for( auto& overlay : overlays ) {
-				overlay->update();
-				window->clearDepth();
-			}
-
-
-
-
 		}
 
 		printf("Game loop stopped\n");
@@ -176,68 +140,51 @@ namespace River {
 
 
 
-	void River::Game::pushLayer(Layer* layer) {
+	void Game::setTitle(const std::string& title) {
+		Game::title = title;
+	}
+
+
+	void Game::setWindowSize(unsigned int width, unsigned int height) {
+		if( started )
+			throw new InvalidStateException("Game has already been started, so window size can't be changed");
+		Game::windowWidth = width;
+		Game::windowHeight = height;
+	}
+
+
+	Window* Game::getWindow() {
+		return window;
+	}
+
+
+	double Game::getFps() {
+		return window->getFps();
+	}
+
+
+	void Game::pushLayer(Layer* layer) {
 		layersToAdd.push_back(layer);
 	}
 
-	void River::Game::popLayer() {
+	void Game::popLayer() {
 		if( !layers.empty() ) {
 			Layer* layer = layers.back();
 			removeLayer(layer);
 		}
 	}
 
-	void River::Game::removeLayer(Layer* layer) {
+	void Game::removeLayer(Layer* layer) {
 		layersToRemove.push_back(layer);
 	}
 
-	void River::Game::clearLayers() {
+	void Game::clearLayers() {
 		for( auto layer : layers )
 			layersToRemove.push_back(layer);
 	}
 
-
-
-	void River::Game::pushOverlay(Layer* overlay) {
-		overlays.push_back(overlay);
-		overlay->initialize();
-	}
-
-	void River::Game::popOverlay() {
-		if( !overlays.empty() ) {
-			Layer* overlay = overlays.back();
-			overlays.pop_back();
-			overlay->terminate();
-			delete overlay;
-		}
-	}
-
-	void River::Game::clearOverlays() {
-		for( auto& overlay : overlays ) {
-			overlay->terminate();
-			delete overlay;
-		}
-		overlays.clear();
-	}
-
-
-
 	void Game::exit() {
 		window->close();
 	}
-
-
-
-	// TODO: testing new start method
-
 	
-}
-
-
-extern void startGame();
-
-int main(int argc, char** argv) {
-	startGame();
-
-	return 1;
 }

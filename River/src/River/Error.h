@@ -24,6 +24,13 @@ namespace River {
 		NullException(const std::string& message) : Exception("NullException", message) {}
 	};
 
+
+	class InvalidStateException : public Exception {
+	public:
+		InvalidStateException(const std::string& message) : Exception("InvalidStateException", message) {}
+	};
+
+
 	class InvalidArgumentException : public Exception {
 	public:
 		InvalidArgumentException(const std::string& message) : Exception("InvalidArgumentException", message) {}

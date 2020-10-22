@@ -6,34 +6,21 @@
 
 #include "MainLayer.h"
 
+using River::Game;
 
 
-class SandboxGame : public River::Game {
+void main() {
 
-private:
+	Game::setTitle("Sandbox Game");
+	Game::setWindowSize(1280, 720);
 
-	
-
-public:
-	SandboxGame() : Game("Sandbox Game") {
-		
-	}
-
-	void onInitialization() override {
-		River::SpriteRenderingSystem::initialize(window);
-		pushLayer(new MainLayer(this));
-	}
-};
+	Game::start([]() {
+		River::SpriteRenderingSystem::initialize(Game::getWindow());
+		Game::pushLayer(new MainLayer());
+	});
 
 
-
-
-void startGame() {
-
-	printf("Starting Sandbox!\n");
-
-	SandboxGame game;
-	game.start();
+	std::cout << "Stopping Sandbox" << std::endl;
 }
 
 

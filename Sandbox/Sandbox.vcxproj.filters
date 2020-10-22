@@ -18,24 +18,12 @@
     <ClCompile Include="src\MainLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Settings.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Main.h">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Init.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\MainLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RenderSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

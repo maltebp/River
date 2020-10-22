@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <functional>
 
 #include "Error.h"
 #include "Graphics/Window.h"
@@ -9,56 +10,52 @@
 namespace River {
 
 	class Game {
+	public:
+	
+		static void setTitle(const std::string&);
+
+		static void setWindowSize(unsigned int width, unsigned int height);
+
+		static void start();
 		
-	private:
-		std::string title;
-		std::vector<Layer*> layers;
-		std::vector<Layer*> layersToAdd;
-		std::vector<Layer*> layersToRemove;
+		static void start(std::function<void()> onStart);
+
+		static void exit();
+
+		static double getFps();
 
 
-		std::vector<Layer*> overlays;
-		// TODO: Add removal and adding of overlays like layers
-		
-		static Game* game;
+		static Window* getWindow();
 
-	protected:
-		River::Window* window;
+
+		static void pushLayer(Layer* layer);
+
+		static void popLayer();
+
+		static void clearLayers();
+
+		static void removeLayer(Layer* layer);
+
+
+
+
 
 	public:
-		static Game* getGame();
+		static inline Window* window = nullptr;
 
+	private:
 
-		Game(std::string title);
-		virtual ~Game();
+		static inline std::vector<Layer*> layers;
+		static inline std::vector<Layer*> layersToAdd;
+		static inline std::vector<Layer*> layersToRemove;
 
-		/**
-			@throws River::Exception Thrown if an error occurs in the game loop
-		*/
-		void start();
+		static inline std::function<void()> initCallback = nullptr;
 
-		void pushLayer(Layer* layer);
+		static inline bool started = false;
 
-		void popLayer();
+		static inline std::string title = "River";
 
-		void clearLayers();
-
-		void removeLayer(Layer* layer);
-
-		void pushOverlay(Layer* layer);
-
-		void popOverlay();
-
-		void clearOverlays();
-
-		void exit();
-
-
-		double getFps();
-
-
-		virtual void onInitialization() {}
-
-		Window* getWindow();
+		static inline unsigned int windowWidth	= 1280;
+		static inline unsigned int windowHeight = 720;
 	};
 }

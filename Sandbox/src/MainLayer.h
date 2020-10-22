@@ -1,18 +1,15 @@
 #pragma once
 
 #include <River.h>
-#include "RenderSystem.h"
 
 
 class MainLayer : public River::Layer {
 
 private:
-	River::Game* game;
 	
 	River::TextRenderer* textRenderer = nullptr;
 	River::ImageRenderer* imageRenderer = nullptr;
 	River::ECS::SpriteAnimationSystem* animationSystem = nullptr;
-	RenderSystem* renderSystem = nullptr;
 	River::Texture* image_coffee = nullptr;
 	River::Texture* image_llama = nullptr;
 	River::Texture *image_glyph = nullptr;
@@ -33,7 +30,7 @@ private:
 
 public:
 
-	MainLayer(River::Game* game) : game(game), santa { 
+	MainLayer() :  santa { 
 		new River::Texture("assets/santa/Jump (1).png", true),
 		new River::Texture("assets/santa/Jump (2).png", true),
 		new River::Texture("assets/santa/Jump (3).png", true),
