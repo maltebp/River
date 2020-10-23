@@ -45,13 +45,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)build\bin\$(Configuration)-$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)build\obj\$(Configuration)-$(Platform)\</IntDir>
+    <OutDir>$(ProjectDir)..\build\bin\$(Configuration)-$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)..\build\obj\$(Configuration)-$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)build\bin\$(Configuration)-$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)build\obj\$(Configuration)-$(Platform)\</IntDir>
+    <OutDir>$(ProjectDir)..\build\bin\$(Configuration)-$(Platform)\</OutDir>
+    <IntDir>$(ProjectDir)..\build\obj\$(Configuration)-$(Platform)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -59,7 +59,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\lib\glfw\include;$(ProjectDir)\lib\glew\include;$(ProjectDir)lib\freetype\include;$(ProjectDir)\lib\stb_image</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)..\lib\glfw\include;$(ProjectDir)..\lib\glew\include;$(ProjectDir)..\lib\freetype\include;$(ProjectDir)..\lib\stb_image</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ProgramDataBaseFileName>$(OutDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -73,10 +73,13 @@
       <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;freetype.lib;RiverECS\lib\$(Configuration)-$(Platform)\RiverECS.lib</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib\;$(ProjectDir)lib\glew\lib\$(Configuration)\$(Platform)\;$(ProjectDir)lib\glfw\lib-vc2019\;$(ProjectDir)lib\freetype\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\lib\;$(ProjectDir)..\lib\glew\lib\$(Configuration)\$(Platform)\;$(ProjectDir)..\lib\glfw\lib-vc2019\;$(ProjectDir)..\lib\freetype\lib\</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>xcopy /y /d  "$(ProjectDir)lib\freetype\bin\*.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y /d  "$(ProjectDir)lib\freetype\bin\*.dll" "$(ProjectDir)$(OutDir)"
+xcopy "$(ProjectDir)..\src\*.h" "$(ProjectDir)..\build\include\" /S /Y
+xcopy "$(ProjectDir)..\src\*.hpp" "$(ProjectDir)..\build\include\" /S /Y
+xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -106,7 +109,9 @@
       <AdditionalOptions>/verbose:lib %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <PostBuildEvent>
-      <Command>xcopy /y /d  "$(ProjectDir)lib\freetype\bin\*.dll" "$(ProjectDir)$(OutDir)"</Command>
+      <Command>xcopy /y /d  "$(ProjectDir)lib\freetype\bin\*.dll" "$(ProjectDir)$(OutDir)"
+xcopy "$(ProjectDir)..\src\*.h" "$(ProjectDir)..\build\include\" /S /Y
+xcopy "$(ProjectDir)..\src\*.hpp" "$(ProjectDir)..\build\include\" /S /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

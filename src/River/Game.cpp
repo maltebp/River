@@ -137,9 +137,11 @@ namespace River {
 		rootLayer->removeLayer(layer);
 	}
 
+
 	void Game::clearLayers() {
 		rootLayer->clearLayers();
 	}
+
 
 	void Game::exit() {
 		window->close();
