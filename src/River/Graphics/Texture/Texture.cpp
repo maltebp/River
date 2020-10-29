@@ -26,16 +26,18 @@ namespace River {
 
 
 	Texture::Texture(const std::string& imagePath, bool partiallyTransparent, unsigned int textureOffsetX, unsigned int textureOffsetY, unsigned int textureWidth, unsigned int textureHeight) :
-		Texture(new Image(imagePath, partiallyTransparent), textureOffsetX, textureOffsetY, textureWidth, textureHeight)
+		Texture(Image::create(imagePath).setPartiallyTransparent(partiallyTransparent).finish(), textureOffsetX, textureOffsetY, textureWidth, textureHeight)
 	{
+		// TODO: REmove this
+		this->image->load();
 		this->partiallyTransparent = partiallyTransparent;
 		dedicatedImage = true;
 	}
 
 
 	Texture::~Texture() {
-		if( dedicatedImage )
-			delete image;
+		/*if( dedicatedImage )
+			delete image;*/
 	}
 
 	unsigned int Texture::getWidth() {

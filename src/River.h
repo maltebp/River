@@ -8,10 +8,6 @@
 
 #include "River/Graphics/Transform.h"
 
-#include "River/Graphics/Texture/Sprite.h"
-#include "River/Graphics/Texture/Texture.h"
-
-#include "River/Graphics/Text/FontController.h"
 
 #include "River/Primitives/Alignment.h"
 #include "River/Primitives/Color.h"
@@ -22,3 +18,11 @@
 #include "River/Graphics/SpriteAnimation/SpriteAnimationSystem.h"
 
 #include "River/Graphics/SpriteRenderingSystem.h"
+
+
+#include "River/Asset/AssetCollection.h"
+
+#include "River/Graphics/Texture/Sprite.h"
+#include "River/Graphics/Texture/Texture.h"
+
+#include "River/Graphics/Text/FontController.h"

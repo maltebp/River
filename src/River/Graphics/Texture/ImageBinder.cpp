@@ -15,15 +15,15 @@ namespace River{
 		free(textures);
 	}
 
-	unsigned int ImageBinder::addImage(Image* texture){
+	unsigned int ImageBinder::addImage(Image* image){
 		for( unsigned int i = 0; i < numTextures; i++ )
-			if( textures[i] == texture )
+			if( textures[i] == image )
 				return i;
 
 		if( numTextures == numSlots )
 			throw new NoTextureSlotException();
 
-		textures[numTextures] = texture;
+		textures[numTextures] = image;
 		numTextures++;
 		return numTextures - 1;
 	}

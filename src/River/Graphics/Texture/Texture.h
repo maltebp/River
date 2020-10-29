@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "River/Asset/AssetCollection.h"
 #include "Image.h"
 
 namespace River {
@@ -26,7 +27,10 @@ namespace River {
 		*/
 		Texture(const std::string &imagePath, bool partiallyTransparent, unsigned int textureOffsetX = 0, unsigned int textureOffsetY = 0, unsigned int textureWidth = 0, unsigned int textureHeight = 0);
 		
+
 		~Texture();
+
+
 
 		/**
 		 * @brief The non-normalized Texture width
@@ -66,6 +70,8 @@ namespace River {
 		bool isPartiallyTransparent() const;
 
 
+		/*virtual void load() override;
+		virtual void unload() override;*/
 
 
 	private:
@@ -78,6 +84,7 @@ namespace River {
 	private:
 		Image* image;
 		bool dedicatedImage = false;
+
 		Image::SampleCoordinates textureCoordinates;
 		Image::SampleCoordinates flippedCoordinates;
 
@@ -89,6 +96,24 @@ namespace River {
 		bool verticallyFlipped = false;
 		bool horizontallyFlipped = false;
 		
+
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Creator
+	private:
+		class Creator {
+			friend class Texture;
+
+			Creator(Image* image);
+			Creator(const std::string& imagePath);
+
+		public:
+
+
+
+
+		};
+
 	};
 
 }

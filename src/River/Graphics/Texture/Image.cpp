@@ -6,42 +6,26 @@
 
 namespace River {
 
-	Image *Image::whiteTexture = nullptr;
 
-	Image::Image(std::string filePath, bool partiallyTransparent) {
-		this->filePath = filePath;
 
-		// TODO: Determine the correct alignment from the texture
+	void Image::load() {
+		if( loaded ) return;
+
+		// TODO: Determine the correct alignment from the image file
 		rowAlignment = 4;
 
 		// Load texture file
 		//stbi_set_flip_vertically_on_load(true);
-		unsigned char *data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
-		if( !data ) {
+		unsigned char* pixels = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
+		if( !pixels ) {
 			throw new River::AssetNotFoundException(filePath);
 		}
 
-		createGLTexture(data);
-		stbi_image_free(data);
-	
+		createGLTexture(pixels);
+		stbi_image_free(pixels);	
+
+		// Optimization (no reason to make it partially transparent if there is no alpha channel)
 		this->partiallyTransparent = this->channels == 4 && partiallyTransparent;
-	}
-
-
-	Image::Image(unsigned int width, unsigned int height, unsigned int channels, bool partiallyTransparent, unsigned int rowAlignment, void *data) {
-		this->width = width;
-		this->height = height;
-		this->channels = channels;
-		this->rowAlignment = rowAlignment;
-		this->partiallyTransparent = channels == 4 && partiallyTransparent;
-
-		createGLTexture(data);
-	}
-
-	Image::~Image() {
-		if( glIsTexture(id) == GL_TRUE )
-			GL(glDeleteTextures(1, &id));
-		// Automatically unbinds the texture as well
 	}
 
 
@@ -55,8 +39,16 @@ namespace River {
 		// Image filtering/wrap options
 		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP));
 		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP));
-		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)); // GL_LINEAR_MIPMAP_LINEAR));
-		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+
+		// I assume this setting is bound to the texture and not the slot (texture unit)
+		GLenum glFilter;
+		if( scaleMode == ScaleMode::LINEAR )
+			glFilter = GL_LINEAR;
+		if( scaleMode == ScaleMode::NEAREST )
+			glFilter = GL_NEAREST;
+
+		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glFilter));
+		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glFilter));
 
 		GLenum format;
 		GLint internalFormat;
@@ -85,33 +77,33 @@ namespace River {
 	}
 
 
+
+	void Image::unload() {
+		if( !loaded ) return;
+
+		// If the image data is constructed in run time (not loaded from disk),
+		// we can't unload it, and as such it will remain loaded.
+		if( pixels != nullptr ) return;
+
+		if( glIsTexture(id) == GL_TRUE )
+			GL(glDeleteTextures(1, &id));
+		loaded = false;
+		// Automatically unbinds the texture as well
+		// and data is associated with the gl texture, so this should free all
+		// memory associated with the image
+	}
+
+
 	void Image::bind(unsigned int textureSlot) {
+		if( !loaded )
+			throw new AssetNotLoaded();
+
 		// Note: Not using glBindTextureUnit as this is only available from 4.5 and onwards
 		GL(
 			glActiveTexture(GL_TEXTURE0 + textureSlot);
-		glBindTexture(GL_TEXTURE_2D, id);
+			glBindTexture(GL_TEXTURE_2D, id);
 		);
-	}
-
-
-
-	void Image::setFilterMode(FilterMode mode) {
-		GLint currentTexture = 0;
-		GL(glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture));
-
-		GL(glBindTexture(GL_TEXTURE_2D, id));
-		if( mode == FilterMode::LINEAR ) {
-			GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-			GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-		}
-		if( mode == FilterMode::NEAREST ) {
-			GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-			GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-		}
-
-		GL(glBindTexture(GL_TEXTURE_2D, currentTexture));
-	}
-	
+	}	
 
 	unsigned int Image::getNumChannels() {
 		return channels;
@@ -129,7 +121,7 @@ namespace River {
 	Image *Image::getWhiteTexture() {
 		if( whiteTexture == nullptr ) {
 			unsigned char data = 0xFF;
-			whiteTexture = new Image(1, 1, 1, false, 1, &data);
+			whiteTexture = Image::create(&data, 1, 1, 1, 1).finish();
 		}
 		return whiteTexture;
 	}
@@ -141,4 +133,53 @@ namespace River {
 	float Image::normalizeY(unsigned int coordinate) {
 		return (float) coordinate / (float) height;
 	}
+
+
+
+	Image::Creator::Creator(const std::string& filePath) {
+		image = new Image();
+		image->filePath = filePath;
+	}
+
+
+	/**
+	 * @brief	Constructs an Image from a data source. The image will copy the data on creation, and unloading this image will have no effect on memory.
+	*/
+	Image::Creator::Creator(unsigned char* data, unsigned int width, unsigned int height, unsigned int channels, unsigned int rowAlignment) {
+		image = new Image();
+		image->pixels = data;
+		image->width = width;
+		image->height = height;
+		image->channels = channels;
+		image->rowAlignment = rowAlignment;
+	}
+
+
+	Image* Image::Creator::finish() {
+		if( assetCollection != nullptr ) assetCollection->add(image);
+
+		if( image->pixels != nullptr ) {
+			image->createGLTexture(image->pixels);
+			image->loaded = true;
+		}
+
+		return image;
+	}
+
+	Image::Creator& Image::Creator::setPartiallyTransparent(bool toggle) {
+		image->partiallyTransparent = toggle;
+		return *this;
+	}
+
+	Image::Creator& Image::Creator::setScaleMode(ScaleMode mode) {
+		image->scaleMode = mode;
+		return *this;
+	}
+
+	Image::Creator& Image::Creator::setAssetCollection(AssetCollection* collection) {
+		assetCollection = collection;
+		return *this;
+	}
+
+
 }

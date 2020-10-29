@@ -114,6 +114,8 @@ xcopy "$(ProjectDir)..\src\*.hpp" "$(ProjectDir)..\build\include\" /S /Y</Comman
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\Asset\AssetCollection.h" />
+    <ClInclude Include="src\River\Asset\Asset.h" />
     <ClInclude Include="src\River\Primitives\MouseButton.h" />
     <ClInclude Include="src\River\Event\MouseEvent\MouseButtonEvent.h" />
     <ClInclude Include="src\River\Event\MouseEvent\MouseScrollEvent.h" />
@@ -153,6 +155,7 @@ xcopy "$(ProjectDir)..\src\*.hpp" "$(ProjectDir)..\build\include\" /S /Y</Comman
     <ClInclude Include="src\River\System\System.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\River\Asset\AssetCollection.cpp" />
     <ClCompile Include="src\River\Event\MouseEvent\MouseEventController.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteRenderingSystem.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteAnimation\SpriteAnimationSystem.cpp" />

@@ -60,10 +60,10 @@ void MainScene::initialize() {
 	River::FontController::setFontFolder("assets");
 	font = River::FontController::getFont("arial", 50);
 
-	image_coffee = new River::Texture("assets/coffee.jpg", false, 100, 100, 760.0/2.0, 506.0/2.0);
+	/*image_coffee = new River::Texture("assets/coffee.jpg", false, 100, 100, 760.0/2.0, 506.0/2.0);
 	image_llama = new River::Texture("assets/A.png", false);
 	image_blue_circle = new River::Texture("assets/BlueAlphaCircle.png", true);
-	image_purple_circle = new River::Texture("assets/PurpleAlphaCircle.png", true);
+	image_purple_circle = new River::Texture("assets/PurpleAlphaCircle.png", true);*/
 
 
 	santaAnimation = new River::SpriteAnimation(0.05f, santa[0], santa[1], santa[2], santa[3], santa[4], santa[5], santa[6], santa[7]);

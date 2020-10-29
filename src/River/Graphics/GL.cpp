@@ -60,7 +60,7 @@ namespace River {
 				msg << " GL error occured: ";
 
 			for (int i = 0; i < errors.size(); i++) {
-				msg << "'" << errorToString(error) << " (" <<  errorToHex(errors[i]) << ")'";
+				msg << "'" << errorToString(errors[i]) << " (" <<  errorToHex(errors[i]) << ")'";
 				if (i < (errors.size() - 1))
 					msg << ", ";
 			}

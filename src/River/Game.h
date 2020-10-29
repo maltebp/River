@@ -7,6 +7,7 @@
 #include "Graphics/Window.h"
 #include "Layer/Layer.h"
 #include "Primitives/Color.h"
+#include "Asset/AssetCollection.h"
 
 namespace River {
 
@@ -71,5 +72,9 @@ namespace River {
 		 * @brief	An "abstract" layer in that it has no callback, only serves as a container for sub layers and will never be deleted
 		*/
 		static inline Layer* rootLayer = new Layer(nullptr);
+
+
+
+
 	};
 }
