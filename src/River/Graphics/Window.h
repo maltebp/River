@@ -6,6 +6,7 @@
 #include "River/Event/KeyEvent/KeyEventController.h"
 #include "River/Error.h"
 #include "River/Graphics/GL.h"
+#include "River/Primitives/Color.h"
 
 
 namespace River {
@@ -23,6 +24,7 @@ namespace River {
 		unsigned int getNumTextureSlots();
 		std::vector<KeyEvent> getKeyEvents();
 		double getFps();
+		void setClearColor(Color color);
 
 
 
@@ -47,6 +49,8 @@ namespace River {
 		double fps = 0;
 		double previousFpsTime;
 		unsigned int frameCount;
+
+		Color clearColor;
 
 		KeyEventController keyEventController;	
 	};

@@ -6,6 +6,7 @@
 #include "Error.h"
 #include "Graphics/Window.h"
 #include "Layer/Layer.h"
+#include "Primitives/Color.h"
 
 namespace River {
 
@@ -34,6 +35,16 @@ namespace River {
 
 		static void removeLayer(Layer* layer);
 
+		/**
+		 * @brief	Sets the color to clear the screen with. Default is Lawn Green.
+		*/
+		static void setClearColor(Color color);
+
+		/**
+		 * @brief	Sets the color to clear the screen with. Default is Lawn Green.
+		*/
+		static const Color& getClearColor();
+
 
 
 
@@ -52,6 +63,9 @@ namespace River {
 
 		static inline unsigned int windowWidth	= 1280;
 		static inline unsigned int windowHeight = 720;
+
+
+		static inline Color clearColor = Colors::LAWN_GREEN;
 
 		/**
 		 * @brief	An "abstract" layer in that it has no callback, only serves as a container for sub layers and will never be deleted

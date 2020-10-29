@@ -104,8 +104,6 @@ namespace River {
 		// This enable binary alpha blending
 		glAlphaFunc(GL_GREATER, 0);
 
-		// TODO: Move this into a seperate function
-		GL( glClearColor(0.15f, 0.8f, 0.15f, 1.0f) );
 
 		previousFpsTime = glfwGetTime();
 
@@ -121,6 +119,10 @@ namespace River {
 
 	Window::~Window() { }
 
+
+	void Window::setClearColor(Color color) {
+		glClearColor(color.r, color.g, color.b, color.a);
+	}
 
 
 	void Window::clear() {	

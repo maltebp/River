@@ -52,13 +52,12 @@ namespace River {
 		std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
 		std::cout << "Graphics card: " << glGetString(GL_RENDERER) << std::endl;
 
+		window->setClearColor(clearColor);
 
 		if( onStart != nullptr ) {
 			printf("Running on start callback\n");	
 			onStart();
 		}
-
-
 
 		printf("Starting game loop\n");
 		while( !window->shouldClose() ) {
@@ -123,6 +122,13 @@ namespace River {
 
 	Layer* Game::pushLayer() {
 		return rootLayer->pushLayer();
+	}
+
+
+	void Game::setClearColor(Color color) {
+		clearColor = color;
+		if( window != nullptr )
+			window->setClearColor(color);
 	}
 
 

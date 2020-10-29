@@ -24,8 +24,18 @@ namespace River {
 	
 
 	namespace Colors {
+
+		// Basic colors
 		const Color BLACK		(0.0, 0.0, 0.0);
 		const Color WHITE		(1.0, 1.0, 1.0);
 		const Color RED			(1.0, 0.0, 0.0);
+		const Color GREEN		(0.0, 1.0, 0.0);
+		const Color BLUE		(0.0, 0.0, 1.0);
+		const Color YELLOW		(1.0, 1.0, 0.0);
+		const Color MAGENTA		(1.0, 0.0, 1.0);
+		const Color CYAN		(0.0, 1.0, 1.0);
+
+		// Special colors
+		const Color LAWN_GREEN	(0.486, 0.988, 0);
 	}
 }
