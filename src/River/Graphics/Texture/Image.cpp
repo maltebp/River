@@ -7,9 +7,10 @@
 namespace River {
 
 
+	void Image::onLoad() {
 
-	void Image::load() {
-		if( loaded ) return;
+		// If not from file, the image data will always be loaded, so we do nothing here
+		if( !fromFile ) return;
 
 		// TODO: Determine the correct alignment from the image file
 		rowAlignment = 4;
@@ -22,7 +23,7 @@ namespace River {
 		}
 
 		createGLTexture(pixels);
-		stbi_image_free(pixels);	
+		stbi_image_free(pixels);
 
 		// Optimization (no reason to make it partially transparent if there is no alpha channel)
 		this->partiallyTransparent = this->channels == 4 && partiallyTransparent;
@@ -78,16 +79,14 @@ namespace River {
 
 
 
-	void Image::unload() {
-		if( !loaded ) return;
+	void Image::onUnload() {
 
-		// If the image data is constructed in run time (not loaded from disk),
-		// we can't unload it, and as such it will remain loaded.
-		if( pixels != nullptr ) return;
+		// If not from file, the image cannot be unloaded without permantly destroying its
+		// data, as it has been created in the code somewhere. So we do nothing.
+		if( fromFile ) return;
 
 		if( glIsTexture(id) == GL_TRUE )
 			GL(glDeleteTextures(1, &id));
-		loaded = false;
 		// Automatically unbinds the texture as well
 		// and data is associated with the gl texture, so this should free all
 		// memory associated with the image
@@ -95,7 +94,7 @@ namespace River {
 
 
 	void Image::bind(unsigned int textureSlot) {
-		if( !loaded )
+		if( !isLoaded() )
 			throw new AssetNotLoaded();
 
 		// Note: Not using glBindTextureUnit as this is only available from 4.5 and onwards
@@ -122,6 +121,7 @@ namespace River {
 		if( whiteTexture == nullptr ) {
 			unsigned char data = 0xFF;
 			whiteTexture = Image::create(&data, 1, 1, 1, 1).finish();
+			whiteTexture->load(); // The white texture should always be loaded
 		}
 		return whiteTexture;
 	}
@@ -139,6 +139,7 @@ namespace River {
 	Image::Creator::Creator(const std::string& filePath) {
 		image = new Image();
 		image->filePath = filePath;
+		image->fromFile = true;
 	}
 
 
@@ -147,20 +148,22 @@ namespace River {
 	*/
 	Image::Creator::Creator(unsigned char* data, unsigned int width, unsigned int height, unsigned int channels, unsigned int rowAlignment) {
 		image = new Image();
-		image->pixels = data;
+		image->fromFile = false;
 		image->width = width;
 		image->height = height;
 		image->channels = channels;
 		image->rowAlignment = rowAlignment;
+		this->imageData = data;
 	}
 
 
 	Image* Image::Creator::finish() {
 		if( assetCollection != nullptr ) assetCollection->add(image);
 
-		if( image->pixels != nullptr ) {
-			image->createGLTexture(image->pixels);
-			image->loaded = true;
+		if( !image->fromFile ) {
+			// The image should always be "loaded" when not from file
+			// so we construct it here
+			image->createGLTexture(imageData);
 		}
 
 		return image;

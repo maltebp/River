@@ -155,6 +155,7 @@ xcopy "$(ProjectDir)..\src\*.hpp" "$(ProjectDir)..\build\include\" /S /Y</Comman
     <ClInclude Include="src\River\System\System.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\River\Asset\Asset.cpp" />
     <ClCompile Include="src\River\Asset\AssetCollection.cpp" />
     <ClCompile Include="src\River\Event\MouseEvent\MouseEventController.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteRenderingSystem.cpp" />

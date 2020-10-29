@@ -51,8 +51,8 @@ namespace River {
 		float normalizeY(unsigned int coordinate);
 
 
-		virtual void load() override;
-		virtual void unload() override;
+		virtual void onLoad() override;
+		virtual void onUnload() override;
 
 
 
@@ -73,16 +73,13 @@ namespace River {
 		// OpenGL texture id
 		unsigned int id;
 		std::string filePath = "";
+		bool fromFile = false;
 
 		int width;
 		int height;
 		int channels;
 		int rowAlignment;
 
-		/**
-		 * @brief Only used if the image is not loaded from the disk
-		*/
-		unsigned char* pixels = nullptr;
 
 		/**
 		 * @brief	Whether or not this texture contains any partially transparent pixels. Curently, it's up to the user to
@@ -114,6 +111,11 @@ namespace River {
 
 		private:
 			Image* image;
+			
+			// Temporary pointer to image data, when not loading from file
+			unsigned char* imageData = nullptr;
+
+			// Temporary pointer to asset collection
 			AssetCollection* assetCollection = nullptr;
 		};
 		

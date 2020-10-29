@@ -209,5 +209,8 @@
     <ClCompile Include="src\River\Asset\AssetCollection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\River\Asset\Asset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -41,13 +41,19 @@ namespace River{
             std::string msg = "Could not load glyph "; msg += ((unsigned char)characterValue);  msg += " for font";
             throw new River::AssetException(msg);
             // Should it just throw warning instead? Does it make sense to throw exception if it can't load glyph?
-        } 
+        }
+
 
         auto &texture = face->glyph->bitmap;
+
+        // TODO: THIS LOADING IS TEMPORARY SOLUTION!
+        auto img = Image::create(texture.buffer, texture.width, texture.rows, 1, 1).setPartiallyTransparent(true).finish();
+        img->load();
+
         auto it = glyphMap.emplace(
             characterValue,
             Glyph{
-                new Texture( Image::create(texture.buffer, texture.width, texture.rows, 1, 1).setPartiallyTransparent(true).finish(), false),
+                new Texture( img, false),
                 face->glyph->bitmap_left, face->glyph->bitmap_top,
                 face->glyph->advance.x >> 6,
                 face->glyph->bitmap_top,  face->glyph->bitmap_top-((int)texture.rows)
