@@ -25,13 +25,6 @@ namespace River {
 		glfwErrorMsg = std::string(errStr);
 	}
 
-	static void printGLErrors() {
-		GLenum err;
-		while( (err = glGetError()) != GL_NO_ERROR ) {
-			std::cout << "GL ERROR: " << std::hex << err << std::endl;
-		}
-	}
-
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Game
