@@ -76,8 +76,7 @@
       <AdditionalLibraryDirectories>$(ProjectDir)..\lib\;$(ProjectDir)..\lib\glew\lib\$(Configuration)\$(Platform)\;$(ProjectDir)..\lib\glfw\lib-vc2019\;$(ProjectDir)..\lib\freetype\lib\</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>xcopy /y /d  "$(ProjectDir)lib\freetype\bin\*.dll" "$(ProjectDir)$(OutDir)"
-xcopy "$(ProjectDir)..\src\*.h" "$(ProjectDir)..\build\include\" /S /Y
+      <Command>xcopy "$(ProjectDir)..\src\*.h" "$(ProjectDir)..\build\include\" /S /Y
 xcopy "$(ProjectDir)..\src\*.hpp" "$(ProjectDir)..\build\include\" /S /Y
 xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y</Command>
     </PostBuildEvent>
