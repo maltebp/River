@@ -2,18 +2,10 @@
 
 #include <iostream>
 
+#include "Assets.h"
 
 MainScene::MainScene(River::Layer* layer) 
-	: layer(layer), santa{
-		new River::Texture("assets/santa/Jump (1).png", true),
-		new River::Texture("assets/santa/Jump (2).png", true),
-		new River::Texture("assets/santa/Jump (3).png", true),
-		new River::Texture("assets/santa/Jump (4).png", true),
-		new River::Texture("assets/santa/Jump (5).png", true),
-		new River::Texture("assets/santa/Jump (6).png", true),
-		new River::Texture("assets/santa/Jump (7).png", true),
-		new River::Texture("assets/santa/Jump (8).png", true)
-	}
+	: layer(layer)
 {
 	layer->onUpdate([this]() {this->update();  });
 	layer->onCreate([this]() {this->initialize();  });
@@ -40,17 +32,18 @@ MainScene::MainScene(River::Layer* layer)
 
 void MainScene::createSanta( double x, double y, unsigned int depth) {
 	auto entity = domain.createEntity();
-	entity->addComponent<River::ECS::Sprite>()->texture = santa[0];
 	auto transform = entity->addComponent<River::ECS::Transform>();
 	transform->x = x;
 	transform->y = y;
 	transform->depth = (double) depth;
-	auto anim = entity->addComponent<River::ECS::AnimatedSprite>();
-	anim->animation = santaAnimation;
+	auto sprite = entity->addComponent<River::ECS::Sprite>();
+	sprite->texture = GlobalAssets::Textures::SANTA_JUMP_1;
 }
 
 
 void MainScene::initialize() {
+
+	std::cout << "Initialized" << std::endl;
 
 	imageRenderer = new River::ImageRenderer(River::Game::getWindow());
 	textRenderer = new River::TextRenderer(River::Game::getWindow());
@@ -66,7 +59,7 @@ void MainScene::initialize() {
 	image_purple_circle = new River::Texture("assets/PurpleAlphaCircle.png", true);*/
 
 
-	santaAnimation = new River::SpriteAnimation(0.05f, santa[0], santa[1], santa[2], santa[3], santa[4], santa[5], santa[6], santa[7]);
+	//santaAnimation = new River::SpriteAnimation(0.05f, santa[0], santa[1], santa[2], santa[3], santa[4], santa[5], santa[6], santa[7]);
 	
 
 	/*for( int i = 0; i < 10; i++ ) {
@@ -74,6 +67,9 @@ void MainScene::initialize() {
 			createSanta(-600 + i * 120, -300 + j * 70, 20);
 		}
 	}*/
+
+
+	createSanta(0, 0, 20);
 
 
 	camera = new River::Camera(1280, 720);

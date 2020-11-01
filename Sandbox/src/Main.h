@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+
+#include "Assets.h"
 #include "MainLayer.h"
 
 
@@ -16,6 +18,7 @@ void main() {
 	Game::setWindowSize(1280, 720);
 
 	Game::start([]() {
+		GlobalAssets::COLLECTION->load();
 		River::SpriteRenderingSystem::initialize(Game::getWindow());
 		new MainScene(Game::pushLayer());
 	});

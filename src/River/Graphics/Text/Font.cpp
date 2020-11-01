@@ -53,7 +53,7 @@ namespace River{
         auto it = glyphMap.emplace(
             characterValue,
             Glyph{
-                new Texture( img, false),
+                Texture::create(img, true).finish(),
                 face->glyph->bitmap_left, face->glyph->bitmap_top,
                 face->glyph->advance.x >> 6,
                 face->glyph->bitmap_top,  face->glyph->bitmap_top-((int)texture.rows)

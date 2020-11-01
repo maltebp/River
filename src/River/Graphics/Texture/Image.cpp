@@ -135,6 +135,10 @@ namespace River {
 	}
 
 
+	bool Image::isPartiallyTransparent() const {
+		return partiallyTransparent;
+	}
+
 
 	Image::Creator::Creator(const std::string& filePath) {
 		image = new Image();

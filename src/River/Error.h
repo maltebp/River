@@ -50,6 +50,13 @@ namespace River {
 		AssetException(const std::string& message) : Exception("AssetException", message) {}
 	};
 
+	class InvalidAssetStateException: public Exception {
+	protected:
+		InvalidAssetStateException(const std::string& exceptionName, const std::string& message) : Exception(exceptionName, message) {}
+	public:
+		InvalidAssetStateException(const std::string& message) : Exception("InvalidAssetStateException", message) {}
+	};
+
 	class AssetNotLoaded : public AssetException {
 	public:
 		AssetNotLoaded(const std::string& assetName) : AssetException("AssetNotFoundException", "Asset '" + assetName + "' has not been loaded") {}

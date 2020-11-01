@@ -51,6 +51,11 @@ namespace River {
 		float normalizeY(unsigned int coordinate);
 
 
+		bool isPartiallyTransparent() const;
+
+		/**
+		 * @brief	Loads the image, if the image was constructed from a filepath
+		*/
 		virtual void onLoad() override;
 		virtual void onUnload() override;
 

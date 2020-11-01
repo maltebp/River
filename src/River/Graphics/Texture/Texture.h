@@ -11,25 +11,8 @@ namespace River {
 	/**
 	 * @brief	A Texture defines a drawable part of some Image. This can be the enitre Image or just a specified region of it.
 	*/
-	class Texture {
+	class Texture : public Asset {
 	public:
-
-		/**
-		 * @brief 
-		 * @param partiallyTransparent	Whether or not the Texture contains partially transparent pixels. Even though the Image may, it doens't mean that the Texture does
-		 * @return 
-		*/
-		Texture(Image *image, bool partiallyTransparent, unsigned int textureOffsetX = 0, unsigned int textureOffsetY = 0, unsigned int textureWidth = 0, unsigned int textureHeight = 0);
-		
-		/**
-		 * @brief	Creates a new Texture with a dedicated Image (texture is owned, and only used by this sprite).
-		 * @param partiallyTransparent    Whether or not the dedicated Image contains partially transparent pixels
-		*/
-		Texture(const std::string &imagePath, bool partiallyTransparent, unsigned int textureOffsetX = 0, unsigned int textureOffsetY = 0, unsigned int textureWidth = 0, unsigned int textureHeight = 0);
-		
-
-		~Texture();
-
 
 
 		/**
@@ -53,7 +36,7 @@ namespace River {
 		 * @brief 
 		 
 		*/
-		void rotate(int times);
+		//void rotate(int times);
 
 		const Image::SampleCoordinates& getTextureCoordinates() const;
 
@@ -70,11 +53,13 @@ namespace River {
 		bool isPartiallyTransparent() const;
 
 
-		/*virtual void load() override;
-		virtual void unload() override;*/
+		virtual void onLoad() override;
+		virtual void onUnload() override;
 
 
 	private:
+		Texture();
+		~Texture();
 		Texture(const Texture& other) = delete;
 		Texture& operator=(const Texture&) = delete;
 
@@ -100,21 +85,57 @@ namespace River {
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Creator
-	private:
+	public:
 		class Creator {
 			friend class Texture;
 
-			Creator(Image* image);
-			Creator(const std::string& imagePath);
+			Texture* texture;
+
+			AssetCollection* collection = nullptr;
+
+			Creator(Image* image, bool dedicatedImage);
 
 		public:
 
+			/**
+			 * @brief	Sets the offset for sampling the image
+			*/
+			Creator& setSamplingOffset(unsigned int x, unsigned int y);
 
+			/**
+			 * @brief	Sets the size for sampling the image
+			*/
+			Creator& setSamplingSize(unsigned int width, unsigned height);
 
+			/**
+			 * @brief	Sets that this Texture should be drawn as partially transparent. Only partially transparent textures
+			 *			will get partially transparent pixels drawn.
+			*/
+			Creator& setPartiallyTransparent();
+
+			/**
+			 * @brief	Finishes the creation of the Texture
+			 * @return	Pointer to the dynamically allocated Texture
+			*/
+			Texture* finish();
+
+			Creator& setAssetCollection(AssetCollection*);
 
 		};
 
+
+		/**
+		 * @brief	Creates a Texture from a shared Image. The image will be loaded/unloaded together with the Texture.
+		 * @param source	The source image this Texture should be sampled from
+		 * @param dedicatedSource	Whether or not this Texture should take ownership of the source. If true, then the Image will be destroyed
+		 *							together with the Texture, and the pointer should be passed only to this method.
+		*/
+		static Creator create(Image* source, bool dedicatedSource) { return Creator(source, dedicatedSource); }
+
 	};
+
+
+
 
 }
 

@@ -1,5 +1,6 @@
 #include "SpriteRenderingSystem.h"
 
+#include <iostream> // TODO: Remove this
 #include <algorithm>
 
 #include "Texture/Sprite.h"
@@ -38,6 +39,7 @@ namespace River {
 		// Draw opaque entities and set aside transparent ones
 		imageRenderer->disableBlending();
 		domain.forEachEntity<ECS::Sprite, ECS::Transform>([&](ECS::Entity* entity, ECS::Sprite* sprite, ECS::Transform* transform) {
+			std::cout << "Rendering sprite!" << std::endl;
 
 			if( sprite->isPartiallyTransparent() ) {
 				transparentEntities.emplace_back(entity, transform, sprite);
@@ -48,8 +50,8 @@ namespace River {
 						(float)transform->x,
 						(float)transform->y,
 						(float)transform->depth,
-						400,
-						400,
+						400, // TODO: What's happening with this width / height?
+						400, 
 						0,
 						sprite->opacity,
 						sprite->tint
