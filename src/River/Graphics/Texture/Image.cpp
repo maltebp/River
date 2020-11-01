@@ -95,7 +95,7 @@ namespace River {
 
 	void Image::bind(unsigned int textureSlot) {
 		if( !isLoaded() )
-			throw new AssetNotLoaded();
+			throw new AssetNotLoaded("Image must be loaded in order to be bound");
 
 		// Note: Not using glBindTextureUnit as this is only available from 4.5 and onwards
 		GL(
@@ -105,16 +105,29 @@ namespace River {
 	}	
 
 	unsigned int Image::getNumChannels() {
+		if( !isLoaded() )
+			throw new AssetNotLoaded("Image must be loaded to check the number of channels of it");
 		return channels;
 	}
 
 	unsigned int Image::getWidth() {
+		if( !isLoaded() )
+			throw new AssetNotLoaded("Image must be loaded to check the width of it");
 		return width;
 	}
 
 	unsigned int Image::getHeight() {
+		if( !isLoaded() )
+			throw new AssetNotLoaded("Image must be loaded to check the height of it");
 		return height;
 	}
+
+	// Comment on getHeight and getWidth:
+	// The fact that the Image must be loaded is in fact only a problem when the image is
+	// from a file. As such we can't know the width/height of the image before it has been
+	// loaded.
+	// However, for simplicity sake, I decided to make it so that any Image must be loaded
+	// in order to check the width / height (to prevent more confusion)
 
 
 	Image *Image::getWhiteTexture() {

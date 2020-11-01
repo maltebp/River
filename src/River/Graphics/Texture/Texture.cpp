@@ -44,17 +44,32 @@ namespace River {
 	}
 
 	unsigned int Texture::getWidth() {
-		return textureCoordinates.x2 - textureCoordinates.x1;
+		if( width == 0 )
+			// The texture should use full width of image, and it hasn't been
+			// calculated yet, as it hasn't been loaded.
+			throw AssetNotLoaded("The Texture asset must be loaded in order to retrieve its width");
+		return width;
 	}
 
 	unsigned int Texture::getHeight() {
-		return textureCoordinates.y2 - textureCoordinates.y1;
+		if( height == 0 )
+			// The texture should use full width of image, and it hasn't been
+			// calculated yet, as it hasn't been loaded.
+			throw AssetNotLoaded("The Texture asset must be loaded in order to retrieve its height");
+		return height;
+	}
+
+
+
+	double Texture::getAspectRatio() {
+		return width / height;
 	}
 
 	Image *Texture::getImage() const {
 		return image;
 	}
 
+	
 
 	//void Texture::flipVertically() {
 	//	verticallyFlipped = true;
@@ -123,6 +138,10 @@ namespace River {
 		if( textureCoordinates.y2 <= textureCoordinates.y1 )
 			textureCoordinates.y2 = image->getHeight();
 
+
+		width = textureCoordinates.x2 - textureCoordinates.x1; 
+		height = textureCoordinates.y2 - textureCoordinates.y1; 
+
 		// Normalize the sampling coordinates
 		textureCoordinates.x1 = image->normalizeX(textureCoordinates.x1);
 		textureCoordinates.x2 = image->normalizeX(textureCoordinates.x2);
@@ -133,6 +152,8 @@ namespace River {
 
 	void Texture::onUnload() {
 		image->unload();
+		width = 0;
+		height = 0;
 	}
 
 

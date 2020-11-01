@@ -34,7 +34,12 @@ namespace River {
 
 		static Image *getWhiteTexture();
 
+
+
+
+
 		unsigned int getWidth();
+
 		unsigned int getHeight();
 
 		

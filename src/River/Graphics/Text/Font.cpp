@@ -50,10 +50,13 @@ namespace River{
         auto img = Image::create(texture.buffer, texture.width, texture.rows, 1, 1).setPartiallyTransparent(true).finish();
         img->load();
 
+        auto tex = Texture::create(img, true).finish();
+        tex->load();
+
         auto it = glyphMap.emplace(
             characterValue,
             Glyph{
-                Texture::create(img, true).finish(),
+                tex,
                 face->glyph->bitmap_left, face->glyph->bitmap_top,
                 face->glyph->advance.x >> 6,
                 face->glyph->bitmap_top,  face->glyph->bitmap_top-((int)texture.rows)

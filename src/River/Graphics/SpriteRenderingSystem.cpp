@@ -50,8 +50,8 @@ namespace River {
 						(float)transform->x,
 						(float)transform->y,
 						(float)transform->depth,
-						400, // TODO: What's happening with this width / height?
-						400, 
+						(float)transform->width,
+						(float)transform->height, 
 						0,
 						sprite->opacity,
 						sprite->tint
@@ -80,8 +80,8 @@ namespace River {
 					(float)transform->x,
 					(float)transform->y,
 					(float)transform->depth,
-					400,
-					400,
+					(float)transform->width,
+					(float)transform->height,
 					0,
 					sprite->opacity,
 					sprite->tint

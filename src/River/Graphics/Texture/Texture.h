@@ -25,6 +25,12 @@ namespace River {
 		*/
 		unsigned int getHeight();
 		
+
+		/**
+		 * @return	The aspectio ratio of the width and height, calculated by dividing width with height.
+		*/
+		double getAspectRatio();
+
 		Image* getImage() const;
 
 
@@ -76,7 +82,8 @@ namespace River {
 		// Whether or not this texture contains partially transparent areas
 		bool partiallyTransparent;
 
-		unsigned int width, height;
+		unsigned int width = 0;
+		unsigned int height = 0;
 
 		bool verticallyFlipped = false;
 		bool horizontallyFlipped = false;
