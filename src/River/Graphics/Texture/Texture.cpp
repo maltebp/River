@@ -62,7 +62,7 @@ namespace River {
 
 
 	double Texture::getAspectRatio() {
-		return width / height;
+		return width / (double) height;
 	}
 
 	Image *Texture::getImage() const {

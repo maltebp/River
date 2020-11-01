@@ -35,11 +35,11 @@ void MainScene::createSanta( double x, double y, unsigned int depth) {
 	auto transform = entity->addComponent<River::ECS::Transform>();
 	transform->x = x;
 	transform->y = y;
-	transform->width = 150;
-	transform->height = 150 * GlobalAssets::Textures::SANTA_JUMP_1->getAspectRatio();
+	transform->width = 150 * GlobalAssets::Textures::CAR->getAspectRatio();
+	transform->height = 150 ;
 	transform->depth = (double) depth;
 	auto sprite = entity->addComponent<River::ECS::Sprite>();
-	sprite->texture = GlobalAssets::Textures::SANTA_JUMP_1;
+	sprite->texture = GlobalAssets::Textures::CAR;
 }
 
 

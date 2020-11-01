@@ -37,19 +37,28 @@ namespace River {
 		GL(glGenTextures(1, &id));
 		GL(glBindTexture(GL_TEXTURE_2D, id));
 
+
 		// Image filtering/wrap options
 		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP));
 		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP));
 
 		// I assume this setting is bound to the texture and not the slot (texture unit)
-		GLenum glFilter;
-		if( scaleMode == ScaleMode::LINEAR )
-			glFilter = GL_LINEAR;
-		if( scaleMode == ScaleMode::NEAREST )
-			glFilter = GL_NEAREST;
+		GLenum glMinFilter;
+		GLenum glMagFilter;
+		if( scaleMode == ScaleMode::LINEAR ) {
+			glMinFilter = GL_LINEAR_MIPMAP_LINEAR;
+			//glMinFilter = GL_LINEAR;
+			glMagFilter = GL_LINEAR;
+		}
+		if( scaleMode == ScaleMode::NEAREST ) {
+			glMinFilter = GL_LINEAR_MIPMAP_NEAREST;
+			//glMinFilter = GL_NEAREST ;
+			glMagFilter = GL_NEAREST;
+		}
 
-		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glFilter));
-		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glFilter));
+		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glMinFilter));
+		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glMagFilter));
+
 
 		GLenum format;
 		GLint internalFormat;
@@ -72,7 +81,7 @@ namespace River {
 		// Set data
 		GL(glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data));
 
-		//GL(glGenerateMipmap(GL_TEXTURE_2D));
+		GL(glGenerateMipmap(GL_TEXTURE_2D));
 
 		GL(glBindTexture(GL_TEXTURE_2D, 0));
 	}

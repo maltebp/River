@@ -5,15 +5,23 @@
 
 namespace GlobalAssets {
 
+
 	inline River::AssetCollection* COLLECTION = new River::AssetCollection();;
 
 	namespace Images {
-
+		inline River::Image* CAR = River::Image::create("assets/car.png")
+			.setScaleMode(River::Image::ScaleMode::NEAREST)
+			.finish();
 	}
 
 	namespace Textures {
 
-		inline River::Texture* SANTA_JUMP_1 = River::Texture::create(River::Image::create("assets/santa/Jump (1).png").finish(), true)
+		inline River::Texture* CAR = River::Texture::create(Images::CAR, true)
+			.setAssetCollection(COLLECTION)
+			.setPartiallyTransparent()
+			.finish();
+
+		inline River::Texture* SANTA_JUMP_1 = River::Texture::create(River::Image::create("assets/santa/Jump (1).png").setScaleMode(River::Image::ScaleMode::LINEAR).finish(), true)
 			.setAssetCollection(COLLECTION)
 			.setPartiallyTransparent()
 			.finish();
