@@ -14,7 +14,7 @@ namespace River{
 
         FT_Face face = (FT_Face)nativeFontType; 
         FT_Set_Pixel_Sizes(face, 0, size);
-        height = size;//  (face->size->metrics.ascender >> 6) - (face->size->metrics.descender >> 6); // face->size->metrics.height >> 6;
+        height = size;
 
         glyphMap.reserve(sizeof(Glyph)*93);
         // Range is all printable ASCII characters

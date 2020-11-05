@@ -95,9 +95,6 @@ void MainScene::initialize() {
 
 
 	camera = new River::Camera(1280, 720);
-	// camera->setRotation(0.40);
-    // camera->setPosition( -100, -100, 0);
-	// camera->setZoom(1.5);
 
 	domain.clean();
 
@@ -111,24 +108,12 @@ void MainScene::update() {
 	fpsText->getComponent<River::ECS::Text>()->text = std::to_string(River::Game::getFps()) ;
 
 	GlobalAssets::Fonts::ARIAL->load();
-	//camera->adjustRotation(0.010);
+	camera->adjustRotation(0.250);
 
 	animationSystem->update(domain, 0.025);
 
 	River::SpriteRenderingSystem::render(camera, domain);
 	River::TextRenderingSystem::render(camera, domain);
-
-	//renderSystem->update(domain, imageRenderer);
-
-	//imageRenderer->setCamera(camera);
-
-	//imageRenderer->drawRectangle({ 0, 0, 0.1f, 1280, 1, 0, River::Colors::RED });
-	//imageRenderer->drawRectangle({ 0, 0, 0.1f, 1, 720, 0, River::Colors::RED });
-
-
-	//imageRenderer->drawSprite(font->getGlyph("x").sprite, 0, 0, 0.25f, 300, 175, 0);
-	//imageRenderer->drawSprite(image_coffee, { 100, 100, 0.0f, 20, 20, 0., {} });
-	//imageRenderer->flush();
 
 	domain.clean();
 
