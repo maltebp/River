@@ -43,17 +43,30 @@ void MainScene::createSanta( double x, double y, unsigned int depth) {
 }
 
 
+void MainScene::createText(const std::string& msg, unsigned int size, double x, double y) {
+	auto entity = domain.createEntity();
+	auto transform = entity->addComponent<River::ECS::Transform>();
+	transform->x = x;
+	transform->y = y;
+	transform->depth = 0;
+	
+	auto text = entity->addComponent<River::ECS::Text>();
+	text->font = GlobalAssets::Fonts::ARIAL;
+	text->text = msg;
+	text->size = size;
+}
+
+
 void MainScene::initialize() {
 
 	std::cout << "Initialized" << std::endl;
 
 	imageRenderer = new River::ImageRenderer(River::Game::getWindow());
-	textRenderer = new River::TextRenderer(River::Game::getWindow());
 
 	animationSystem = new River::ECS::SpriteAnimationSystem();
 	
-	River::FontController::setFontFolder("assets");
-	font = River::FontController::getFont("arial", 50);
+	//River::FontController::setFontFolder("assets");
+	//font = River::FontController::getFont("arial", 50);
 
 	/*image_coffee = new River::Texture("assets/coffee.jpg", false, 100, 100, 760.0/2.0, 506.0/2.0);
 	image_llama = new River::Texture("assets/A.png", false);
@@ -71,7 +84,12 @@ void MainScene::initialize() {
 	}*/
 
 
-	createSanta(0, 0, 20);
+	//createSanta(0, 0, 20);
+	createText("Hello world", 10, 0, -200);
+	createText("Hello world", 20, 0, -100);
+	createText("Hello world", 30, 0, 0);
+	createText("Hello world", 40, 0, 100);
+	createText("Hello world", 50, 0, 200);
 
 
 	camera = new River::Camera(1280, 720);
@@ -89,17 +107,15 @@ void MainScene::update() {
 	animationSystem->update(domain, 0.025);
 
 	River::SpriteRenderingSystem::render(camera, domain);
+	River::TextRenderingSystem::render(camera, domain);
 
 	//renderSystem->update(domain, imageRenderer);
 
 	//imageRenderer->setCamera(camera);
-	textRenderer->setCamera(camera);
 
 	//imageRenderer->drawRectangle({ 0, 0, 0.1f, 1280, 1, 0, River::Colors::RED });
 	//imageRenderer->drawRectangle({ 0, 0, 0.1f, 1, 720, 0, River::Colors::RED });
 
-	textRenderer->drawText(std::to_string(River::Game::getFps()), font, River::Colors::BLACK, 0, 0, 0.0f, River::Align::TOP_CENTER);
-	textRenderer->flush();
 
 	//imageRenderer->drawSprite(font->getGlyph("x").sprite, 0, 0, 0.25f, 300, 175, 0);
 	//imageRenderer->drawSprite(image_coffee, { 100, 100, 0.0f, 20, 20, 0., {} });

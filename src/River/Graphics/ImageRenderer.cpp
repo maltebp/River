@@ -96,12 +96,9 @@ namespace River{
 		int textureSlot = -1; // -1 is no texture (just color)
 		unsigned int numTextureChannels = 0;
 		if( textureData.texture != nullptr ) {
-			try {
-				textureSlot = textureBinder.addImage(textureData.texture);
-			} catch( NoTextureSlotException e ) {
+			if( textureBinder.isFull() )
 				flush();
-				textureSlot = textureBinder.addImage(textureData.texture);
-			}
+			textureSlot = textureBinder.addImage(textureData.texture);
 			numTextureChannels = textureData.texture->getNumChannels();
 		}
 		

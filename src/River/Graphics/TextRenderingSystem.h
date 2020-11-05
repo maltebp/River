@@ -1,15 +1,16 @@
 #pragma once
 
-#include "River/Graphics/ImageRenderer.h"
-#include "River/Graphics/Window.h"
+#include "Window.h"
+#include "Camera/Camera.h"
+#include "ImageRenderer.h"
 #include "River/Vendor/RiverECS/ECS.h"
 
 
 namespace River {
 
-	class SpriteRenderingSystem {
+	class TextRenderingSystem {
 	public:
-		
+
 		// TODO: Remove this at some point
 		static void initialize(Window* window);
 
@@ -17,7 +18,7 @@ namespace River {
 
 
 	private:
-		static ImageRenderer* imageRenderer;
+		static inline ImageRenderer* imageRenderer = nullptr;
 
 	};
 

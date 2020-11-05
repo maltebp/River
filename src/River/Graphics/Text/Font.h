@@ -2,52 +2,80 @@
 
 #include <string>
 #include <unordered_map>
+#include <set>
 
-#include "River/Graphics/Texture/Sprite.h"
+#include "FontInstance.h"
+
+#include "River/Error.h"
 
 namespace River {
 
-	class Font {
+	class Font : public Asset {
 	public:
-		struct Glyph {
-			Texture* const texture;
-			const int bearingX, bearingY;
-			const int advance;
-			const int yMax, yMin;
 
-			Glyph(Texture* texture, int bearingX, int bearingY, int advance, int yMax, int yMin)
-				: texture(texture), bearingX(bearingX), bearingY(bearingY), advance(advance), yMax(yMax), yMin(yMin) {
-			}
+		virtual void onLoad() override;
+		virtual void onUnload() override;
+	
+	private:
+		Font(const std::string& fontPath);
+		FontInstance* getFontInstance(unsigned int size);
+
+
+	private:
+		void* nativeFontType;
+
+		std::unordered_map<unsigned int, FontInstance*> instanceMap;
+
+		std::string path = "";
+
+		bool autoLoadSizes = false;
+
+		std::set<unsigned int> sizesToPreload;
+
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Creator
+
+	public:
+		class Creator {
+			friend class Font;
+
+		public:
+
+			/**
+			 * @brief	Automatically load a new Font size, if it doesn't exist and its
+			 *			being requested.
+			*/
+			Creator& enableSizeAutoLoading();
+
+			/**
+			 * @brief	Load the particular Font size, when loading the Font
+			*/
+			Creator& preloadSize(unsigned int fontSize);
+
+
+			Creator& setAssetCollection(AssetCollection*);
+
+			Font* finish();
+			
+
+		private:
+			Creator(const std::string& fontPath);
+
+		private:
+			AssetCollection* assetCollection = nullptr;
+			Font* font;
+
 		};
 
-	private:
-		const void *nativeFontType;
-		const unsigned int size;
-		unsigned int height;
-		std::unordered_map<unsigned int, Glyph> glyphMap;
-
-
-	public:
-		Font(unsigned int size, void* nativeFontType);
-
-		const Glyph &getGlyph(unsigned int characterValue); 
-
-		struct TextSize { unsigned int width = 0, height = 0; };
-		TextSize calculateTextSize(const std::string& text);
-
-
-		/**
-		 * @brief Returns the Font's Height. Note: some glyphs may go beyond this height
-		*/
-		unsigned int getHeight();
 	
-	
-	private:
-		const Glyph &createGlyph(unsigned int characterValue);
+	static Creator create(const std::string& fontPath){
+		return Creator(fontPath);
+	}
 
-		Font(const Font &other);
-		Font &operator=(const Font &);
-	
+	friend class Creator;
+	friend class TextRenderingSystem;
+
 	};
 
 }

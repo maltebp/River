@@ -124,7 +124,7 @@ namespace River {
 			textureCoordinates.x2 > image->getWidth()	||
 			textureCoordinates.y2 > image->getHeight()
 		)
-			throw new InvalidAssetStateException("Texture sampling coordinates (offsets, size) goes beyond image coordinates½");
+			throw new InvalidAssetStateException("Texture sampling coordinates (offsets, size) goes beyond image coordinates");
 
 
 		// Adjust sampling coordinates to actual image coordinates,

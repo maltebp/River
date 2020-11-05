@@ -3,89 +3,116 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include "River/Error.h"
+namespace River {
 
-namespace River{
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Freetype
 
-	Font::Font(unsigned int size, void* nativeFontType) :
-		size(size), nativeFontType(nativeFontType)
-	{   
+	namespace Freetype {
+		static FT_Library library;
+		static bool initialized = false;
 
-        FT_Face face = (FT_Face)nativeFontType; 
-        FT_Set_Pixel_Sizes(face, 0, size);
-        height = size;//  (face->size->metrics.ascender >> 6) - (face->size->metrics.descender >> 6); // face->size->metrics.height >> 6;
+		void initialize() {
+			if( initialized ) return;
 
-        glyphMap.reserve(sizeof(Glyph)*93);
-        // Range is all printable ASCII characters
-        for( unsigned int  characterValue = 33;  characterValue < 126;  characterValue++ ) {
-            createGlyph(characterValue);
-        }
+			if( FT_Init_FreeType(&library) ) {
+				// TODO: Proper exception here
+				throw River::Exception("Could not initialize FreeType library");
+			}
+
+			initialized = true;
+		}
+	}
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+	Font::Font(const std::string& fontPath) {
+		path = fontPath;
+	}
+
+	
+	FontInstance* Font::getFontInstance(unsigned int size) {
+		if( !isLoaded() )
+			throw new AssetNotLoaded("The font '" + path + "' has not been loaded");
+	
+		auto it = instanceMap.find(size);
+		if( it != instanceMap.end() )
+			return it->second;
+
+		if( !autoLoadSizes )
+			throw new AssetNotLoaded("Font size " + std::to_string(size) + " has not been loaded, and auto loaded is not enabled");
+
+		auto result = instanceMap.emplace(size, new FontInstance(size, nativeFontType));
+		return result.first->second;
 	}
 
 
-	const Font::Glyph& Font::getGlyph(unsigned int characterValue) {    
-        auto it = glyphMap.find(characterValue);
-        if( it != glyphMap.end() ) return it->second;
-        return createGlyph(characterValue);
+	void Font::onLoad() {
+		Freetype::initialize();
+
+		// Initialize the font
+		FT_Error result = FT_New_Face(Freetype::library, path.c_str(), 0, (FT_Face*)&nativeFontType);
+		if( result > 0 ) {
+			// TODO: Implement proper exception
+			throw River::AssetException("Error when loading Font '" + path + "' (Freetype error: " + std::to_string(result) + ")");
+		}
+
+		// Preload font sizes
+		for( auto size : sizesToPreload ) {
+			auto result = instanceMap.emplace(size, new FontInstance(size, nativeFontType));
+		}	
 	}
 
 
-    const Font::Glyph& Font::createGlyph(unsigned int characterValue) {
-        FT_Face face = (FT_Face) nativeFontType;
+	void Font::onUnload() {
+		
+		// TODO: Destroy font instnaces
 
-        FT_Set_Pixel_Sizes(face, 0, size);
+		// TODO: Destroy face (FT_Done_Face)
 
-        // TODO: Proper error handling
-        int loadResult = FT_Load_Char(face, characterValue, FT_LOAD_RENDER);
-        if( loadResult != 0 ) {
-            std::string msg = "Could not load glyph "; msg += ((unsigned char)characterValue);  msg += " for font";
-            throw new River::AssetException(msg);
-            // Should it just throw warning instead? Does it make sense to throw exception if it can't load glyph?
-        }
+		// TODO: Clear fontMap
 
-
-        auto &texture = face->glyph->bitmap;
-
-        // TODO: THIS LOADING IS TEMPORARY SOLUTION!
-        auto img = Image::create(texture.buffer, texture.width, texture.rows, 1, 1).setPartiallyTransparent(true).finish();
-        img->load();
-
-        auto tex = Texture::create(img, true).finish();
-        tex->load();
-
-        auto it = glyphMap.emplace(
-            characterValue,
-            Glyph{
-                tex,
-                face->glyph->bitmap_left, face->glyph->bitmap_top,
-                face->glyph->advance.x >> 6,
-                face->glyph->bitmap_top,  face->glyph->bitmap_top-((int)texture.rows)
-            }
-        );
-
-        return it.first->second;
-    }
-
-
-    Font::TextSize Font::calculateTextSize(const std::string &text) {
-        unsigned int minY = 0, maxY = 0, length = 0, glyphMinY, glyphMaxY;
-
-        TextSize size;
-        for( const char& c : text ) {
-            if( c < 0 ) throw new River::NotImplementedException("Font::calculateTextLength: Non-ASCII characters are not supported yet");
-            if( c < 32 ) throw new River::Exception("Control characters cannot be rendered");
-            
-            const Glyph& glyph = getGlyph(c);
-            length += glyph.advance;
-
-            if( glyph.yMax > maxY ) maxY = glyph.yMax;
-            if( glyph.yMin < minY ) minY = glyph.yMin;
-        }
-        if( minY < 0 ) minY *= -1;
-        return TextSize{ length, maxY + minY };
 	}
 
-    unsigned int Font::getHeight() {
-        return height;
-    }
+
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Creator
+
+	Font::Creator::Creator(const std::string& fontPath) {
+		font = new Font(fontPath);
+	}
+
+
+	Font::Creator& Font::Creator::enableSizeAutoLoading() {
+		font->autoLoadSizes = true;
+		return *this;
+	}
+
+
+	Font::Creator& Font::Creator::preloadSize(unsigned int fontSize) {
+		font->sizesToPreload.insert(fontSize);
+		return *this;
+	}
+
+
+	Font::Creator& Font::Creator::setAssetCollection(AssetCollection* collection) {
+		assetCollection = collection;
+		return *this;
+	}
+
+
+	Font* Font::Creator::finish() {
+		if( assetCollection != nullptr )
+			assetCollection->add(font);
+
+		auto returnFont = font;
+		font = nullptr;
+
+		return returnFont;
+	}
+
+
+
+
 }

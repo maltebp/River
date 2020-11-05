@@ -76,10 +76,13 @@
       <AdditionalLibraryDirectories>$(ProjectDir)..\lib\;$(ProjectDir)..\lib\glew\lib\$(Configuration)\$(Platform)\;$(ProjectDir)..\lib\glfw\lib-vc2019\;$(ProjectDir)..\lib\freetype\lib\</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)..\src\*.h" "$(ProjectDir)..\build\include\" /S /Y
-xcopy "$(ProjectDir)..\src\*.hpp" "$(ProjectDir)..\build\include\" /S /Y
-xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y</Command>
+      <Command>xcopy "$(ProjectDir)..\src\*.h" "$(ProjectDir)..\build\include\" /S /Y /q
+xcopy "$(ProjectDir)..\src\*.hpp" "$(ProjectDir)..\build\include\" /S /Y /q
+xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>rd $(ProjectDir)..\build\include /s /q 2&gt;nul</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -108,14 +111,18 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y</Comman
       <AdditionalOptions>/verbose:lib %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <PostBuildEvent>
-      <Command>xcopy /y /d  "$(ProjectDir)lib\freetype\bin\*.dll" "$(ProjectDir)$(OutDir)"
-xcopy "$(ProjectDir)..\src\*.h" "$(ProjectDir)..\build\include\" /S /Y
-xcopy "$(ProjectDir)..\src\*.hpp" "$(ProjectDir)..\build\include\" /S /Y</Command>
+      <Command>xcopy "$(ProjectDir)..\src\*.h" "$(ProjectDir)..\build\include\" /S /Y /q
+xcopy "$(ProjectDir)..\src\*.hpp" "$(ProjectDir)..\build\include\" /S /Y /q
+xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>rd $(ProjectDir)..\build\include /s /q 2&gt;nul</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\River\Asset\AssetCollection.h" />
     <ClInclude Include="src\River\Asset\Asset.h" />
+    <ClInclude Include="src\River\Graphics\Text\Text.h" />
     <ClInclude Include="src\River\Primitives\MouseButton.h" />
     <ClInclude Include="src\River\Event\MouseEvent\MouseButtonEvent.h" />
     <ClInclude Include="src\River\Event\MouseEvent\MouseScrollEvent.h" />
@@ -129,9 +136,8 @@ xcopy "$(ProjectDir)..\src\*.hpp" "$(ProjectDir)..\build\include\" /S /Y</Comman
     <ClInclude Include="src\River\Primitives\Color.h" />
     <ClInclude Include="src\River\Primitives\Alignment.h" />
     <ClInclude Include="src\River\Graphics\Texture\Sprite.h" />
-    <ClInclude Include="src\River\Graphics\Text\FontType.h" />
     <ClInclude Include="src\River\Graphics\Text\Font.h" />
-    <ClInclude Include="src\River\Graphics\Text\FontController.h" />
+    <ClInclude Include="src\River\Graphics\Text\FontInstance.h" />
     <ClInclude Include="src\River\Graphics\Texture\Texture.h" />
     <ClInclude Include="src\River\Graphics\Texture\Image.h" />
     <ClInclude Include="src\River\Event\KeyEvent\KeyEventController.h" />
@@ -153,6 +159,7 @@ xcopy "$(ProjectDir)..\src\*.hpp" "$(ProjectDir)..\build\include\" /S /Y</Comman
     <ClInclude Include="src\River\Graphics\VertexArray.h" />
     <ClInclude Include="src\River\Graphics\TextRenderer.h" />
     <ClInclude Include="src\River\System\System.h" />
+    <ClInclude Include="src\River\Graphics\TextRenderingSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\River\Asset\Asset.cpp" />
@@ -160,9 +167,8 @@ xcopy "$(ProjectDir)..\src\*.hpp" "$(ProjectDir)..\build\include\" /S /Y</Comman
     <ClCompile Include="src\River\Event\MouseEvent\MouseEventController.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteRenderingSystem.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteAnimation\SpriteAnimationSystem.cpp" />
-    <ClCompile Include="src\River\Graphics\Text\FontType.cpp" />
     <ClCompile Include="src\River\Graphics\Text\Font.cpp" />
-    <ClCompile Include="src\River\Graphics\Text\FontController.cpp" />
+    <ClCompile Include="src\River\Graphics\Text\FontInstance.cpp" />
     <ClCompile Include="src\River\Graphics\Texture\Texture.cpp" />
     <ClCompile Include="src\River\Graphics\Texture\Image.cpp" />
     <ClCompile Include="src\River\Event\KeyEvent\KeyEventController.cpp" />
@@ -181,6 +187,7 @@ xcopy "$(ProjectDir)..\src\*.hpp" "$(ProjectDir)..\build\include\" /S /Y</Comman
     <ClCompile Include="src\River\Game.cpp" />
     <ClCompile Include="src\River\Graphics\ImageRenderer.cpp" />
     <ClCompile Include="src\River\Graphics\VertexArray.cpp" />
+    <ClCompile Include="src\River\Graphics\TextRenderingSystem.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

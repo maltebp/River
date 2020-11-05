@@ -8,11 +8,23 @@ namespace GlobalAssets {
 
 	inline River::AssetCollection* COLLECTION = new River::AssetCollection();;
 
+
+
+	namespace Fonts {
+		inline River::Font* ARIAL = River::Font::create("assets/arial.ttf")
+			.setAssetCollection(COLLECTION)
+			.enableSizeAutoLoading()
+			.finish();
+	}
+
+
 	namespace Images {
 		inline River::Image* CAR = River::Image::create("assets/car.png")
 			.setScaleMode(River::Image::ScaleMode::NEAREST)
 			.finish();
 	}
+
+
 
 	namespace Textures {
 

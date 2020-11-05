@@ -20,6 +20,7 @@ void main() {
 	Game::start([]() {
 		GlobalAssets::COLLECTION->load();
 		River::SpriteRenderingSystem::initialize(Game::getWindow());
+		River::TextRenderingSystem::initialize(Game::getWindow());
 		new MainScene(Game::pushLayer());
 	});
 

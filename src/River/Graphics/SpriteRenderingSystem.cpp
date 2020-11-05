@@ -1,6 +1,5 @@
 #include "SpriteRenderingSystem.h"
 
-#include <iostream> // TODO: Remove this
 #include <algorithm>
 
 #include "Texture/Sprite.h"
@@ -39,7 +38,6 @@ namespace River {
 		// Draw opaque entities and set aside transparent ones
 		imageRenderer->disableBlending();
 		domain.forEachEntity<ECS::Sprite, ECS::Transform>([&](ECS::Entity* entity, ECS::Sprite* sprite, ECS::Transform* transform) {
-			std::cout << "Rendering sprite!" << std::endl;
 
 			if( sprite->isPartiallyTransparent() ) {
 				transparentEntities.emplace_back(entity, transform, sprite);

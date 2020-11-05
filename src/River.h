@@ -18,11 +18,12 @@
 #include "River/Graphics/SpriteAnimation/SpriteAnimationSystem.h"
 
 #include "River/Graphics/SpriteRenderingSystem.h"
-
+#include "River/Graphics/TextRenderingSystem.h"
 
 #include "River/Asset/AssetCollection.h"
 
 #include "River/Graphics/Texture/Sprite.h"
 #include "River/Graphics/Texture/Texture.h"
 
-#include "River/Graphics/Text/FontController.h"
+#include "River/Graphics/Text/Font.h"
+#include "River/Graphics/Text/Text.h"

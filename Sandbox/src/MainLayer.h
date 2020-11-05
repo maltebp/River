@@ -14,9 +14,10 @@ public:
 
 private:
 	void createSanta(double x, double y, unsigned int depth);
+	void createText(const std::string& text, unsigned int size, double x, double y);
+
 
 private:
-	River::TextRenderer* textRenderer = nullptr;
 	River::ImageRenderer* imageRenderer = nullptr;
 	River::ECS::SpriteAnimationSystem* animationSystem = nullptr;
 	River::Texture* image_coffee = nullptr;
@@ -24,7 +25,9 @@ private:
 	River::Texture* image_glyph = nullptr;
 	River::Texture* image_blue_circle = nullptr;
 	River::Texture* image_purple_circle = nullptr;
-	River::Font* font = nullptr;
+	//River::Font* font = nullptr;
+
+
 
 
 	River::Texture* santa[8];

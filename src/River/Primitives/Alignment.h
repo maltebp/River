@@ -6,9 +6,6 @@ namespace River {
 		enum class H { LEFT, CENTER, RIGHT };
 		enum class V { TOP, CENTER, BOTTOM };
 
-		const H h;
-		const V v;
-
 		Alignment(V vAlign, H hAlign) : h(hAlign), v(vAlign) { }
 
 		bool isTop() { return v == V::TOP; }
@@ -20,10 +17,14 @@ namespace River {
 		bool isRight() { return h == H::RIGHT; }
 
 		bool isCenter() { return v == V::CENTER && h == H::CENTER; }
+
+	private:
+		H h;
+		V v;
 	};
 
 
-	namespace Align {
+	namespace Alignments {
 
 		const Alignment TOP_LEFT		(Alignment::V::TOP,		Alignment::H::LEFT);
 		const Alignment TOP_CENTER		(Alignment::V::TOP,		Alignment::H::CENTER);
