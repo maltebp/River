@@ -157,7 +157,6 @@ namespace River {
 
 	void Window::clearDepth() {
 		GL(glClear(GL_DEPTH_BUFFER_BIT));
-		// TODO: Implement depth buffer stuff here
 	}
 
 	unsigned int Window::getNumTextureSlots() {
@@ -192,7 +191,8 @@ namespace River {
 
 
 	void Window::glfwMousePosCallback(GLFWwindow* glfwWindow, double mouseX, double mouseY) {
-		MouseEventController::registerMouseMovement(mouseX, mouseY);
+		Window* window = glfwWindowMap[glfwWindow];
+		MouseEventController::registerMouseMovement(mouseX-window->width/2.0, mouseY*(-1)+window->height/2.0);
 	}
 
 

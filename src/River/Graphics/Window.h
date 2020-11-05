@@ -40,6 +40,10 @@ namespace River {
         GLFWwindow* glfwWindow;
         int width;
         int height;
+
+		double mouseXTransform;
+		double mouseYTransform;
+
         std::string title = "River Window";
 
 		/* The number of texture slots (or units) accessible from the fragment shader */

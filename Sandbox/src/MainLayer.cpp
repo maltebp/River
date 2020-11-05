@@ -17,7 +17,7 @@ MainScene::MainScene(River::Layer* layer)
 	});
 
 	layer->onMouseMoveEvent([](auto e) {
-		std::cout << "MouseMove: " << (double)e.movementX << " " << (double)e.positionY << std::endl;
+		std::cout << "MouseMove: " << (double)e.positionX << " " << (double)e.positionY << std::endl;
 	});
 
 	layer->onMouseScrollEvent([](auto e) {
