@@ -14,7 +14,7 @@ public:
 
 private:
 	void createSanta(double x, double y, unsigned int depth);
-	void createText(const std::string& text, unsigned int size, double x, double y);
+	River::ECS::Entity* createText(const std::string& text, unsigned int size, double x, double y);
 
 
 private:
@@ -27,7 +27,7 @@ private:
 	River::Texture* image_purple_circle = nullptr;
 	//River::Font* font = nullptr;
 
-
+	River::ECS::Entity* fpsText = nullptr;
 
 
 	River::Texture* santa[8];

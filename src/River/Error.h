@@ -69,6 +69,11 @@ namespace River {
 		AssetNotFoundException(const std::string& assetName) : AssetException("AssetNotFoundException", "The asset '" + assetName + "' could not be found") {}
 	};
 
+	class AssetDeletionFailedException : public AssetException {
+	public:
+		AssetDeletionFailedException(const std::string& msg) : AssetException("AssetNotFoundException", msg) {}
+	};
+
 	class ShaderException : public Exception {
 	public:
 		ShaderException(const std::string& message) : Exception("ShaderException", message) {}

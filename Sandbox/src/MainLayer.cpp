@@ -43,7 +43,7 @@ void MainScene::createSanta( double x, double y, unsigned int depth) {
 }
 
 
-void MainScene::createText(const std::string& msg, unsigned int size, double x, double y) {
+River::ECS::Entity* MainScene::createText(const std::string& msg, unsigned int size, double x, double y) {
 	auto entity = domain.createEntity();
 	auto transform = entity->addComponent<River::ECS::Transform>();
 	transform->x = x;
@@ -54,6 +54,8 @@ void MainScene::createText(const std::string& msg, unsigned int size, double x, 
 	text->font = GlobalAssets::Fonts::ARIAL;
 	text->text = msg;
 	text->size = size;
+
+	return entity;
 }
 
 
@@ -87,7 +89,7 @@ void MainScene::initialize() {
 	//createSanta(0, 0, 20);
 	createText("Hello world", 10, 0, -200);
 	createText("Hello world", 20, 0, -100);
-	createText("Hello world", 30, 0, 0);
+	fpsText = createText("Hello world", 30, 0, 0);
 	createText("Hello world", 40, 0, 100);
 	createText("Hello world", 50, 0, 200);
 
@@ -98,10 +100,17 @@ void MainScene::initialize() {
 	// camera->setZoom(1.5);
 
 	domain.clean();
+
+	GlobalAssets::Fonts::ARIAL->load();
+
 }
 
 
 void MainScene::update() {
+
+	fpsText->getComponent<River::ECS::Text>()->text = std::to_string(River::Game::getFps()) ;
+
+	GlobalAssets::Fonts::ARIAL->load();
 	//camera->adjustRotation(0.010);
 
 	animationSystem->update(domain, 0.025);
@@ -122,4 +131,5 @@ void MainScene::update() {
 	//imageRenderer->flush();
 
 	domain.clean();
+
 }

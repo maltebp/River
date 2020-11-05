@@ -8,8 +8,6 @@
 namespace River {
 
 	class FontInstance {
-		friend class Font;
-	
 	public:
 		struct Glyph {
 			Texture* const texture;
@@ -24,11 +22,18 @@ namespace River {
 
 
 	public:
+		FontInstance(unsigned int size, void* nativeFontType);
 
 		const Glyph &getGlyph(unsigned int characterValue); 
 
 		struct TextSize { unsigned int width = 0, height = 0; };
 		TextSize calculateTextSize(const std::string& text);
+
+		/**
+		 * @brief	Cleans this FontInstance and calls delete on 'this' once cleaned.
+		 *			This may throw an exception (unlike calling the delete directly)
+		*/
+		void destroy();
 
 
 		/**
@@ -38,12 +43,12 @@ namespace River {
 	
 	
 	private:
-		FontInstance(unsigned int size, void* nativeFontType);
 		~FontInstance();
 
 		FontInstance(const FontInstance& other) = delete;
 		FontInstance& operator=(const FontInstance&) = delete;
 		
+
 		const Glyph &createGlyph(unsigned int characterValue);
 
 

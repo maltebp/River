@@ -59,17 +59,21 @@ namespace River {
 		bool isPartiallyTransparent() const;
 
 
+
+
 		virtual void onLoad() override;
 		virtual void onUnload() override;
 
 
+
+
 	private:
 		Texture();
-		~Texture();
+		~Texture(); // Only dedicated friend classes should be able to delete
 		Texture(const Texture& other) = delete;
 		Texture& operator=(const Texture&) = delete;
 
-		void updateAdjustedCoordinates();
+		void destroy();
 
 
 	private:
@@ -139,10 +143,12 @@ namespace River {
 		*/
 		static Creator create(Image* source, bool dedicatedSource) { return Creator(source, dedicatedSource); }
 
+
+		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+		// Friends
+		friend class FontInstance; // For deleting
+
 	};
-
-
-
 
 }
 

@@ -24,10 +24,21 @@ namespace River{
 	}
 
 
-    FontInstance::~FontInstance() {
-        // TODO: Delete font assets
+    void FontInstance::destroy() {
+        // Delete glyph textures
+        for( auto pair : glyphMap ) {
+            auto texture = pair.second.texture;
+            if( texture != nullptr ) {
+                texture->unload();
+                texture->destroy();
+            }
+        }
+        
+        delete this;
     }
 
+
+    FontInstance::~FontInstance() {}
 
 
 
@@ -62,7 +73,6 @@ namespace River{
             auto img = Image::create(texture.buffer, texture.width, texture.rows, 1, 1)
                 .setPartiallyTransparent(true)
                 .finish();
-            img->load();
 
             tex = Texture::create(img, true)
                 .finish();

@@ -67,8 +67,10 @@ namespace River {
 
 
 	private:
-		Image(){}
-		~Image(){}
+		Image();
+		~Image();
+
+		void destroy();
 
 		void createGLTexture(void* data);
 
@@ -137,6 +139,14 @@ namespace River {
 		static Creator create(unsigned char* data, unsigned int width, unsigned int height, unsigned int channels, unsigned int rowAlignment) {
 			return Creator(data, width, height, channels, rowAlignment);
 		}
+
+
+
+		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+		// Friend classes
+
+		friend class Texture; // For deleting
+
 	};
 
 

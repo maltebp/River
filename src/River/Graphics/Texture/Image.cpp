@@ -7,6 +7,31 @@
 namespace River {
 
 
+	Image::Image(){}
+
+	void Image::destroy() {
+		if( isLoaded() )
+			throw new AssetDeletionFailedException("Image asset is still loaded, and cannot be deleted");
+
+		if( !fromFile ) {
+			// Only the OpenGL textures of Images that are not loaded from files
+			// persists beyond the onUnload function.
+			auto result = GL(glIsTexture(id));
+			if( result != GL_TRUE )
+				// TODO: Convert this to warning
+				throw new AssetDeletionFailedException("Image was not a Texture but it should be (this will be a warning in the future)");
+			GL(glDeleteTextures(1, &id));
+
+		}
+		
+		delete this;
+	}
+
+
+	Image::~Image() {}
+	
+
+
 	void Image::onLoad() {
 
 		// If not from file, the image data will always be loaded, so we do nothing here
@@ -92,7 +117,7 @@ namespace River {
 
 		// If not from file, the image cannot be unloaded without permantly destroying its
 		// data, as it has been created in the code somewhere. So we do nothing.
-		if( fromFile ) return;
+		if( !fromFile ) return;
 
 		if( glIsTexture(id) == GL_TRUE )
 			GL(glDeleteTextures(1, &id));

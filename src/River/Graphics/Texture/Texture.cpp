@@ -32,16 +32,23 @@ namespace River {
 		dedicatedImage = true;
 	}*/
 
-	Texture::Texture() {
+	Texture::Texture() {}
 
+
+	void Texture::destroy() {
+		if( isLoaded() )
+			throw new AssetDeletionFailedException("Texture asset is still loaded, and cannot be destroyed");
+
+		if( dedicatedImage )
+			image->destroy();
+
+		delete this;
 	}
 
 
+	Texture::~Texture() {}
 
-	Texture::~Texture() {
-		/*if( dedicatedImage )
-			delete image;*/
-	}
+
 
 	unsigned int Texture::getWidth() {
 		if( width == 0 )

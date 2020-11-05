@@ -65,13 +65,13 @@ namespace River {
 
 
 	void Font::onUnload() {
-		
-		// TODO: Destroy font instnaces
+		// Deleting size instances
+		for( auto pair : instanceMap ) 
+			pair.second->destroy();
+		instanceMap.clear();
 
-		// TODO: Destroy face (FT_Done_Face)
-
-		// TODO: Clear fontMap
-
+		// Remove face
+		FT_Done_Face((FT_Face) nativeFontType);
 	}
 
 
