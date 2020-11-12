@@ -54,19 +54,15 @@ namespace River::ECS {
 		}						  
 
 
-
-
-
-
 		template <typename C>
-		void forEachEntity(std::function<void (Entity*, C*)> callback) {
+		void forMatchingEntities(std::function<void (Entity*, C*)> callback) {
 			auto componentController = getComponentController<C>();
-			componentController->forEachEntity(callback);
+			componentController->forMatchingEntities(callback);
 		}
 
 
 		template <typename ... C, typename Func>
-		void forEachEntity(Func callback) {
+		void forMatchingEntities(Func callback) {
 			
 			// TODO: Store signature across queries (no need to create new each query)
 			Signature signature(ComponentTypeRegistry::getNumTypes());
@@ -102,6 +98,12 @@ namespace River::ECS {
 		*/
 		void clean();
 
+
+
+		/**
+		 * @return	The total number of "cleaned" entities (doesn't include newly created entities, but includes newly deleted ones)
+		*/
+		unsigned int getNumEntities();
 
 
 		

@@ -108,8 +108,8 @@ namespace River{
 		// Variables for translation and rotation
 		float halfWidth = transformData.width / 2.0f;
 		float halfHeight = transformData.height / 2.0f;
-		float sin = glm::sin(glm::radians(-transformData.rotation));
-		float cos = glm::cos(glm::radians(-transformData.rotation));
+		float sin = glm::sin(glm::radians(transformData.rotation));
+		float cos = glm::cos(glm::radians(transformData.rotation));
 		glm::mat3x2 transform = { { cos, sin }, { -sin, cos }, { transformData.x, transformData.y } };
 
 		glm::vec2 position;

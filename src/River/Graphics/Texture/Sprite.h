@@ -13,8 +13,17 @@ namespace River::ECS {
 	*/
 	struct Sprite : Component {
 		const Texture* texture = nullptr;
-		double rotation = 0;
-		double offsetX, offsetY;
+
+		/**
+		 * @brief	How many degrees the sprite should be rotated relative to the Transform position.
+		 *			This rotation is performed before translating the offset
+		*/
+		double rotationOffset = 0;
+
+		/**
+		 * @brief	Where the sprite should be drawn relative to the transform position
+		*/
+		double xOffset, yOffset;
 		float opacity = 1.0;
 		Color tint;
 		// Tint mode?

@@ -37,7 +37,7 @@ namespace River {
 
 		// Draw opaque entities and set aside transparent ones
 		imageRenderer->disableBlending();
-		domain.forEachEntity<ECS::Sprite, ECS::Transform>([&](ECS::Entity* entity, ECS::Sprite* sprite, ECS::Transform* transform) {
+		domain.forMatchingEntities<ECS::Sprite, ECS::Transform>([&](ECS::Entity* entity, ECS::Sprite* sprite, ECS::Transform* transform) {
 
 			if( sprite->isPartiallyTransparent() ) {
 				transparentEntities.emplace_back(entity, transform, sprite);
@@ -45,12 +45,12 @@ namespace River {
 				imageRenderer->drawSprite(
 					sprite->texture,
 					{
-						(float)transform->x,
-						(float)transform->y,
+						(float)(transform->x + sprite->xOffset),
+						(float)(transform->y + sprite->yOffset),
 						(float)transform->depth,
 						(float)transform->width,
 						(float)transform->height, 
-						0,
+						(float)(transform->rotation + sprite->rotationOffset),
 						sprite->opacity,
 						sprite->tint
 					}
@@ -75,12 +75,12 @@ namespace River {
 			imageRenderer->drawSprite(
 				sprite->texture,
 				{
-					(float)transform->x,
-					(float)transform->y,
+					(float)(transform->x + sprite->xOffset),
+					(float)(transform->y + sprite->yOffset),
 					(float)transform->depth,
 					(float)transform->width,
 					(float)transform->height,
-					0,
+					(float)(transform->rotation + sprite->rotationOffset),
 					sprite->opacity,
 					sprite->tint
 				}

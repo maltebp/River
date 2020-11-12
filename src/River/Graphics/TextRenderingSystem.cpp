@@ -36,7 +36,7 @@ namespace River {
 
 		// Get text entities and add them to list
 		std::vector<TextEntity> textEntities;
-		domain.forEachEntity<ECS::Text, ECS::Transform>([&](ECS::Entity* entity, ECS::Text* text, ECS::Transform* transform) {
+		domain.forMatchingEntities<ECS::Text, ECS::Transform>([&](ECS::Entity* entity, ECS::Text* text, ECS::Transform* transform) {
 			textEntities.emplace_back(entity, transform, text);
 		});
 

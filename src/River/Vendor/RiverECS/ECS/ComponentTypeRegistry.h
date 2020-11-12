@@ -33,7 +33,7 @@ namespace River::ECS {
 
 
 		static unsigned int getNumTypes() {
-			return types.size();
+			return (unsigned int) types.size();
 		}
 
 

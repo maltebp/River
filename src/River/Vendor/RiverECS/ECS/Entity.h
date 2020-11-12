@@ -28,7 +28,10 @@ namespace River::ECS {
 			domain.removeEntityComponent<C>(this);
 		}
 
-		//void destroy();
+		
+		void destroy() {
+			domain.destroyEntity(this);
+		}
 
 
 

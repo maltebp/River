@@ -11,7 +11,7 @@ namespace River::ECS {
 		double depth = 0;
 		double width = 0;
 		double height = 0;
-		
+		double rotation = 0;
 	};
 
 }

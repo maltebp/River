@@ -11,7 +11,7 @@ namespace River::ECS {
 	public:
 		void update(Domain& domain, double timeStep) {
 
-			domain.forEachEntity<AnimatedSprite, Sprite>( [&timeStep](auto& entity, AnimatedSprite* animation, Sprite* sprite) {
+			domain.forMatchingEntities<AnimatedSprite, Sprite>( [&timeStep](auto& entity, AnimatedSprite* animation, Sprite* sprite) {
 				
 				if( animation->animation == nullptr ) return;
 

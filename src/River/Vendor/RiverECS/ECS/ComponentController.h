@@ -51,14 +51,14 @@ namespace River::ECS {
 
 		/**
 		 * @brief	Creates a new component for the given Entity
-		 * 
+		 *
 		 * @return	A temporary pointer to the component. The pointer is invalidated after the compress() or clean() is called
 		*/
 		C* createComponent(Entity* entity) {
 			/*	Created components are stored in the primary list only if the
 				primary list already has memory allocated for it. Otherwise, it's
 				stored in one of the secondary lists until the the controllers
-				'compress' method is called. This is to prevent invalidation of 
+				'compress' method is called. This is to prevent invalidation of
 				pointers to elements in the primary list, in case new components
 				are created during iteration of primary components.
 			*/
@@ -67,9 +67,9 @@ namespace River::ECS {
 
 			if( componentMap.find(entity) != componentMap.end() )
 				throw MultipleComponentException(typeid(C).name()); // Throw exception
-			
+
 			C* component = allocateComponent();
-			
+
 			entityMap[component->id] = entity;
 			componentMap[entity] = component->id;
 
@@ -111,6 +111,9 @@ namespace River::ECS {
 					The pointer is invalidated when the Controller is cleaned or compressed.
 		*/
 		C* getComponent(ComponentId id) {
+			if( id == NULL_COMPONENT_ID )
+				throw new Exception("ComponentId is null");
+
 			// Check if id exists
 			auto iterator = indexMap.find(id);
 			if( iterator == indexMap.end() )
@@ -118,7 +121,7 @@ namespace River::ECS {
 
 			// Find component primary list
 			unsigned int index = iterator->second;
-			unsigned int primaryListSize = (unsigned int) components.size();
+			unsigned int primaryListSize = (unsigned int)components.size();
 			if( index < primaryListSize )
 				return &components.at(index);
 
@@ -135,7 +138,7 @@ namespace River::ECS {
 		 * @brief	Call the given callback for each Entity which has this Component
 		 * @param callback	The callback to call
 		*/
-		void forEachEntity(std::function<void (Entity*, C*)> callback) {
+		void forMatchingEntities(std::function<void(Entity*, C*)> callback) {
 			for( auto& component : components ) {
 				auto entity = entityMap.find(component.id)->second;
 				callback(entity, &component);
@@ -144,13 +147,13 @@ namespace River::ECS {
 
 
 		/**
-		 * @brief	Deletes components that are marked for deletion, and compress the data structure.
+		 * @brief	Deletes components that are marked for deletion, and move newly created components to sequential data structure
 		 *			This invalidated all pointers to Components returned by the controller
 		*/
 		void clean() override {
 			moveNewComponents();
-			deleteComponents();			
-		}		
+			deleteComponents();
+		}
 
 
 		/*
@@ -185,29 +188,40 @@ namespace River::ECS {
 
 
 		/**
-		 * @brief	Adds a component with the given ID to the list of new components	
+		 * @brief	Adds a component with the given ID to the list of new components
 		 * @return	Pointer to the newly added component
 		*/
 		C* allocateComponent() {
 			ComponentId id = createComponentId();
 			unsigned int index = numComponents;
 
-			if( newComponents.size() == 0 || newComponents.back().size() == SECONDARY_LIST_SIZE ) {
-				// All lists are full - create new secondary list
-				newComponents.emplace_back();
-				newComponents.back().reserve(SECONDARY_LIST_SIZE);
+			C* newComponent = nullptr;
+
+			if( components.size() > numComponents ) {
+				newComponent = &components[index];
+				numComponentsInPrimary++;
+				numComponents++;
+			} else {
+				if( newComponents.size() == 0 || newComponents.back().size() == SECONDARY_LIST_SIZE ) {
+					// All lists are full - create new secondary list
+					// This is to ensure that pointers to other newly created components aren't
+					// invalidated
+					newComponents.emplace_back();
+					newComponents.back().reserve(SECONDARY_LIST_SIZE);
+				}
+
+				auto& list = newComponents.back();
+				list.emplace_back();
+				newComponent = &list.back();
+				numComponents++;
 			}
 
-			auto& list = newComponents.back();
-			list.emplace_back();
 
-			auto& newComponent = list.back();
-			newComponent.id = id;			
+			(*newComponent) = C(); // Reset to default values
+			newComponent->id = id;
 			indexMap[id] = index;
 
-			numComponents++;
-
-			return &newComponent;
+			return newComponent;
 		}
 
 
@@ -216,39 +230,39 @@ namespace River::ECS {
 		 *			This invalidated all pointers to Components returned by the controller
 		*/
 		void moveNewComponents() {
-			auto numNewComponentLists = newComponents.size();
-			if( numNewComponentLists == 0 ) return;
 
-			unsigned int primaryListSize = (unsigned int)components.size();
-			unsigned int insertIndex = primaryListSize;
-			unsigned int remainingComponents = numComponents - primaryListSize;
+			// Check if there are any components to move
+			if( newComponents.size() == 0 ) return;
 
-			components.resize(numComponents);
+			// Resize primary list (we'll never downsize)
+			if( components.size() < numComponents )
+				components.resize(numComponents);
 
 			for( auto& secondaryList : newComponents ) {
 				for( auto& component : secondaryList ) {
-					if( insertIndex >= numComponents ) break;
-					auto& newDestination = components.at(insertIndex);
+					if( numComponents - numComponentsInPrimary <= 0 ) break;
+					auto& newDestination = components.at(numComponentsInPrimary);
 					newDestination = component;
-					insertIndex++;
+					numComponentsInPrimary++;
 				}
 			}
 
 			newComponents.clear();
 		}
 
-		
+
 		void deleteComponents() {
-			// we assume that the lists have been compressed when deleting
+			// we assume that all components have been moved to the primary list
 			for( auto& componentId : componentsToDelete ) {
 				auto entity = entityMap.find(componentId)->second;
 				unsigned int index = indexMap.find(componentId)->second;
 
 				auto& component = components.at(index);
 
-				// Move last component to the now empty slot
-				if( (index + 1) < numComponents ) {
-					auto& last = components.at(index);
+				bool isNotLast = (index + 1) < numComponents;
+				if( isNotLast ) {
+					// Move last component to the now empty slot
+					auto& last = components.at(numComponents-1);
 					component = last;
 					indexMap.at(last.id) = index;
 				}
@@ -258,15 +272,18 @@ namespace River::ECS {
 				entityMap.erase(componentId);
 				indexMap.erase(componentId);
 
+				numComponentsInPrimary--;
 				numComponents--;
 			}
+
+			componentsToDelete.clear();
 		}
 
 
 
 	private:
-		ComponentId nextId = 0;
-		
+		ComponentId nextId = 1;
+
 		// Maps entity to component id
 		std::unordered_map<Entity*, ComponentId> componentMap;
 
@@ -281,11 +298,8 @@ namespace River::ECS {
 		std::vector<std::vector<C>> newComponents;
 
 		unsigned int numComponents = 0;
+		unsigned int numComponentsInPrimary = 0; // Number of components in primary list
 		std::vector<C> components;
-		
-
-		// Temporary storage for components created in between compress() calls
-		//std::vector<std::vector<C>> secondaryLists;
 	};
 
 
