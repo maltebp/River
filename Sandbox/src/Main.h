@@ -18,7 +18,7 @@ void main() {
 	Game::setWindowSize(1280, 720);
 
 	Game::start([]() {
-		//GlobalAssets::COLLECTION->load();
+		GlobalAssets::COLLECTION->load();
 		River::SpriteRenderingSystem::initialize(Game::getWindow());
 		River::TextRenderingSystem::initialize(Game::getWindow());
 		new MainScene(Game::pushLayer());

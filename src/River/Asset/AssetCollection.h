@@ -22,13 +22,13 @@ namespace River {
 		/**
 		 * @brief Adds an asset to this collection
 		 *
-		 * @tparam A	Any class inherting from the River::Asset class 
+		 * @tparam A	Any class publicly inherting from the River::Asset class 
 		 * @param a		The asset to add. Does nothing if the asset has already been added
 		 * @return		The same pointer which was passed this function (allows for creation of assets and adding them to the collection in one line).
 		*/
-		template <class A>
+		template <typename A>
 		A* add(A* a) {
-			static_assert(std::is_convertible<A*, Asset*>::value, "Class type must inherit publicly from River::Asset");
+			static_assert(std::is_convertible<A*, Asset*>::value, "Class must inherit publicly from River::Asset");
 			
 			auto casted = (Asset*)a;
 			if( casted->collection != nullptr )

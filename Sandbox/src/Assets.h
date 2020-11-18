@@ -3,10 +3,12 @@
 #include <River.h>
 
 
+
+
 namespace GlobalAssets {
 
 
-	inline River::AssetCollection* COLLECTION = new River::AssetCollection();;
+	inline River::AssetCollection* COLLECTION = new River::AssetCollection();
 
 
 
@@ -71,6 +73,33 @@ namespace GlobalAssets {
 		inline River::Texture* SANTA_JUMP_8 = River::Texture::create(River::Image::create("assets/santa/Jump (8).png").finish(), true)
 			.setAssetCollection(COLLECTION)
 			.setPartiallyTransparent()
+			.finish();
+
+
+
+	}
+
+
+	namespace SpriteAnimation {
+
+		inline River::SpriteAnimation* SANTA_JUMP = River::SpriteAnimation::create(
+				Textures::SANTA_JUMP_1,
+				Textures::SANTA_JUMP_2,
+				Textures::SANTA_JUMP_3,
+				Textures::SANTA_JUMP_4,
+				Textures::SANTA_JUMP_5,
+				Textures::SANTA_JUMP_6,
+				Textures::SANTA_JUMP_7,
+				Textures::SANTA_JUMP_8,
+				Textures::SANTA_JUMP_7,
+				Textures::SANTA_JUMP_6,
+				Textures::SANTA_JUMP_5,
+				Textures::SANTA_JUMP_4,
+				Textures::SANTA_JUMP_3,
+				Textures::SANTA_JUMP_2
+			)
+			.setAssetCollection(COLLECTION)
+			.setDuration(1.5)
 			.finish();
 
 	}

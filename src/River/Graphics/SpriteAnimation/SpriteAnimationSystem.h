@@ -14,19 +14,14 @@ namespace River::ECS {
 			domain.forMatchingEntities<AnimatedSprite, Sprite>( [&timeStep](auto& entity, AnimatedSprite* animation, Sprite* sprite) {
 				
 				if( animation->animation == nullptr ) return;
+				if( animation->paused ) return;
 
-				animation->time += timeStep*animation->speed;
+				animation->time += timeStep * animation->speed;
 				
-				auto animationSpeed = animation->animation->getSpeed();
-				while( animation->time >= animationSpeed ) {
-					animation->time -= animationSpeed;
-					animation->currentFrame++;
-					if( animation->currentFrame >= animation->animation->getNumFrames() )
-						animation->currentFrame = 0;
-				}
+				animation->time = fmod(animation->time, animation->animation->getTotalDuration());
 
 				// Set sprite to correct frame
-				sprite->texture = animation->animation->getSprite(animation->currentFrame);
+				sprite->texture = animation->animation->getFrameAtTime(animation->time);
 			});
 
 		}

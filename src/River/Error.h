@@ -50,11 +50,11 @@ namespace River {
 		AssetException(const std::string& message) : Exception("AssetException", message) {}
 	};
 
-	class InvalidAssetStateException: public Exception {
+	class InvalidAssetStateException: public AssetException {
 	protected:
-		InvalidAssetStateException(const std::string& exceptionName, const std::string& message) : Exception(exceptionName, message) {}
+		InvalidAssetStateException(const std::string& exceptionName, const std::string& message) : AssetException(exceptionName, message) {}
 	public:
-		InvalidAssetStateException(const std::string& message) : Exception("InvalidAssetStateException", message) {}
+		InvalidAssetStateException(const std::string& message) : AssetException("InvalidAssetStateException", message) {}
 	};
 
 	class AssetNotLoaded : public AssetException {
@@ -73,6 +73,7 @@ namespace River {
 	public:
 		AssetDeletionFailedException(const std::string& msg) : AssetException("AssetNotFoundException", msg) {}
 	};
+
 
 	class ShaderException : public Exception {
 	public:

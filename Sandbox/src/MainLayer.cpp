@@ -38,8 +38,13 @@ void MainScene::createSanta( double x, double y, unsigned int depth) {
 	transform->width = 150 * GlobalAssets::Textures::CAR->getAspectRatio();
 	transform->height = 150 ;
 	transform->depth = (double) depth;
+
 	auto sprite = entity->addComponent<River::ECS::Sprite>();
-	sprite->texture = GlobalAssets::Textures::CAR;
+	sprite->texture = GlobalAssets::Textures::SANTA_JUMP_1;
+
+	auto animation = entity->addComponent<River::ECS::AnimatedSprite>();
+	animation->animation = GlobalAssets::SpriteAnimation::SANTA_JUMP;
+
 }
 
 
@@ -86,7 +91,7 @@ void MainScene::initialize() {
 	}*/
 
 
-	//createSanta(0, 0, 20);
+	createSanta(0, 0, 20);
 	createText("Hello world", 10, 0, -200);
 	createText("Hello world", 20, 0, -100);
 	fpsText = createText("Hello world", 30, 0, 0);
@@ -108,9 +113,9 @@ void MainScene::update() {
 	fpsText->getComponent<River::ECS::Text>()->text = std::to_string(River::Game::getFps()) ;
 
 	GlobalAssets::Fonts::ARIAL->load();
-	camera->adjustRotation(0.250);
+	//camera->adjustRotation(0.250);
 
-	animationSystem->update(domain, 0.025);
+	animationSystem->update(domain, 0.016);
 
 	River::SpriteRenderingSystem::render(camera, domain);
 	River::TextRenderingSystem::render(camera, domain);

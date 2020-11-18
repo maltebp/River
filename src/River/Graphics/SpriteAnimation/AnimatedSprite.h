@@ -6,11 +6,23 @@
 namespace River::ECS {
 
 	struct AnimatedSprite : Component {
+
+		/**
+		 * @brief	The Asset to, which describes the Animation to use */
 		SpriteAnimation* animation = nullptr;
-		unsigned int currentFrame = 0;
+
+		/**
+		 * @brief	Percentage speed of the animation	*/
 		float speed = 1.0f;
-		float time = 0;
+
+		/**
+		 * @brief	Whether or not the animation is paused. If paused, time won't get increased, and it will be paused at the current frame.
+		*/
 		bool paused = false;
+
+		/**
+		 * @brief	The current time of the animation (how far into the animation we are)*/
+		float time = 0;
 	};
 
 }
