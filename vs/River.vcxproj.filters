@@ -66,13 +66,7 @@
     <ClInclude Include="src\River\Graphics\TextRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\River\Graphics\SpriteAnimation\AnimatedSprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\River\Graphics\SpriteAnimation\SpriteAnimationSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\River\Graphics\SpriteAnimation\SpriteAnimation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\River\Graphics\Texture\Sprite.h">
@@ -135,6 +129,12 @@
     <ClInclude Include="src\River\Graphics\Text\Text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\River\Graphics\SpriteAnimation\TextureAnimation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Graphics\SpriteAnimation\SpriteAnimation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\River\Game.cpp">
@@ -180,9 +180,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\River\Event\KeyEvent\KeyEventController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\River\Graphics\SpriteAnimation\SpriteAnimationSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\River\Graphics\Texture\ImageBinder.cpp">

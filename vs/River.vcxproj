@@ -130,8 +130,8 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Event\MouseEvent\MouseEventController.h" />
     <ClInclude Include="src\River\Graphics\SpriteRenderingSystem.h" />
     <ClInclude Include="src\River\Graphics\SpriteAnimation\SpriteAnimationSystem.h" />
-    <ClInclude Include="src\River\Graphics\SpriteAnimation\AnimatedSprite.h" />
     <ClInclude Include="src\River\Graphics\SpriteAnimation\SpriteAnimation.h" />
+    <ClInclude Include="src\River\Graphics\SpriteAnimation\TextureAnimation.h" />
     <ClInclude Include="src\River\Graphics\Transform.h" />
     <ClInclude Include="src\River\Primitives\Color.h" />
     <ClInclude Include="src\River\Primitives\Alignment.h" />
@@ -166,7 +166,6 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClCompile Include="src\River\Asset\AssetCollection.cpp" />
     <ClCompile Include="src\River\Event\MouseEvent\MouseEventController.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteRenderingSystem.cpp" />
-    <ClCompile Include="src\River\Graphics\SpriteAnimation\SpriteAnimationSystem.cpp" />
     <ClCompile Include="src\River\Graphics\Text\Font.cpp" />
     <ClCompile Include="src\River\Graphics\Text\FontInstance.cpp" />
     <ClCompile Include="src\River\Graphics\Texture\Texture.cpp" />

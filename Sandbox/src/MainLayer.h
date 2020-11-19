@@ -19,19 +19,8 @@ private:
 
 private:
 	River::ImageRenderer* imageRenderer = nullptr;
-	River::ECS::SpriteAnimationSystem* animationSystem = nullptr;
-	River::Texture* image_coffee = nullptr;
-	River::Texture* image_llama = nullptr;
-	River::Texture* image_glyph = nullptr;
-	River::Texture* image_blue_circle = nullptr;
-	River::Texture* image_purple_circle = nullptr;
-	//River::Font* font = nullptr;
 
 	River::ECS::Entity* fpsText = nullptr;
-
-
-	River::Texture* santa[8];
-	River::SpriteAnimation* santaAnimation;
 
 	River::ECS::Domain domain;
 	River::ECS::Entity* santaEntity;

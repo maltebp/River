@@ -82,7 +82,7 @@ namespace GlobalAssets {
 
 	namespace SpriteAnimation {
 
-		inline River::SpriteAnimation* SANTA_JUMP = River::SpriteAnimation::create(
+		inline River::TextureAnimation* SANTA_JUMP = River::TextureAnimation::create(
 				Textures::SANTA_JUMP_1,
 				Textures::SANTA_JUMP_2,
 				Textures::SANTA_JUMP_3,
@@ -99,7 +99,7 @@ namespace GlobalAssets {
 				Textures::SANTA_JUMP_2
 			)
 			.setAssetCollection(COLLECTION)
-			.setDuration(1.5)
+			.setDuration(1.0)
 			.finish();
 
 	}

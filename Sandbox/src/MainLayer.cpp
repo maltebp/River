@@ -42,7 +42,7 @@ void MainScene::createSanta( double x, double y, unsigned int depth) {
 	auto sprite = entity->addComponent<River::ECS::Sprite>();
 	sprite->texture = GlobalAssets::Textures::SANTA_JUMP_1;
 
-	auto animation = entity->addComponent<River::ECS::AnimatedSprite>();
+	auto animation = entity->addComponent<River::ECS::SpriteAnimation>();
 	animation->animation = GlobalAssets::SpriteAnimation::SANTA_JUMP;
 
 }
@@ -68,29 +68,6 @@ void MainScene::initialize() {
 
 	std::cout << "Initialized" << std::endl;
 
-	imageRenderer = new River::ImageRenderer(River::Game::getWindow());
-
-	animationSystem = new River::ECS::SpriteAnimationSystem();
-	
-	//River::FontController::setFontFolder("assets");
-	//font = River::FontController::getFont("arial", 50);
-
-	/*image_coffee = new River::Texture("assets/coffee.jpg", false, 100, 100, 760.0/2.0, 506.0/2.0);
-	image_llama = new River::Texture("assets/A.png", false);
-	image_blue_circle = new River::Texture("assets/BlueAlphaCircle.png", true);
-	image_purple_circle = new River::Texture("assets/PurpleAlphaCircle.png", true);*/
-
-
-	//santaAnimation = new River::SpriteAnimation(0.05f, santa[0], santa[1], santa[2], santa[3], santa[4], santa[5], santa[6], santa[7]);
-	
-
-	/*for( int i = 0; i < 10; i++ ) {
-		for( int j = 0; j < 10; j++ ) {
-			createSanta(-600 + i * 120, -300 + j * 70, 20);
-		}
-	}*/
-
-
 	createSanta(0, 0, 20);
 	createText("Hello world", 10, 0, -200);
 	createText("Hello world", 20, 0, -100);
@@ -115,8 +92,7 @@ void MainScene::update() {
 	GlobalAssets::Fonts::ARIAL->load();
 	//camera->adjustRotation(0.250);
 
-	animationSystem->update(domain, 0.016);
-
+	River::SpriteAnimationSystem::update(domain, 0.016);
 	River::SpriteRenderingSystem::render(camera, domain);
 	River::TextRenderingSystem::render(camera, domain);
 

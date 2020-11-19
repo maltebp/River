@@ -1,17 +1,18 @@
 #pragma once
 
+#include "SpriteAnimation.h"
 #include "River/Vendor/RiverECS/ECS.h"
 #include "River/Graphics/Texture/Sprite.h"
-#include "AnimatedSprite.h"
 
-namespace River::ECS {
+namespace River {
 
 	class SpriteAnimationSystem {
 
 	public:
-		void update(Domain& domain, double timeStep) {
 
-			domain.forMatchingEntities<AnimatedSprite, Sprite>( [&timeStep](auto& entity, AnimatedSprite* animation, Sprite* sprite) {
+		static void update(ECS::Domain& domain, double timeStep) {
+
+			domain.forMatchingEntities<ECS::SpriteAnimation, ECS::Sprite>( [&timeStep](auto& entity, ECS::SpriteAnimation* animation, ECS::Sprite* sprite) {
 				
 				if( animation->animation == nullptr ) return;
 				if( animation->paused ) return;
