@@ -10,9 +10,9 @@ namespace River {
 
 	public:
 
-		static void update(ECS::Domain& domain, double timeStep) {
+		static void update(ECS::Domain* domain, double timeStep) {
 
-			domain.forMatchingEntities<ECS::SpriteAnimation, ECS::Sprite>( [&timeStep](auto& entity, ECS::SpriteAnimation* animation, ECS::Sprite* sprite) {
+			domain->forMatchingEntities<ECS::SpriteAnimation, ECS::Sprite>( [&timeStep](auto& entity, ECS::SpriteAnimation* animation, ECS::Sprite* sprite) {
 				
 				if( animation->animation == nullptr ) return;
 				if( animation->paused ) return;

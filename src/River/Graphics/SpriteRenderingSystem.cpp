@@ -21,7 +21,7 @@ namespace River {
 
 	
 
-	void SpriteRenderingSystem::render(Camera* camera, ECS::Domain& domain) {
+	void SpriteRenderingSystem::render(ECS::Domain* domain, Camera* camera) {
 		imageRenderer->setCamera(camera);
 
 		// Just to hold data for transparent entities
@@ -37,7 +37,7 @@ namespace River {
 
 		// Draw opaque entities and set aside transparent ones
 		imageRenderer->disableBlending();
-		domain.forMatchingEntities<ECS::Sprite, ECS::Transform>([&](ECS::Entity* entity, ECS::Sprite* sprite, ECS::Transform* transform) {
+		domain->forMatchingEntities<ECS::Sprite, ECS::Transform>([&](ECS::Entity* entity, ECS::Sprite* sprite, ECS::Transform* transform) {
 
 			if( sprite->isPartiallyTransparent() ) {
 				transparentEntities.emplace_back(entity, transform, sprite);

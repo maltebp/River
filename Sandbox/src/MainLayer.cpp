@@ -94,9 +94,9 @@ void MainScene::update() {
 	GlobalAssets::Fonts::ARIAL->load();
 	//camera->adjustRotation(0.250);
 
-	River::SpriteAnimationSystem::update(domain, 0.016);
-	River::SpriteRenderingSystem::render(camera, domain);
-	River::TextRenderingSystem::render(camera, domain);
+	River::SpriteAnimationSystem::update(&domain, 0.016);
+	River::SpriteRenderingSystem::render(&domain, camera);
+	River::TextRenderingSystem::render(&domain, camera);
 
 	domain.clean();
 
