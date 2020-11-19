@@ -41,6 +41,7 @@ void MainScene::createSanta( double x, double y, unsigned int depth) {
 
 	auto sprite = entity->addComponent<River::ECS::Sprite>();
 	sprite->texture = GlobalAssets::Textures::SANTA_JUMP_1;
+	sprite->opacity = 0.5;
 
 	auto animation = entity->addComponent<River::ECS::SpriteAnimation>();
 	animation->animation = GlobalAssets::SpriteAnimation::SANTA_JUMP;
@@ -69,6 +70,7 @@ void MainScene::initialize() {
 	std::cout << "Initialized" << std::endl;
 
 	createSanta(0, 0, 20);
+	createSanta(50, 0, 20);
 	createText("Hello world", 10, 0, -200);
 	createText("Hello world", 20, 0, -100);
 	fpsText = createText("Hello world", 30, 0, 0);

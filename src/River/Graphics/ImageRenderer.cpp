@@ -123,7 +123,7 @@ namespace River{
 		vertices[0].r = transformData.color.r;
 		vertices[0].g = transformData.color.g;
 		vertices[0].b = transformData.color.b;
-		vertices[0].a = transformData.color.a;
+		vertices[0].a = transformData.color.a * transformData.opacity;
 		vertices[0].textureSlot = (GLfloat) textureSlot;
 		vertices[0].textureX = textureData.textureCoordinates.x1;
 		vertices[0].textureY = textureData.textureCoordinates.y1;
@@ -136,7 +136,7 @@ namespace River{
 		vertices[1].r = transformData.color.r;
 		vertices[1].g = transformData.color.g;
 		vertices[1].b = transformData.color.b;
-		vertices[1].a = transformData.color.a;
+		vertices[1].a = transformData.color.a * transformData.opacity;
 		vertices[1].textureSlot = (GLfloat)textureSlot;
 		vertices[1].textureX = textureData.textureCoordinates.x2;
 		vertices[1].textureY = textureData.textureCoordinates.y1;
@@ -149,7 +149,7 @@ namespace River{
 		vertices[2].r = transformData.color.r;
 		vertices[2].g = transformData.color.g;
 		vertices[2].b = transformData.color.b;
-		vertices[2].a = transformData.color.a;
+		vertices[2].a = transformData.color.a * transformData.opacity;
 		vertices[2].textureSlot = (GLfloat)textureSlot;
 		vertices[2].textureX = textureData.textureCoordinates.x1;
 		vertices[2].textureY = textureData.textureCoordinates.y2;
@@ -162,7 +162,7 @@ namespace River{
 		vertices[3].r = transformData.color.r;
 		vertices[3].g = transformData.color.g;
 		vertices[3].b = transformData.color.b;
-		vertices[3].a = transformData.color.a;
+		vertices[3].a = transformData.color.a * transformData.opacity;
 		vertices[3].textureSlot = (GLfloat) textureSlot;
 		vertices[3].textureX = textureData.textureCoordinates.x2;
 		vertices[3].textureY = textureData.textureCoordinates.y2;
