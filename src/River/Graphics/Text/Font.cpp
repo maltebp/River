@@ -80,36 +80,19 @@ namespace River {
 	// Creator
 
 	Font::Creator::Creator(const std::string& fontPath) {
-		font = new Font(fontPath);
+		asset = new Font(fontPath);
 	}
 
 
 	Font::Creator& Font::Creator::enableSizeAutoLoading() {
-		font->autoLoadSizes = true;
+		asset->autoLoadSizes = true;
 		return *this;
 	}
 
 
 	Font::Creator& Font::Creator::preloadSize(unsigned int fontSize) {
-		font->sizesToPreload.insert(fontSize);
+		asset->sizesToPreload.insert(fontSize);
 		return *this;
-	}
-
-
-	Font::Creator& Font::Creator::setAssetCollection(AssetCollection* collection) {
-		assetCollection = collection;
-		return *this;
-	}
-
-
-	Font* Font::Creator::finish() {
-		if( assetCollection != nullptr )
-			assetCollection->add(font);
-
-		auto returnFont = font;
-		font = nullptr;
-
-		return returnFont;
 	}
 
 

@@ -21,11 +21,5 @@ namespace River {
 	bool Asset::isLoaded() {
 		return loadCount > 0;
 	}
-	
-
-	AssetCollection* Asset::getCollection() const {
-		return collection;
-	}
-
 
 }

@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "River/Asset/AssetCreator.h"
 #include "River/Asset/AssetCollection.h"
 #include "Image.h"
 
@@ -97,12 +98,8 @@ namespace River {
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Creator
 	public:
-		class Creator {
+		class Creator : public AssetCreator<Creator, Texture> {
 			friend class Texture;
-
-			Texture* texture;
-
-			AssetCollection* collection = nullptr;
 
 			Creator(Image* image, bool dedicatedImage);
 
@@ -123,15 +120,6 @@ namespace River {
 			 *			will get partially transparent pixels drawn.
 			*/
 			Creator& setPartiallyTransparent();
-
-			/**
-			 * @brief	Finishes the creation of the Texture
-			 * @return	Pointer to the dynamically allocated Texture
-			*/
-			Texture* finish();
-
-			Creator& setAssetCollection(AssetCollection*);
-
 		};
 
 

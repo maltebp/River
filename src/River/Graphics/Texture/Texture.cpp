@@ -3,34 +3,6 @@
 namespace River {
 
 
-	/*Texture::Texture(Image *texture, bool partiallyTransparent, unsigned int textureOffsetX, unsigned int textureOffsetY, unsigned int textureWidth, unsigned int textureHeight) {
-		this->image = texture;
-		this->dedicatedImage = false;
-		
-		if( textureWidth == 0 ) textureWidth = texture->getWidth();
-		if( textureHeight == 0 ) textureHeight = texture->getHeight();
-
-		textureCoordinates = {
-			texture->normalizeX(textureOffsetX),
-			texture->normalizeY(textureOffsetY),
-			texture->normalizeX(textureOffsetX+textureWidth),
-			texture->normalizeY(textureOffsetY+textureHeight)
-		};
-		updateAdjustedCoordinates(); 
-
-		this->width = textureWidth;
-		this->height = textureHeight;
-	
-		this->partiallyTransparent = partiallyTransparent;
-	}*/
-
-
-	/*Texture::Texture(const std::string& imagePath, bool partiallyTransparent, unsigned int textureOffsetX, unsigned int textureOffsetY, unsigned int textureWidth, unsigned int textureHeight) :
-		Texture(Image::create(imagePath).setPartiallyTransparent(partiallyTransparent).finish(), textureOffsetX, textureOffsetY, textureWidth, textureHeight)
-	{
-		this->partiallyTransparent = partiallyTransparent;
-		dedicatedImage = true;
-	}*/
 
 	Texture::Texture() {}
 
@@ -75,36 +47,6 @@ namespace River {
 	Image *Texture::getImage() const {
 		return image;
 	}
-
-	
-
-	//void Texture::flipVertically() {
-	//	verticallyFlipped = true;
-	//	updateAdjustedCoordinates();
-	//}
-
-	//void Texture::flipHorizontally() {
-	//	horizontallyFlipped = true;
-	//	updateAdjustedCoordinates();
-	//}
-
-	//void Texture::updateAdjustedCoordinates() {
-
-	//	if( horizontallyFlipped ) {
-	//		flippedCoordinates.x1 = textureCoordinates.x2;
-	//		flippedCoordinates.x2 = textureCoordinates.x1;
-	//	} else {  
-	//		flippedCoordinates.x1 = textureCoordinates.x1;
-	//		flippedCoordinates.x2 = textureCoordinates.x2;
-	//	}		   
-	//	if( verticallyFlipped ) {
-	//		flippedCoordinates.y1 = textureCoordinates.y2;
-	//		flippedCoordinates.y2 = textureCoordinates.y1;
-	//	}else {	 
-	//		flippedCoordinates.y1 = textureCoordinates.y1;
-	//		flippedCoordinates.y2 = textureCoordinates.y2;
-	//	}
-	//}
 
 	bool Texture::hasDedicatedImage() const {
 		return dedicatedImage;
@@ -169,39 +111,39 @@ namespace River {
 
 
 	Texture::Creator::Creator(Image* source, bool dedicatedImage) {
-		texture = new Texture();
-		texture->image = source;
-		texture->partiallyTransparent = source->isPartiallyTransparent();
-		texture->dedicatedImage = dedicatedImage;
+		asset = new Texture();
+		asset->image = source;
+		asset->partiallyTransparent = source->isPartiallyTransparent();
+		asset->dedicatedImage = dedicatedImage;
 
 		// Sample x2/y2 of 0 means "from offset x/y to full width/height".
 		// However these coordinates can only be set once the image has been loaded.
-		texture->textureCoordinates.x1 = 0;
-		texture->textureCoordinates.x2 = 0;
-		texture->textureCoordinates.y1 = 0;
-		texture->textureCoordinates.y2 = 0;
+		asset->textureCoordinates.x1 = 0;
+		asset->textureCoordinates.x2 = 0;
+		asset->textureCoordinates.y1 = 0;
+		asset->textureCoordinates.y2 = 0;
 	}
 
 	
 	Texture::Creator& Texture::Creator::setSamplingOffset(unsigned int x, unsigned int y) {
-		auto width = texture->textureCoordinates.x2 - texture->textureCoordinates.x1;
-		texture->textureCoordinates.x1 = x;
+		auto width = asset->textureCoordinates.x2 - asset->textureCoordinates.x1;
+		asset->textureCoordinates.x1 = x;
 
-		auto height = texture->textureCoordinates.y2 - texture->textureCoordinates.y1;
-		texture->textureCoordinates.y1 = y;
+		auto height = asset->textureCoordinates.y2 - asset->textureCoordinates.y1;
+		asset->textureCoordinates.y1 = y;
 
 		// Only if the width/height is larger than zero (means it shouldn't be full width)
 		// we move the second coordinate, so the width/height remains the same
-		if( width > 0 ) texture->textureCoordinates.x2 = x + width; 
-		if( height > 0 ) texture->textureCoordinates.y2 = y + height; 
+		if( width > 0 ) asset->textureCoordinates.x2 = x + width; 
+		if( height > 0 ) asset->textureCoordinates.y2 = y + height; 
 
 		return *this;
 	}
 
 
 	Texture::Creator& Texture::Creator::setSamplingSize(unsigned int width, unsigned height) {
-		texture->textureCoordinates.x2 = texture->textureCoordinates.x1 + width;
-		texture->textureCoordinates.y2 = texture->textureCoordinates.y1 + height;
+		asset->textureCoordinates.x2 = asset->textureCoordinates.x1 + width;
+		asset->textureCoordinates.y2 = asset->textureCoordinates.y1 + height;
 
 		return *this;
 
@@ -209,26 +151,9 @@ namespace River {
 
 
 	Texture::Creator& Texture::Creator::setPartiallyTransparent() {
-		texture->partiallyTransparent = true;
+		asset->partiallyTransparent = true;
 
 		return *this;
-	}
-
-	Texture::Creator& Texture::Creator::setAssetCollection(AssetCollection* collection) {
-		this->collection = collection;
-		return *this;
-	}
-
-
-	Texture* Texture::Creator::finish() {
-		if( texture == nullptr )
-			throw new InvalidStateException("Texture Creator has already returned its Texture");
-
-		if( collection != nullptr ) collection->add(texture);
-		
-		auto finishedTexture = texture;
-		texture = nullptr;
-		return finishedTexture;
 	}
 
 }

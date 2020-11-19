@@ -4,6 +4,9 @@
 #include <unordered_map>
 #include <set>
 
+#include "River/Asset/Asset.h"
+#include "River/Asset/AssetCreator.h"
+
 #include "FontInstance.h"
 
 #include "River/Error.h"
@@ -37,7 +40,7 @@ namespace River {
 	// Creator
 
 	public:
-		class Creator {
+		class Creator : public AssetCreator<Creator, Font> {
 			friend class Font;
 
 		public:
@@ -53,19 +56,10 @@ namespace River {
 			*/
 			Creator& preloadSize(unsigned int fontSize);
 
-
-			Creator& setAssetCollection(AssetCollection*);
-
-			Font* finish();
-			
-
 		private:
 			Creator(const std::string& fontPath);
 
 		private:
-			AssetCollection* assetCollection = nullptr;
-			Font* font;
-
 		};
 
 	

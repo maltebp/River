@@ -2,8 +2,10 @@
 
 #include "River/Graphics/Texture/Texture.h"
 #include "River/Error.h"
+
 #include "River/Asset/Asset.h"
 #include "River/Asset/AssetCollection.h"
+#include "River/Asset/AssetCreator.h"
 
 
 namespace River {
@@ -140,11 +142,9 @@ namespace River {
 	// Creator
 	public:
 		
-		class Creator {
+		class Creator : public AssetCreator<Creator, TextureAnimation> {
 			friend class TextureAnimation;
 
-			bool finished = false;
-			TextureAnimation* animation;
 			AssetCollection* collection = nullptr;
 
 			template<typename ... Frames>
@@ -153,14 +153,14 @@ namespace River {
 				static_assert(sizeof...(Frames) > 0, "TextureAnimation must receieve at least one texture for its sequence");
 				static_assert(std::conjunction<std::is_same<River::Texture*, Frames>...>::value, "Sprites must be of type River::Texture*");
 
-				animation = new TextureAnimation();
+				asset = new TextureAnimation();
 
 				// Populate array
-				(void(animation->frames.push_back(frames)), ...); // Fold expression
+				(void(asset->frames.push_back(frames)), ...); // Fold expression
 
-				animation->durations.assign(animation->frames.size(), 0.25);
+				asset->durations.assign(asset->frames.size(), 0.25);
 				
-				animation->recalculateTotalDuration();
+				asset->recalculateTotalDuration();
 			}
 
 
@@ -177,13 +177,13 @@ namespace River {
 
 				unsigned int numTimes = sizeof...(Durations);
 
-				if( numTimes != animation->frames.size() )
+				if( numTimes != asset->frames.size() )
 					throw new InvalidArgumentException("Number of animation durations does not match number of frames in TextureAnimation");
 
-				animation->durations.clear();
-				(void(animation->durations.push_back(durations)), ...);
+				asset->durations.clear();
+				(void(asset->durations.push_back(durations)), ...);
 
-				animation->recalculateTotalDuration();
+				asset->recalculateTotalDuration();
 
 				return *this;
 			}
@@ -196,9 +196,9 @@ namespace River {
 			Creator& setDuration(float duration) {
 				if( !(duration > 0) )
 					throw new InvalidArgumentException("Animation duration of TextureAnimation must be larger than 0");
-				std::fill(animation->durations.begin(), animation->durations.end(), duration / animation->frames.size());
+				std::fill(asset->durations.begin(), asset->durations.end(), duration / asset->frames.size());
 
-				animation->recalculateTotalDuration();
+				asset->recalculateTotalDuration();
 
 				return *this;
 			}
@@ -211,38 +211,13 @@ namespace River {
 			Creator& setFrameDuration(unsigned int frameIndex, float duration) {
 				if( !(duration > 0) )
 					throw new InvalidArgumentException("Animation duration of TextureAnimation must be larger than 0");
-				if( !(frameIndex < animation->durations.size()) )
+				if( !(frameIndex < asset->durations.size()) )
 					throw new InvalidArgumentException("Frame index is out of bounds for TextureAnimation");
-				animation->durations[frameIndex] = duration;
+				asset->durations[frameIndex] = duration;
 
-				animation->recalculateTotalDuration();
-
-				return *this;
-			}
-
-
-			/**
-			 * @brief	Sets the collection of Assets that this TextureAnimation asset belongs to
-			*/
-			Creator& setAssetCollection(AssetCollection* collection) {
-				this->collection = collection;
+				asset->recalculateTotalDuration();
 
 				return *this;
-			}
-
-
-			/**
-			 * @brief	Finishes the creation of the Texture
-			 * @return	Pointer to the dynamically allocated Texture
-			*/
-			TextureAnimation* finish() {
-				if( finished )
-					throw new InvalidStateException("TextureAnimation::Creator has already finished");
-
-				if( collection != nullptr ) collection->add(animation);
-
-				finished = true;
-				return animation;
 			}
 					
 		};

@@ -32,11 +32,6 @@ namespace River {
 		*/
 		bool isLoaded();
 
-		/**
-		 * @return	Pointer to the collection this asset belongs to, or nullptr if it doesn't belong to any collection 
-		*/
-		AssetCollection* getCollection() const;
-
 
 	protected:
 
@@ -53,7 +48,6 @@ namespace River {
 
 	protected:
 		unsigned int loadCount = 0;
-		AssetCollection* collection = nullptr;	
 	};
 
 }

@@ -188,9 +188,9 @@ namespace River {
 
 
 	Image::Creator::Creator(const std::string& filePath) {
-		image = new Image();
-		image->filePath = filePath;
-		image->fromFile = true;
+		asset = new Image();
+		asset->filePath = filePath;
+		asset->fromFile = true;
 	}
 
 
@@ -198,40 +198,31 @@ namespace River {
 	 * @brief	Constructs an Image from a data source. The image will copy the data on creation, and unloading this image will have no effect on memory.
 	*/
 	Image::Creator::Creator(unsigned char* data, unsigned int width, unsigned int height, unsigned int channels, unsigned int rowAlignment) {
-		image = new Image();
-		image->fromFile = false;
-		image->width = width;
-		image->height = height;
-		image->channels = channels;
-		image->rowAlignment = rowAlignment;
+		asset = new Image();
+		asset->fromFile = false;
+		asset->width = width;
+		asset->height = height;
+		asset->channels = channels;
+		asset->rowAlignment = rowAlignment;
 		this->imageData = data;
 	}
 
 
-	Image* Image::Creator::finish() {
-		if( assetCollection != nullptr ) assetCollection->add(image);
-
-		if( !image->fromFile ) {
+	void Image::Creator::onFinish() {
+		if( !asset->fromFile ) {
 			// The image should always be "loaded" when not from file
 			// so we construct it here
-			image->createGLTexture(imageData);
+			asset->createGLTexture(imageData);
 		}
-
-		return image;
 	}
 
 	Image::Creator& Image::Creator::setPartiallyTransparent(bool toggle) {
-		image->partiallyTransparent = toggle;
+		asset->partiallyTransparent = toggle;
 		return *this;
 	}
 
 	Image::Creator& Image::Creator::setScaleMode(ScaleMode mode) {
-		image->scaleMode = mode;
-		return *this;
-	}
-
-	Image::Creator& Image::Creator::setAssetCollection(AssetCollection* collection) {
-		assetCollection = collection;
+		asset->scaleMode = mode;
 		return *this;
 	}
 

@@ -2,8 +2,9 @@
 
 #include <string>
 
-
+#include "River/Asset/AssetCreator.h"
 #include "River/Asset/AssetCollection.h"
+
 #include "../GL.h"
 
 namespace River {
@@ -106,7 +107,7 @@ namespace River {
 
 	public:
 
-		class Creator {
+		class Creator : public AssetCreator<Creator, Image> {
 			friend class Image;
 
 		private:
@@ -114,21 +115,15 @@ namespace River {
 			Creator(unsigned char* data, unsigned int width, unsigned int height, unsigned int channels, unsigned int rowAlignment);
 		
 		public:
-			Image* finish();
-
-			Creator& setAssetCollection(AssetCollection*);
 			Creator& setPartiallyTransparent(bool toggle);
 			Creator& setScaleMode(ScaleMode mode);
 
+		protected:
+			void onFinish() override;
 
 		private:
-			Image* image;
-			
 			// Temporary pointer to image data, when not loading from file
 			unsigned char* imageData = nullptr;
-
-			// Temporary pointer to asset collection
-			AssetCollection* assetCollection = nullptr;
 		};
 		
 
