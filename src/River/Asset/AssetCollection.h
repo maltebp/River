@@ -22,13 +22,9 @@ namespace River {
 		/**
 		 * @brief Adds an asset to this collection
 		 *
-		 * @tparam A	Any class publicly inherting from the River::Asset class 
 		 * @param a		The asset to add. Does nothing if the asset has already been added
 		*/
-		template <typename A>
-		void add(A* a) {
-			static_assert(std::is_convertible<A*, Asset*>::value, "Class must inherit publicly from River::Asset");
-			
+		void add(Asset* a) {
 			auto iterator = std::find(assets.begin(), assets.end(), a);
 			if( iterator == assets.end() )
 				assets.push_back(a);
