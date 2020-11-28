@@ -37,14 +37,6 @@ namespace River {
 	}
 
 
-	/*Layer* Layer::pushLayer() {
-		Layer* layer = new Layer();
-		layer->parent = this;
-		layersToAdd.push_back(layer);
-		return layer;
-	}*/
-
-
 	void Layer::removeLayer(Layer* layer) {
 		if( layer == nullptr )
 			throw new InvalidArgumentException("Layer cannot be null");

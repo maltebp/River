@@ -120,12 +120,6 @@ namespace River {
 	}
 
 
-	Layer* Game::pushLayer() {
-		return rootLayer->pushLayer();
-	}
-
-
-
 	void Game::setClearColor(Color color) {
 		clearColor = color;
 		if( window != nullptr )

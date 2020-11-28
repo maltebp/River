@@ -10,32 +10,19 @@
 
 namespace River {
 
-
 	// Forward declaring game, so we can friend it
 	class Game;
 
+
 	/**
-	 * @brief	Represents a logical layer in the Game. Layers are structure in a hierarchy, where each layer,
-	 *			may have a number of children, and each child its own children etc.
+	 * @brief	Abstract class, representing a logical layer in the Game.
+	 *			Layers are structure in a hierarchy, where each layer, may have a number of children,
+	 *			and each child its own children etc.
 	 *			
-	 *			Layers are added to the game using the 'pushLayer' methods of the this class or the Game class.
-	 *			You may add either "Raw" Layers (no inheritance), or your own specialised Layer by inhereting
-	 *			this class.
+	 *			Layers are added to Layers or to the Game using the 'pushLayer' methods in either of those classes.
 	*/
 	class Layer {
 	public:
-
-
-		/**
-		 * @brief	Create and add a new child Layer to this Layer. It's a "raw" Layer, and functionality
-		 *			may be added by setting the 'on[Something]' std::functions.
-		*/
-		Layer* pushLayer() {
-			Layer* layer = new Layer();
-			layersToAdd.push_back(layer);
-			return layer;
-		}
-
 
 		/**
 		 * @brief	Create and add a new child Layer to this Layer, of the given template type.
@@ -53,7 +40,6 @@ namespace River {
 			return layer;
 		}
 
-
 		/**
 		 * @brief	Removes a child Layer from this Layer.
 		 *			The layer is only marked for deletion, and will only effectively be removed during next "cleaning" of this layer.
@@ -63,39 +49,35 @@ namespace River {
 		*/
 		void removeLayer(Layer* layer);
 
-
 		/**
 		 * @brief	Removes all children from this layer by calling the 'removeLayer(..)' on
 		 *			each child.
 		*/
 		void clearLayers();
 
-
 		/**
 		 * @return	The parent Layer of this layer. It may be null, if called before onCreate(..), or if
   		 *			the layer has no parent (is root layer).
 		*/
 		Layer* getParent();
-
-
-		/**
-		 * @brief	Function called when the Layer has been effectively added to its parent (after the parent has been cleaned)
-		*/
-		std::function<void()> onCreate = [](){};
-		std::function<void()> onUpdate = [](){};
-		std::function<void()> onDestroy = [](){};
 		
-		std::function<void(KeyEvent&)> onKeyEvent = [](auto e){};
-		std::function<void(MouseMoveEvent&)> onMouseMoveEvent = [](auto e){};
-		std::function<void(MouseScrollEvent&)> onMouseScrollEvent = [](auto e){};
-		std::function<void(MouseButtonEvent&)> onMouseButtonEvent = [](auto e){};
-
-
-
 
 	protected:
 		Layer() {}
-		~Layer();
+		virtual ~Layer() = 0;
+
+		/**
+		 * @brief	Method called when the Layer has been effectively added to its parent (after the parent has been cleaned)
+		*/
+		virtual void onCreate(){}
+		virtual void onUpdate(){}
+		virtual void onDestroy(){}
+
+		virtual void onKeyEvent(KeyEvent&) {}
+		virtual void onMouseMoveEvent(MouseMoveEvent&) {}
+		virtual void onMouseScrollEvent(MouseScrollEvent&) {}
+		virtual void onMouseButtonEvent(MouseButtonEvent&) {}
+
 
 	private:
 		Layer(Layer&) = delete;

@@ -7,27 +7,12 @@
 MainLayer::MainLayer(const std::string& arg) {
 	std::cout << "Start arg: " << arg;
 
-	onUpdate = [this](){ this->update(); };
-	onCreate = [this](){ this->initialize(); };
-
 
 	// event printing functions
-	onKeyEvent = [](auto e) {
-		std::cout << "KeyEvent: " << (int) e.key << " " << (int) e.action << std::endl;
-	};
-
-	onMouseMoveEvent = [](auto e) {
-		std::cout << "MouseMove: " << (double)e.positionX << " " << (double)e.positionY << std::endl;
-	};
-
-	onMouseScrollEvent = [](auto e) {
-		std::cout << "MouseScroll: " << (double)e.amount << std::endl;
-	};
-
-	onMouseButtonEvent = [](auto e) {
-		std::cout << "MouseButton: " << e.button << " " << (int)e.action << std::endl;
-	};
+	
 }
+
+
 
 
 void MainLayer::createSanta( double x, double y, unsigned int depth) {
@@ -65,7 +50,7 @@ River::ECS::Entity* MainLayer::createText(const std::string& msg, unsigned int s
 }
 
 
-void MainLayer::initialize() {
+void MainLayer::onCreate() {
 
 	std::cout << "Initialized" << std::endl;
 
@@ -91,7 +76,7 @@ void MainLayer::initialize() {
 }
 
 
-void MainLayer::update() {
+void MainLayer::onUpdate() {
 
 	fpsText->getComponent<River::ECS::Text>()->text = std::to_string(River::Game::getFps()) ;
 
@@ -105,3 +90,20 @@ void MainLayer::update() {
 	domain.clean();
 
 }
+
+
+void MainLayer::onKeyEvent(River::KeyEvent& e) {
+	std::cout << "KeyEvent: " << (int) e.key << " " << (int) e.action << std::endl;
+};
+
+void MainLayer::onMouseMoveEvent(River::MouseMoveEvent& e) {
+	std::cout << "MouseMove: " << (double)e.positionX << " " << (double)e.positionY << std::endl;
+};
+
+void MainLayer::onMouseScrollEvent(River::MouseScrollEvent& e) {
+	std::cout << "MouseScroll: " << (double)e.amount << std::endl;
+};
+
+void MainLayer::onMouseButtonEvent(River::MouseButtonEvent& e) {
+	std::cout << "MouseButton: " << e.button << " " << (int)e.action << std::endl;
+};

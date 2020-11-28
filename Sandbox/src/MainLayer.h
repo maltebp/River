@@ -9,8 +9,14 @@ public:
 
 	MainLayer(const std::string&);
 
-	void update();
-	void initialize();
+	void onCreate() override;
+	void onUpdate() override;
+
+	void onKeyEvent(River::KeyEvent& e) override;
+	void onMouseMoveEvent(River::MouseMoveEvent& e) override;
+	void onMouseScrollEvent(River::MouseScrollEvent& e) override;
+	void onMouseButtonEvent(River::MouseButtonEvent& e) override;
+
 
 private:
 	void createSanta(double x, double y, unsigned int depth);

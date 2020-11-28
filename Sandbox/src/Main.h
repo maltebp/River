@@ -22,7 +22,6 @@ void main() {
 		River::SpriteRenderingSystem::initialize(Game::getWindow());
 		River::TextRenderingSystem::initialize(Game::getWindow());
 		Game::pushLayer<MainLayer>("This is a layer starting argument!");
-		//new MainLayer(Game::pushLayer());
 	});
 
 
