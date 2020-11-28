@@ -4,33 +4,33 @@
 
 #include "Assets.h"
 
-MainScene::MainScene(River::Layer* layer) 
-	: layer(layer)
-{
-	layer->onUpdate([this]() {this->update();  });
-	layer->onCreate([this]() {this->initialize();  });
+MainLayer::MainLayer(const std::string& arg) {
+	std::cout << "Start arg: " << arg;
+
+	onUpdate = [this](){ this->update(); };
+	onCreate = [this](){ this->initialize(); };
 
 
 	// event printing functions
-	layer->onKeyEvent([](auto e) {
+	onKeyEvent = [](auto e) {
 		std::cout << "KeyEvent: " << (int) e.key << " " << (int) e.action << std::endl;
-	});
+	};
 
-	layer->onMouseMoveEvent([](auto e) {
+	onMouseMoveEvent = [](auto e) {
 		std::cout << "MouseMove: " << (double)e.positionX << " " << (double)e.positionY << std::endl;
-	});
+	};
 
-	layer->onMouseScrollEvent([](auto e) {
+	onMouseScrollEvent = [](auto e) {
 		std::cout << "MouseScroll: " << (double)e.amount << std::endl;
-	});
+	};
 
-	layer->onMouseButtonEvent([](auto e) {
+	onMouseButtonEvent = [](auto e) {
 		std::cout << "MouseButton: " << e.button << " " << (int)e.action << std::endl;
-	});
+	};
 }
 
 
-void MainScene::createSanta( double x, double y, unsigned int depth) {
+void MainLayer::createSanta( double x, double y, unsigned int depth) {
 	auto entity = domain.createEntity();
 	auto transform = entity->addComponent<River::ECS::Transform>();
 	transform->x = x;
@@ -49,7 +49,7 @@ void MainScene::createSanta( double x, double y, unsigned int depth) {
 }
 
 
-River::ECS::Entity* MainScene::createText(const std::string& msg, unsigned int size, double x, double y) {
+River::ECS::Entity* MainLayer::createText(const std::string& msg, unsigned int size, double x, double y) {
 	auto entity = domain.createEntity();
 	auto transform = entity->addComponent<River::ECS::Transform>();
 	transform->x = x;
@@ -65,12 +65,16 @@ River::ECS::Entity* MainScene::createText(const std::string& msg, unsigned int s
 }
 
 
-void MainScene::initialize() {
+void MainLayer::initialize() {
 
 	std::cout << "Initialized" << std::endl;
 
 	createSanta(0, 0, 20);
 	createSanta(50, 0, 20);
+	createSanta(650, 0, 20);
+	createSanta(650, 320, 20);
+	createSanta(650, 0, 20);
+	createSanta(650, -320, 20);
 	createText("Hello world", 10, 0, -200);
 	createText("Hello world", 20, 0, -100);
 	fpsText = createText("Hello world", 30, 0, 0);
@@ -87,7 +91,7 @@ void MainScene::initialize() {
 }
 
 
-void MainScene::update() {
+void MainLayer::update() {
 
 	fpsText->getComponent<River::ECS::Text>()->text = std::to_string(River::Game::getFps()) ;
 

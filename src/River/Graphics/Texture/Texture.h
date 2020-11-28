@@ -6,6 +6,7 @@
 #include "River/Asset/AssetCollection.h"
 #include "Image.h"
 
+
 namespace River {
 
 
@@ -19,25 +20,21 @@ namespace River {
 		/**
 		 * @brief The non-normalized Texture width
 		*/
-		unsigned int getWidth();
+		unsigned int getWidth() const;	
 
 		/**
 		 * @brief The non-normalized Texture width
 		*/
-		unsigned int getHeight();
+		unsigned int getHeight() const;
 		
 
 		/**
 		 * @return	The aspectio ratio of the width and height, calculated by dividing width with height.
 		*/
-		double getAspectRatio();
+		double getAspectRatio() const;
+
 
 		Image* getImage() const;
-
-
-		void flipVertically();
-
-		void flipHorizontally();
 
 		/**
 		 * @brief 

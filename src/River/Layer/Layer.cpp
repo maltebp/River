@@ -3,15 +3,12 @@
 namespace River {
 
 
-	Layer::Layer(Layer* parent)
-		: parent(parent)
-	{}
 
 	Layer::~Layer() {
-		// When a layer is deleted, wit will call its destroy callback
+		// When a layer is deleted, it will call its destroy callback
 		// and recursively delete its children
 
-		if( destroyCallback != nullptr ) destroyCallback();
+		onDestroy();
 		for( auto subLayer : layers ) delete subLayer;
 	}
 
@@ -19,8 +16,7 @@ namespace River {
 	void Layer::clean() {
 		for( auto layer : layersToAdd ) {
 			layers.push_back(layer);
-			if( layer->createCallback != nullptr )
-				layer->createCallback();
+			layer->onCreate();
 			layer->clean();
 		}
 		layersToAdd.clear();
@@ -41,21 +37,12 @@ namespace River {
 	}
 
 
-
-	void Layer::setCamera(Camera *camera){
-		this->camera = camera;
-	}
-
-	Camera* Layer::getCamera(){
-		return camera;
-	}
-
-
-	Layer* Layer::pushLayer() {
-		Layer* layer = new Layer(this);
+	/*Layer* Layer::pushLayer() {
+		Layer* layer = new Layer();
+		layer->parent = this;
 		layersToAdd.push_back(layer);
 		return layer;
-	}
+	}*/
 
 
 	void Layer::removeLayer(Layer* layer) {
@@ -75,27 +62,25 @@ namespace River {
 	}
 
 
+	Layer* Layer::getParent() {
+		return parent;
+	}
+
+
+
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Callback setters
 
 
 	void Layer::create() {
-		if( createCallback != nullptr ) createCallback(); 
-	}
-	void Layer::onCreate(std::function<void()> callback) {
-		createCallback = callback;
+		onCreate(); 
 	}
 
 
 	void Layer::update() {
-		if( updateCallback != nullptr ) updateCallback();
+		onUpdate();
 		for( auto subLayer : layers ) subLayer->update();
 	}
-
-	void Layer::onUpdate(std::function<void()> callback) {
-		updateCallback = callback;
-	}
-
 
 	void Layer::destroy() {
 		// Sort of a special case... It doesn't call the destroy callbakc directly, but
@@ -105,21 +90,13 @@ namespace River {
 		if( parent != nullptr ) parent->removeLayer(this);
 	}
 
-	void Layer::onDestroy(std::function<void()> callback) {
-		destroyCallback = destroyCallback;
-	}
-
 
 	void Layer::keyEvent(KeyEvent& e) {
 		for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
 			if( e.isConsumed() ) break;
 			(*it)->keyEvent(e);
 		}
-		if( keyCallback != nullptr && !e.isConsumed() ) keyCallback(e);
-	}
-
-	void Layer::onKeyEvent(std::function<void(KeyEvent&)> callback) {
-		keyCallback = callback;
+		if( !e.isConsumed() ) onKeyEvent(e);
 	}
 
 
@@ -128,11 +105,7 @@ namespace River {
 			if( e.isConsumed() ) break;
 			(*it)->mouseMoveEvent(e);
 		}
-		if( mouseMoveCallback != nullptr && !e.isConsumed() ) mouseMoveCallback(e);
-	}
-
-	void Layer::onMouseMoveEvent(std::function<void(MouseMoveEvent&)> callback) {
-		mouseMoveCallback = callback;
+		if( !e.isConsumed() ) onMouseMoveEvent(e);
 	}
 
 
@@ -141,11 +114,7 @@ namespace River {
 			if( e.isConsumed() ) break;
 			(*it)->mouseScrollEvent(e);
 		}
-		if( mouseScrollCallback != nullptr && !e.isConsumed() ) mouseScrollCallback(e);
-	}
-
-	void Layer::onMouseScrollEvent(std::function<void(MouseScrollEvent&)> callback) {
-		mouseScrollCallback = callback;
+		if( !e.isConsumed() ) onMouseScrollEvent(e);
 	}
 
 
@@ -154,11 +123,8 @@ namespace River {
 			if( e.isConsumed() ) break;
 			(*it)->mouseButtonEvent(e);
 		}
-		if( mouseButtonCallback != nullptr && !e.isConsumed() ) mouseButtonCallback(e);
+		if( !e.isConsumed() ) onMouseButtonEvent(e);
 	}
 
-	void Layer::onMouseButtonEvent(std::function<void(MouseButtonEvent&)> callback) {
-		mouseButtonCallback = callback;
-	}
 }
 

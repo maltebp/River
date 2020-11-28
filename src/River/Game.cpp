@@ -125,6 +125,7 @@ namespace River {
 	}
 
 
+
 	void Game::setClearColor(Color color) {
 		clearColor = color;
 		if( window != nullptr )

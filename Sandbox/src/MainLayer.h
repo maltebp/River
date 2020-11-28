@@ -2,12 +2,12 @@
 
 #include <River.h>
 
+#include <string>
 
-
-class MainScene {
+class MainLayer : public River::Layer {
 public:
 
-	MainScene(River::Layer* layer);
+	MainLayer(const std::string&);
 
 	void update();
 	void initialize();

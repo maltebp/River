@@ -51,23 +51,24 @@ namespace River {
 	}
 
 
-	
-
-
 	namespace MouseButtons {
 
-		inline const MouseButton	UNKNOWN		= {"Unknown",	0	};
-		inline const MouseButton	LEFT		= {"Left",		1	};
-		inline const MouseButton	RIGHT		= {"Right",		2	};
+		/**
+		 * @brief	An unknown mouse button (may indicate an error has occured in the framework)
+		*/
+		inline const MouseButton	UNKNOWN		= { "Unknown",	0	};
+
+		inline const MouseButton	LEFT		= { "Left",		1	};
+		inline const MouseButton	RIGHT		= { "Right",	2	};
 
 		// Mousewheel press
-		inline const MouseButton	MIDDLE		= {"Middle",	3	};
+		inline const MouseButton	MIDDLE		= { "Middle",	3	};
 		
 		// This may depend on the mouse settings
-		inline const MouseButton	EXTRA1		= {"Extra1",	4	};
-		inline const MouseButton	EXTRA2		= {"Extra2",	5	};
-		inline const MouseButton	EXTRA3		= {"Extra3",	6	};
-		inline const MouseButton	EXTRA4		= {"Extra4",	7	};
-		inline const MouseButton	EXTRA5		= {"Extra5",	8	};
+		inline const MouseButton	EXTRA1		= { "Extra1",	4	};
+		inline const MouseButton	EXTRA2		= { "Extra2",	5	};
+		inline const MouseButton	EXTRA3		= { "Extra3",	6	};
+		inline const MouseButton	EXTRA4		= { "Extra4",	7	};
+		inline const MouseButton	EXTRA5		= { "Extra5",	8	};
 	}
 }

@@ -21,12 +21,12 @@ namespace River {
 
 			/**
 			 * @brief	Signals that a key was pressed (held down) this event cycle. A pressed events will occur each cycle,
-		     *			until the key is released again, and an up event will be fired
+		     *			until the key is released again, and an up event will be fired.
 			*/
 			PRESSED,
 
 			/**
-			 * @brief	Signals that a was down and was released "up"
+			 * @brief	Signals that a key was down, and has now been releaseed
 			*/
 			UP
 		};

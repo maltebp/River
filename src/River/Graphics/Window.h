@@ -56,7 +56,8 @@ namespace River {
 
 		Color clearColor;
 
-		KeyEventController keyEventController;	
+		KeyEventController keyEventController;
+
 	};
 }
 

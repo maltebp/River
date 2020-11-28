@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "Texture/Texture.h"
 #include "Texture/Sprite.h"
 #include "Transform.h"
 #include "Text/Text.h"

@@ -22,7 +22,7 @@ namespace River {
 
 
 
-	unsigned int Texture::getWidth() {
+	unsigned int Texture::getWidth() const {
 		if( width == 0 )
 			// The texture should use full width of image, and it hasn't been
 			// calculated yet, as it hasn't been loaded.
@@ -30,7 +30,7 @@ namespace River {
 		return width;
 	}
 
-	unsigned int Texture::getHeight() {
+	unsigned int Texture::getHeight() const {
 		if( height == 0 )
 			// The texture should use full width of image, and it hasn't been
 			// calculated yet, as it hasn't been loaded.
@@ -40,7 +40,7 @@ namespace River {
 
 
 
-	double Texture::getAspectRatio() {
+	double Texture::getAspectRatio() const {
 		return width / (double) height;
 	}
 

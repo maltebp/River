@@ -12,6 +12,7 @@ namespace River::ECS {
      *			It doesn't contain a position, as this should be defined externally.
 	*/
 	struct Sprite : Component {
+
 		const Texture* texture = nullptr;
 
 		/**
@@ -27,8 +28,6 @@ namespace River::ECS {
 		float opacity = 1.0;
 		Color tint;
 		// Tint mode?
-
-
 
 		bool isPartiallyTransparent() const {
 			return texture->isPartiallyTransparent() || (opacity > 0.0 && opacity < 1.0);

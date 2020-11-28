@@ -138,6 +138,9 @@
     <ClInclude Include="src\River\Asset\AssetCreator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\River\Event\WindowEvent\WindowEventController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\River\Game.cpp">
@@ -213,6 +216,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\River\Graphics\TextRenderingSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\River\Event\WindowEvent\WindowEventController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -12,12 +12,11 @@ namespace River {
 	class MouseEventController {
 	public:
 
-
 		/**
-		 * @brief	Initializes the controller by setting the mouse initial position
+		 * @brief	Initializes the controller by setting the initial position of the mouse
 		*/
 		static void initialize(double mouseX, double mouseY);
-		
+	
 		static void registerMouseMovement(double newX, double newY);
 
 		static bool hasMovementOccured();
@@ -65,7 +64,7 @@ namespace River {
 
 		/**
 		 * @brief	Maps a MouseButton code to its event state
-		 * @details	Once an event is added to this, it will remain their for the rest of the program
+		 * @details	Once an event is added to this, it will remain there for the rest of the program
 		 *			We're using the button code instead of the button object, as its comparison operator has been overloaded,
 		 *			and thus its hashing functionality is out of order (for now)
 		*/
