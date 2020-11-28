@@ -16,6 +16,7 @@ namespace River {
 
 	void Layer::clean() {
 		for( auto layer : layersToAdd ) {
+			layer->parent = this;
 			layers.push_back(layer);
 			layer->onCreate();
 			layer->onCreateAction();
