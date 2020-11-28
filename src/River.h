@@ -3,6 +3,9 @@
 #include "River/Game.h"
 #include "River/Error.h"
 
+#include "River/Layer/Layer.h"
+#include "River/Layer/SimpleLayer.h"
+
 #include "River/Graphics/ImageRenderer.h"
 #include "River/Graphics/TextRenderer.h"
 

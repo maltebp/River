@@ -15,7 +15,7 @@ namespace River {
 
 
 	/**
-	 * @brief	Abstract class, representing a logical layer in the Game.
+	 * @brief	Represents a logical layer in the Game.
 	 *			Layers are structure in a hierarchy, where each layer, may have a number of children,
 	 *			and each child its own children etc.
 	 *			
@@ -23,6 +23,17 @@ namespace River {
 	*/
 	class Layer {
 	public:
+
+
+		/**
+		 * @brief	Create and add a new child Layer to this Layer
+		*/
+		Layer* pushLayer() {
+			Layer* layer = new Layer();
+			layersToAdd.push_back(layer);
+			return layer;
+		}
+
 
 		/**
 		 * @brief	Create and add a new child Layer to this Layer, of the given template type.
@@ -41,8 +52,10 @@ namespace River {
 		}
 
 		/**
-		 * @brief	Removes a child Layer from this Layer.
-		 *			The layer is only marked for deletion, and will only effectively be removed during next "cleaning" of this layer.
+		 * @brief	Marks a child of this layer for removal and deletion. All children of the given Layer will be
+		 *			marked recursively as well.
+		 *			
+		 *			The actual removal/deletion will take place, when this Layer is being cleaned.
 		 *
 		 * @param layer	The layer to add
 		 * @throws River::IllegalArgumentException	If the 'layer' is a nullptr
@@ -60,11 +73,47 @@ namespace River {
   		 *			the layer has no parent (is root layer).
 		*/
 		Layer* getParent();
+
+
+		/**
+		 * @brief	Sets an action function to be called immediately after the matching virtual function.
+		*/
+		void onCreate(std::function<void()> action);
+
+		/**
+		 * @brief	Sets an action function to be called immediately after the matching virtual function.
+		*/
+		void onUpdate(std::function<void()> action);
+
+		/**
+		 * @brief	Sets an action function to be called immediately after the matching virtual function.
+		*/
+		void onDestroy(std::function<void()> action);
+
+		/**
+		 * @brief	Sets an action function to be called immediately after the matching virtual function.
+		*/
+		void onKeyEvent(std::function<void(KeyEvent&)> action);
+
+		/**
+		 * @brief	Sets an action function to be called immediately after the matching virtual function.
+		*/
+		void onMouseMoveEvent(std::function<void(MouseMoveEvent&)> action);
+
+		/**
+		 * @brief	Sets an action function to be called immediately after the matching virtual function.
+		*/
+		void onMouseScrollEvent(std::function<void(MouseScrollEvent&)> action);
+
+		/**
+		 * @brief	Sets an action function to be called immediately after the matching virtual function.
+		*/
+		void onMouseButtonEvent(std::function<void(MouseButtonEvent&)> action);
 		
 
 	protected:
 		Layer() {}
-		virtual ~Layer() = 0;
+		virtual ~Layer();
 
 		/**
 		 * @brief	Method called when the Layer has been effectively added to its parent (after the parent has been cleaned)
@@ -88,8 +137,6 @@ namespace River {
 		*/
 		void clean();
 
-		// Methods which fire callbacks
-		void create();
 		void update();
 		void destroy();
 		void keyEvent(KeyEvent&);
@@ -104,7 +151,19 @@ namespace River {
 		std::vector<Layer*> layers;
 		std::vector<Layer*> layersToAdd;
 		std::vector<Layer*> layersToRemove;
-	
+
+
+		// Actions - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+		std::function<void()> onCreateAction = [](){};
+		std::function<void()> onUpdateAction = [](){};
+		std::function<void()> onDestroyAction = [](){};
+		
+		std::function<void(KeyEvent&)> onKeyEventAction = [](auto e){};
+		std::function<void(MouseMoveEvent&)> onMouseMoveEventAction = [](auto e){};
+		std::function<void(MouseScrollEvent&)> onMouseScrollEventAction = [](auto e){};
+		std::function<void(MouseButtonEvent&)> onMouseButtonEventAction = [](auto e){};
+		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 		friend Game;
 	};
 }

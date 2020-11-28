@@ -5,7 +5,7 @@
 
 #include "Error.h"
 #include "Graphics/Window.h"
-#include "Layer/SimpleLayer.h"
+#include "Layer/Layer.h"
 #include "Primitives/Color.h"
 #include "Asset/AssetCollection.h"
 
@@ -29,6 +29,9 @@ namespace River {
 
 		static Window* getWindow();
 
+		static Layer* pushLayer() {
+			return rootLayer->pushLayer();
+		}
 
 		template <typename L, typename ... Args>
 		static L* pushLayer(Args ... args) {
@@ -75,7 +78,7 @@ namespace River {
 		/**
 		 * @brief	An "abstract" layer in that it has no callback, only serves as a container for sub layers and will never be deleted
 		*/
-		static inline Layer* rootLayer = new SimpleLayer();
+		static inline Layer* rootLayer = new Layer();
 
 
 
