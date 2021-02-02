@@ -85,6 +85,12 @@ namespace River {
 		GLException(const std::string& message) : Exception("GLException", message) {}
 	};
 
+	
+	class AudioException : public Exception {
+	public:
+		AudioException(const std::string& message) : Exception("AudioException", message) {}
+	};
+
 	class NoTextureSlotException : public Exception{
 	public:
 		NoTextureSlotException() : Exception("NoTextureSlotException", "No texture slot is available") {}

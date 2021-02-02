@@ -8,6 +8,8 @@
 #include <sstream>
 #include <algorithm>
 
+#include "Audio/AudioSystem.h"
+
 #include "Event/MouseEvent/MouseEventController.h"
 
 
@@ -51,6 +53,9 @@ namespace River {
 		std::cout << "GLEW initialized" << std::endl;
 		std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
 		std::cout << "Graphics card: " << glGetString(GL_RENDERER) << std::endl;
+
+		// Initialize audio system
+		AudioSystem::initialize();
 
 		window->setClearColor(clearColor);
 

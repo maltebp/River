@@ -70,10 +70,10 @@
       <AdditionalLibraryDirectories>C:\Users\Malte\Projects\River\x64\Debug</AdditionalLibraryDirectories>
     </Link>
     <Lib>
-      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;freetype.lib;RiverECS\lib\$(Configuration)-$(Platform)\RiverECS.lib</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;freetype.lib;RiverECS\lib\$(Configuration)-$(Platform)\RiverECS.lib;OpenAL32.lib</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\lib\;$(ProjectDir)..\lib\glew\lib\$(Configuration)\$(Platform)\;$(ProjectDir)..\lib\glfw\lib-vc2019\;$(ProjectDir)..\lib\freetype\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\lib\OpenAL\libs\Win64\;$(ProjectDir)..\lib\;$(ProjectDir)..\lib\glew\lib\$(Configuration)\$(Platform)\;$(ProjectDir)..\lib\glfw\lib-vc2019\;$(ProjectDir)..\lib\freetype\lib\</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)..\src\*.h" "$(ProjectDir)..\build\include\" /S /Y /q
@@ -120,6 +120,8 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\Audio\AudioSystem.h" />
+    <ClInclude Include="src\River\Audio\Sound.h" />
     <ClInclude Include="src\River\Layer\SimpleLayer.h" />
     <ClInclude Include="src\River\Asset\AssetCreator.h" />
     <ClInclude Include="src\River\Asset\AssetCollection.h" />
@@ -160,13 +162,14 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Graphics\ImageRenderer.h" />
     <ClInclude Include="src\River\Graphics\VertexArray.h" />
     <ClInclude Include="src\River\Graphics\TextRenderer.h" />
-    <ClInclude Include="src\River\System\System.h" />
     <ClInclude Include="src\River\Graphics\TextRenderingSystem.h" />
     <ClInclude Include="src\River\Event\WindowEvent\WindowEventController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\River\Asset\Asset.cpp" />
     <ClCompile Include="src\River\Asset\AssetCollection.cpp" />
+    <ClCompile Include="src\River\Audio\AudioSystem.cpp" />
+    <ClCompile Include="src\River\Audio\Sound.cpp" />
     <ClCompile Include="src\River\Event\MouseEvent\MouseEventController.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteRenderingSystem.cpp" />
     <ClCompile Include="src\River\Graphics\Text\Font.cpp" />
