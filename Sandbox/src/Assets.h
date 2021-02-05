@@ -79,6 +79,13 @@ namespace GlobalAssets {
 	}
 
 
+	namespace Sounds {
+		inline River::AudioAsset* TEST_SOUND = River::AudioAsset::create("assets/test.wav")
+			.addToCollection(COLLECTION)
+			.finish();
+	}
+
+
 	namespace SpriteAnimation {
 
 		inline River::TextureAnimation* SANTA_JUMP = River::TextureAnimation::create(

@@ -20,9 +20,8 @@ namespace River {
 	template <typename C, typename A>
 	class AssetCreator {
 	public:
-
+		
 		static_assert(std::is_convertible<A*, Asset*>::value, "Class must inherit publicly from River::Asset");
-
 
 		/**
 		 * @brief	Add this Asset to an AssetCollection. If the asset is already added to the collection,

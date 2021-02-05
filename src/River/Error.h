@@ -50,6 +50,16 @@ namespace River {
 		AssetException(const std::string& message) : Exception("AssetException", message) {}
 	};
 
+
+	/// <summary>
+	/// States that something is wrong with the file used for the asset (i.e. wrong data format)
+	/// </summary>
+	class InvalidAssetException : public AssetException {
+	public:
+		InvalidAssetException(const std::string& message) : AssetException("InvalidAssetException", message) {}
+	};
+
+
 	class InvalidAssetStateException: public AssetException {
 	protected:
 		InvalidAssetStateException(const std::string& exceptionName, const std::string& message) : AssetException(exceptionName, message) {}

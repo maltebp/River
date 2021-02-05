@@ -54,6 +54,8 @@ void MainLayer::onCreate() {
 
 	std::cout << "Initialized" << std::endl;
 
+	River::AudioSystem::playAudio(GlobalAssets::Sounds::TEST_SOUND);
+
 	createSanta(0, 0, 20);
 	createSanta(50, 0, 20);
 	createSanta(650, 0, 20);

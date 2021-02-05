@@ -24,32 +24,24 @@ namespace River {
 			LINEAR, NEAREST
 		};
 
+
 	public:
-		
-
-
 		void bind(unsigned int textureSlot);
+
 		unsigned int getId() { return id; }
 
 		unsigned int getNumChannels();
 
 		static Image *getWhiteTexture();
 
-
-
-
-
 		unsigned int getWidth();
 
 		unsigned int getHeight();
-
-		
 
 		/**
 		 * @brief Normalizes the x-coordinate into the OpenGL coordinates (ranging from 0 to 1);
 		*/
 		float normalizeX(unsigned int coordinate);
-
 
 		/**
 		 * @brief Normalizes the x-coordinate into the OpenGL coordinates (ranging from 0 to 1);
@@ -59,13 +51,12 @@ namespace River {
 
 		bool isPartiallyTransparent() const;
 
+	protected:
 		/**
 		 * @brief	Loads the image, if the image was constructed from a filepath
 		*/
 		virtual void onLoad() override;
 		virtual void onUnload() override;
-
-
 
 	private:
 		Image();
@@ -119,7 +110,7 @@ namespace River {
 			Creator& setScaleMode(ScaleMode mode);
 
 		protected:
-			void onFinish() override;
+			void onFinish() override;	
 
 		private:
 			// Temporary pointer to image data, when not loading from file

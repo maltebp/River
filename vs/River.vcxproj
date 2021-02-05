@@ -120,6 +120,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\Audio\AudioAsset.h" />
     <ClInclude Include="src\River\Audio\AudioSystem.h" />
     <ClInclude Include="src\River\Audio\Sound.h" />
     <ClInclude Include="src\River\Layer\SimpleLayer.h" />
@@ -150,6 +151,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Graphics\Camera\Camera.h" />
     <ClInclude Include="src\River\Graphics\Texture\ImageBinder.h" />
     <ClInclude Include="src\River\Layer\Layer.h" />
+    <ClInclude Include="src\River\Vendor\dr_wav\dr_wav.h" />
     <ClInclude Include="src\River\Vendor\stb_image\stb_image.h" />
     <ClInclude Include="src\River\Graphics\Shader\ShaderProgram.h" />
     <ClInclude Include="src\River\Graphics\GL.h" />
@@ -166,6 +168,9 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Event\WindowEvent\WindowEventController.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\River\Audio\ALUtility.cpp" />
+    <ClCompile Include="src\River\Audio\ALUtility.h" />
+    <ClCompile Include="src\River\Audio\AudioAsset.cpp" />
     <ClCompile Include="src\River\Asset\Asset.cpp" />
     <ClCompile Include="src\River\Asset\AssetCollection.cpp" />
     <ClCompile Include="src\River\Audio\AudioSystem.cpp" />
