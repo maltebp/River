@@ -13,7 +13,7 @@ namespace River {
 
 		static std::string errorToString(ALenum errorCode);
 
-		static void checkError();
+		static void checkErrors();
 
 		static std::string contextErrorToString(ALCenum errorCode);
 

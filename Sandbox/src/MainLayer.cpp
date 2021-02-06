@@ -80,6 +80,8 @@ void MainLayer::onCreate() {
 
 void MainLayer::onUpdate() {
 
+	River::AudioSystem::update(0.016666);
+
 	fpsText->getComponent<River::ECS::Text>()->text = std::to_string(River::Game::getFps()) ;
 
 	GlobalAssets::Fonts::ARIAL->load();

@@ -42,7 +42,7 @@ namespace River {
 		}
 
 		if (stream) {
-			// Store file for streaming later
+			// Stor< file for streaming later
 			*nativeData->file = file;
 		}
 
@@ -50,26 +50,25 @@ namespace River {
 		else {
 			
 			// Read file data
-			int16_t* data = new int16_t[2 * numSamples * file.channels];
+			int16_t* data = new int16_t[numSamples * file.channels];
 			if (data == nullptr) throw new Exception("Malloc failed");
 			drwav_read_pcm_frames_s16(&file, file.totalPCMFrameCount, static_cast<drwav_int16*>(data));
 
 			// Convert stereo to mono (in-place)
 			if (file.channels == 2) {
-				int16_t* data16 = static_cast<int16_t*>(data);
 				for (size_t i = 0; i < numSamples; i++)
 					// Upcast then downcast to prevent overflow
-					data16[i] = static_cast<int16_t>((static_cast<int32_t>(data16[i * 2]) + static_cast<int32_t>(data16[i * 2 + 1])) * 0.5);
+					data[i] = static_cast<int16_t>((static_cast<int32_t>(data[i * 2]) + static_cast<int32_t>(data[i * 2 + 1])) * 0.5);
 			}
 
 			{ // Copy to OpenAL buffer
 				ALuint bufferId;
 
 				alGenBuffers(1, &bufferId);
-				ALUtility::checkError();
+				ALUtility::checkErrors();
 
-				alBufferData(bufferId, AL_FORMAT_MONO16, data, static_cast<ALsizei>(numSamples), static_cast<ALsizei>(sampleRate));
-				ALUtility::checkError();
+				alBufferData(bufferId, AL_FORMAT_MONO16, data, static_cast<ALsizei>(numSamples)*2, static_cast<ALsizei>(sampleRate));
+				ALUtility::checkErrors();
 
 				nativeData->samplesBuffer = bufferId;
 			}
@@ -98,7 +97,7 @@ namespace River {
 			throw new AssetNotLoaded();
 		if (!stream)
 			throw new InvalidAssetStateException("AudioAsset is not a stream");
-		return this->nativeData;
+		return static_cast<NativeData*>(nativeData)->file;
 	}
 
 
@@ -111,9 +110,22 @@ namespace River {
 	}
 
 
+	double AudioAsset::getLength() {
+		if (!isLoaded())
+			throw new AssetNotLoaded();
+		return (double)((long double)numSamples / (long double)sampleRate);
+	}
+
+
 	bool AudioAsset::isStream() {
 		return stream;
 	}
+
+
+	unsigned int AudioAsset::getPriority() {
+		return priority;
+	}
+
 
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -128,7 +140,13 @@ namespace River {
 		asset->filePath = filePath;
 	}
 
+
 	void AudioAsset::Creator::setStreamed(bool toggle) {
 		asset->stream = toggle;
+	}
+
+	
+	void AudioAsset::Creator::setPriority(unsigned int priority) {
+		asset->priority = priority;
 	}
 }

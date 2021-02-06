@@ -32,7 +32,7 @@ namespace River {
 	}
 
 
-	void ALUtility::checkError() {
+	void ALUtility::checkErrors() {
 		ALenum error = alGetError();
 		if (error == AL_NO_ERROR) return;
 

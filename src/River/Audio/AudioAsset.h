@@ -8,6 +8,8 @@ namespace River {
 	class AudioAsset : public Asset {
 	public:
 
+		static inline const unsigned DEFAULT_PRIORITY = 10;
+
 		/// <returns>A pointer to the native file handle</returns>
 		void* getFile();
 
@@ -16,6 +18,14 @@ namespace River {
 
 		/// <returns>True if this AudioAsset is a stream</returns>
 		bool isStream();
+
+		/**
+	     *	@returns  The length of this AudioAsset in seconds
+		 */
+		double getLength();
+
+		/// <returns>Returns the priority of this sound asset</returns>
+		unsigned int getPriority();
 
 	protected:
 		virtual void onLoad() override;
@@ -43,6 +53,8 @@ namespace River {
 		// Native data handle
 		void* nativeData = nullptr;
 
+		unsigned int priority = DEFAULT_PRIORITY;
+
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Creator
@@ -59,6 +71,13 @@ namespace River {
 			*			when loaded, of if it should be streamed only when needed.
 			*/
 			void setStreamed(bool toggle);
+
+			/**
+			 * @brief	Sets the playing priority of AudioAsset. This will influence (not determine), whether
+			 *			audio instances of this asset will be played if not enough sound channels are present
+			 *			to play all audio instances.
+			 */
+			void setPriority(unsigned int);
 
 		};
 
