@@ -16,15 +16,13 @@ The framework is under constant development, but as of now the following feature
 
 ### To come
 Some core features that are yet to be implemented
-
  - Sounds
  - Collision system
  - Particles
  - Lighting
  - Screen resolution management
 
-
- ___Currently working on___: Game demonstrating the use of the framework (see [StarFighter](https://github.com/maltebp/StarFighter))
+ ___Currently working on___: Implementing a somewhat simple 3d audio system
 
 
 ## Technologies / libraries
