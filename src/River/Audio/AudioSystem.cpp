@@ -58,11 +58,13 @@ namespace River {
 		for (auto& it : assetInstanceCount)
 			it.second = 0;
 		
+		// Update time and heuristics
 		std::vector<AudioInstance*> finishedInstances;
 		for (auto instance : audioInstances) {
+			if (instance->paused) continue;
 
-			// Update itme
 			bool finished = false;
+
 			if( !instance->active ) {
 				// Not active: Manually update time
 				instance->currentTime += time * instance->speed;
@@ -98,32 +100,35 @@ namespace River {
 			AudioInstance* instance = *instanceIterator;
 			if( instance->active )
 				deactivateInstance(instance);
-			instance->playing = false;
 			audioInstances.erase(instanceIterator);
 			if( instance->onFinishCallback != nullptr )
 				instance->onFinishCallback(instance);
 		}
 
 		// Sort instance with heuristic
+		// Sorting in new list, as a audioInstances, is in the order
+		// they have been "played"
 		std::vector<AudioInstance*> sortedInstances(audioInstances);
 		std::sort(sortedInstances.begin(), sortedInstances.end(), [](AudioInstance* a1, AudioInstance* a2) {
 			return a1 - a2;
 		});
 
-		// Deactivate instances that should not be active but are
-		if (sortedInstances.size() > ALData::NUM_SOURCES) {
-			for (auto iterator = sortedInstances.begin() + ALData::NUM_SOURCES; iterator != sortedInstances.end(); iterator++) {
-				AudioInstance* instance = *iterator;
-				if( instance->active )
-					deactivateInstance(instance);
-			}
-		}
-
 		// Make sure the first 16 instances are active
-		for (int i = 0; i < ALData::NUM_SOURCES && i < sortedInstances.size(); i++) {
-			AudioInstance* instance = sortedInstances[i];
-			if( !instance->active )
-				activateInstance(sortedInstances[i]);
+		int activationCount = 0;
+		for (AudioInstance* instance : sortedInstances) {
+
+			// Deactivate and skip instances that are paused, or there
+			// is not room for
+			if (instance->paused || activationCount >= ALData::NUM_SOURCES) {
+				if (instance->active)
+					deactivateInstance(instance);
+				continue;
+			}
+
+			if (!instance->active)
+				activateInstance(instance);
+
+			activationCount++;
 		}
 	}
 
@@ -138,7 +143,10 @@ namespace River {
 		{
 			double xDistance = audioInstance->positionX - listenerPositionX;
 			double yDistance = audioInstance->positionY - listenerPositionY;
-			volumeComponent += referenceDistance / std::sqrt(xDistance * xDistance + yDistance * yDistance);
+			double distance = std::sqrt(xDistance * xDistance + yDistance * yDistance);
+
+			if( distance != 0 )
+				volumeComponent += referenceDistance / distance;
 			/*	Note on use of sqrt:
 			*	The use of sqrt here shoulld >>not<< be a bottle neck, as this heuristic
 			*   calculation should be done a reasonably low number of times per frame.
@@ -184,7 +192,8 @@ namespace River {
 
 		alSourcei(sourceId, AL_BUFFER, *static_cast<ALuint*>(instance->asset->getData()));
 
-		alSourcei(sourceId, AL_SEC_OFFSET, instance->currentTime);
+		alSourcef(sourceId, AL_SEC_OFFSET, instance->currentTime);
+		std::cout << "ACtivation time: " << instance->currentTime << std::endl;
 
 		alSourcef(sourceId, AL_GAIN, (ALfloat)instance->volume);
 		alSourcef(sourceId, AL_PITCH, (ALfloat)instance->speed);

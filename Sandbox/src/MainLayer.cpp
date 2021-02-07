@@ -116,8 +116,14 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 	if (e.key == River::Key::DOWN)
 		camera->adjustY(-10);
 
-	if (e.key == River::Key::F && e.action == River::KeyEvent::Action::DOWN )
-		music.set3D(!music.is3D());
+	if (e.key == River::Key::F && e.action == River::KeyEvent::Action::DOWN) {
+		if (music.isPaused()) {
+			music.unpause();
+		}
+		else {
+			music.pause();
+		}
+	}
 };
 
 void MainLayer::onMouseMoveEvent(River::MouseMoveEvent& e) {

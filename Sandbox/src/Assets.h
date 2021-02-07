@@ -80,7 +80,7 @@ namespace GlobalAssets {
 
 
 	namespace Sounds {
-		inline River::AudioAsset* TEST_SOUND = River::AudioAsset::create("assets/music.wav")
+		inline River::AudioAsset* TEST_SOUND = River::AudioAsset::create("assets/countdown.wav")
 			.addToCollection(COLLECTION)
 			.finish();
 	}

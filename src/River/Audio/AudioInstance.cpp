@@ -17,7 +17,7 @@ namespace River {
 	AudioInstance::~AudioInstance(){
 		// TODO: Kill the audio from the audio system here
 
-		if( playing )
+		if( active )
 			// TODO: Convert this to logging
 			std::cout << "Audio is playing" << std::endl;
 	}
@@ -101,7 +101,6 @@ namespace River {
 
 	double AudioInstance::getTime() {
 		if (!active) return currentTime;
-
 		ALuint sourceId = ALData::instanceSourceMap.at(this);
 		ALfloat time;
 		alGetSourcef(sourceId, AL_SEC_OFFSET, &time);
@@ -110,7 +109,26 @@ namespace River {
 
 
 	void AudioInstance::pause() {
+		if (!paused && active) {
+			// Update current time to the time
+			ALuint sourceId = ALData::instanceSourceMap.at(this);
+			ALfloat time;
+			alGetSourcef(sourceId, AL_SEC_OFFSET, &time);
+			alSourceStop(sourceId);
+			currentTime = time;
+			std::cout << "Pause time: " << currentTime << std::endl;
+		}
+		paused = true;
+	}
 
+
+	void AudioInstance::unpause() {
+		paused = false;
+	}
+
+
+	bool AudioInstance::isPaused() {
+		return paused;
 	}
 
 

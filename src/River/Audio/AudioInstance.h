@@ -34,6 +34,10 @@ namespace River {
 		double getTime();
 
 		void pause();
+
+		void unpause();
+
+		bool isPaused();
 		
 		void resume();
 
@@ -50,10 +54,11 @@ namespace River {
 
 		AudioAsset* asset;
 		
+		bool playing = false;
 
 		std::function<void(AudioInstance*)> onFinishCallback = nullptr;
 
-		bool playing = false;
+		bool paused = false;
 
 		double speed = 1.0;
 		
