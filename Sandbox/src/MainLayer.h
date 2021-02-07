@@ -38,6 +38,8 @@ private:
 
 	River::Layer* layer;
 
+	River::AudioInstance music;
+
 };
 
 

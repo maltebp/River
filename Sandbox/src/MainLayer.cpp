@@ -4,7 +4,10 @@
 
 #include "Assets.h"
 
-MainLayer::MainLayer(const std::string& arg) {
+
+MainLayer::MainLayer(const std::string& arg) : 
+	music(GlobalAssets::Sounds::TEST_SOUND)
+{
 	std::cout << "Start arg: " << arg;
 
 
@@ -54,7 +57,9 @@ void MainLayer::onCreate() {
 
 	std::cout << "Initialized" << std::endl;
 
-	River::AudioSystem::playAudio(GlobalAssets::Sounds::TEST_SOUND);
+	River::AudioSystem::setReferenceDistance(100);
+
+	River::AudioSystem::playAudio(&music);
 
 	createSanta(0, 0, 20);
 	createSanta(50, 0, 20);
@@ -80,6 +85,7 @@ void MainLayer::onCreate() {
 
 void MainLayer::onUpdate() {
 
+	River::AudioSystem::setListenerPosition(camera->getX(), camera->getY());
 	River::AudioSystem::update(0.016666);
 
 	fpsText->getComponent<River::ECS::Text>()->text = std::to_string(River::Game::getFps()) ;
@@ -98,6 +104,20 @@ void MainLayer::onUpdate() {
 
 void MainLayer::onKeyEvent(River::KeyEvent& e) {
 	std::cout << "KeyEvent: " << (int) e.key << " " << (int) e.action << std::endl;
+	if (e.key == River::Key::RIGHT)
+		camera->adjustX(10);
+
+	if (e.key == River::Key::LEFT)
+		camera->adjustX(-10);
+
+	if (e.key == River::Key::UP)
+		camera->adjustY(10);
+
+	if (e.key == River::Key::DOWN)
+		camera->adjustY(-10);
+
+	if (e.key == River::Key::F && e.action == River::KeyEvent::Action::DOWN )
+		music.set3D(!music.is3D());
 };
 
 void MainLayer::onMouseMoveEvent(River::MouseMoveEvent& e) {

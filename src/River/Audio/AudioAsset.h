@@ -32,13 +32,10 @@ namespace River {
 		virtual void onUnload() override;
 
 	private:
-		AudioAsset();
-		~AudioAsset();
+		AudioAsset() { }
+		~AudioAsset() { }
 
 	private:
-		// Whether or not this audio file should be streamed
-		bool stream = false;
-
 		// Byte size of each sample
 		size_t sampleSize = 0;
 
@@ -65,12 +62,6 @@ namespace River {
 			Creator(const std::string& filePath);
 
 		public:
-
-			/**
-			* @brief	Sets whether or not this AudioAsset should be fully loaded and stored into memory
-			*			when loaded, of if it should be streamed only when needed.
-			*/
-			void setStreamed(bool toggle);
 
 			/**
 			 * @brief	Sets the playing priority of AudioAsset. This will influence (not determine), whether

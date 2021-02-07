@@ -36,7 +36,19 @@ namespace River{
 		void adjustY(float y);
 		void adjustZ(float z);
 
+		// TODO: Clean this up (getters)
 
+		float getX() {
+			return x;
+		}
+
+		float getY() {
+			return y;
+		}
+
+		float getZ() {
+			return z;
+		}
 
 		/**
 		 * @brief	Set the cameras rotation to the given value

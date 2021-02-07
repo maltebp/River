@@ -8,13 +8,10 @@
 namespace River {
 
 	struct NativeData {
-		drwav* file = nullptr;
-		ALuint samplesBuffer = 0;
+		ALuint bufferId = 0;
 	};
 	
-	AudioAsset::AudioAsset() { }
-
-	AudioAsset::~AudioAsset() { }
+	
 
 	void AudioAsset::onLoad() {
 		auto nativeData = new NativeData();
@@ -41,42 +38,33 @@ namespace River {
 			sampleRate = file.sampleRate;
 		}
 
-		if (stream) {
-			// Stor< file for streaming later
-			*nativeData->file = file;
+		// Read file data
+		int16_t* data = new int16_t[numSamples * file.channels];
+		if (data == nullptr) throw new Exception("Malloc failed");
+		drwav_read_pcm_frames_s16(&file, file.totalPCMFrameCount, static_cast<drwav_int16*>(data));
+
+		// Convert stereo to mono (in-place)
+		if (file.channels == 2) {
+			for (size_t i = 0; i < numSamples; i++)
+				// Upcast then downcast to prevent overflow
+				data[i] = static_cast<int16_t>((static_cast<int32_t>(data[i * 2]) + static_cast<int32_t>(data[i * 2 + 1])) * 0.5);
 		}
 
-		// Pre-load audio data into OpenAL buffer
-		else {
-			
-			// Read file data
-			int16_t* data = new int16_t[numSamples * file.channels];
-			if (data == nullptr) throw new Exception("Malloc failed");
-			drwav_read_pcm_frames_s16(&file, file.totalPCMFrameCount, static_cast<drwav_int16*>(data));
+		{ // Copy to OpenAL buffer
+			ALuint bufferId;
 
-			// Convert stereo to mono (in-place)
-			if (file.channels == 2) {
-				for (size_t i = 0; i < numSamples; i++)
-					// Upcast then downcast to prevent overflow
-					data[i] = static_cast<int16_t>((static_cast<int32_t>(data[i * 2]) + static_cast<int32_t>(data[i * 2 + 1])) * 0.5);
-			}
+			alGenBuffers(1, &bufferId);
+			ALUtility::checkErrors();
 
-			{ // Copy to OpenAL buffer
-				ALuint bufferId;
+			alBufferData(bufferId, AL_FORMAT_MONO16, data, static_cast<ALsizei>(numSamples)*2, static_cast<ALsizei>(sampleRate));
+			ALUtility::checkErrors();
 
-				alGenBuffers(1, &bufferId);
-				ALUtility::checkErrors();
-
-				alBufferData(bufferId, AL_FORMAT_MONO16, data, static_cast<ALsizei>(numSamples)*2, static_cast<ALsizei>(sampleRate));
-				ALUtility::checkErrors();
-
-				nativeData->samplesBuffer = bufferId;
-			}
-
-			// The file is not needed for non-streamed audio
-			drwav_uninit(&file);
-			delete[] data;
+			nativeData->bufferId = bufferId;
 		}
+
+		// The file is not needed for non-streamed audio
+		drwav_uninit(&file);
+		delete[] data;
 
 		// Assign the audio native data
 		this->nativeData = static_cast<void*>(nativeData);
@@ -92,21 +80,10 @@ namespace River {
 	}
 
 
-	void* AudioAsset::getFile() {
-		if (!isLoaded())
-			throw new AssetNotLoaded();
-		if (!stream)
-			throw new InvalidAssetStateException("AudioAsset is not a stream");
-		return static_cast<NativeData*>(nativeData)->file;
-	}
-
-
 	void* AudioAsset::getData() {
 		if (!isLoaded())
 			throw new AssetNotLoaded();
-		if (stream)
-			throw new InvalidAssetStateException("AudioAsset is a stream");
-		return &(static_cast<NativeData*>(nativeData)->samplesBuffer);
+		return &(static_cast<NativeData*>(nativeData)->bufferId);
 	}
 
 
@@ -114,11 +91,6 @@ namespace River {
 		if (!isLoaded())
 			throw new AssetNotLoaded();
 		return (double)((long double)numSamples / (long double)sampleRate);
-	}
-
-
-	bool AudioAsset::isStream() {
-		return stream;
 	}
 
 
@@ -140,12 +112,6 @@ namespace River {
 		asset->filePath = filePath;
 	}
 
-
-	void AudioAsset::Creator::setStreamed(bool toggle) {
-		asset->stream = toggle;
-	}
-
-	
 	void AudioAsset::Creator::setPriority(unsigned int priority) {
 		asset->priority = priority;
 	}

@@ -6,65 +6,13 @@
 #include <algorithm>
 
 #include "River.h"
+#include "ALData.h"
 #include "ALUtility.h"
+
 
 namespace River {
 
 
-	struct ALData {
-		static inline const int NUM_SOURCES = 16;
-		static inline std::unordered_map<AudioInstance*, ALuint> instanceSourceMap;
-		static inline std::stack<ALuint> freeSources;
-		static inline std::vector<ALuint> allSources;
-	};
-
-
-	void AudioInstance::activate() {
-		if (active) return;
-
-		if (ALData::freeSources.empty())
-			throw new InvalidStateException("No OpenAL sources are available when activating AudioInstance");
-
-		ALuint sourceId = ALData::freeSources.top();
-		ALData::freeSources.pop();
-		ALData::instanceSourceMap[this] = sourceId;
-
-		alSourcei(sourceId, AL_BUFFER, *static_cast<ALuint*>(asset->getData()));
-		// Setting buffer position (in seconds)
-		alSourcef(sourceId, AL_SEC_OFFSET, currentTime);
-
-		// Set source attributes
-		alSourcef(sourceId, AL_GAIN, (float)volume);
-		alSourcef(sourceId , AL_PITCH, 1);
-		alSourcei(sourceId, AL_LOOPING, looping);
-		alSource3f(sourceId, AL_POSITION, positionX, positionY, 0);
-		alSource3f(sourceId, AL_POSITION, velocityX, velocityY, 0);
-
-		alSourcePlay(sourceId);
-		
-		ALUtility::checkErrors();
-
-		active = true;
-	}
-
-
-	void AudioInstance::deactivate() {
-		auto it = ALData::instanceSourceMap.find(this);
-		if (it == ALData::instanceSourceMap.end()) return;
-
-		ALuint sourceId = it->second;
-		ALData::instanceSourceMap.erase(it);
-
-		alSourceStop(sourceId);
-		ALUtility::checkErrors();		
-
-		ALData::freeSources.push(sourceId);
-
-		active = false;
-	}
-
-
-	
 	void AudioSystem::initialize() {
 		if (initialized) throw new InvalidStateException("Audio system has already been initialized");
 		initialized = true;
@@ -93,34 +41,67 @@ namespace River {
 	}
 
 
+	void AudioSystem::playAudio(AudioInstance* audio) {
+		if (audio->playing) return;
+		audio->playing = true;
+		audioInstances.push_back(audio);
+	}
+
+
 	void AudioSystem::update(double time) {
 		if (!initialized) throw new InvalidStateException("Audio system has not been initialized");
 
+		if (audioInstances.size() == 0) return;
+
 		// Reset number of audio instances for assets
-		// (see heuristics comment)
+		// (used for heuristic calculation)
 		for (auto& it : assetInstanceCount)
 			it.second = 0;
 		
 		std::vector<AudioInstance*> finishedInstances;
 		for (auto instance : audioInstances) {
-			// Check instance time
-			instance->currentTime += time;
-			if (instance->currentTime > instance->length) {
-				if (!instance->looping) {
-					finishedInstances.push_back(instance);
-					continue;
+
+			// Update itme
+			bool finished = false;
+			if( !instance->active ) {
+				// Not active: Manually update time
+				instance->currentTime += time * instance->speed;
+				if (instance->currentTime > instance->asset->getLength()) {
+					if (!instance->looping)
+						finished = true;
+					else
+						instance->currentTime = std::fmod(instance->currentTime, instance->asset->getLength());
 				}
-				instance->currentTime = std::fmod(instance->currentTime, instance->length);
+			}
+			else {
+				// Use AL to check time
+				ALuint sourceId = ALData::instanceSourceMap.at(instance);
+				ALenum state;
+				alGetSourcei(sourceId, AL_SOURCE_STATE, &state);
+				if (state == AL_STOPPED)
+					finished = true;
+			}
+
+			// Check if finished
+			if (finished) {
+				finishedInstances.push_back(instance);
+				continue;
 			}
 
 			// Calculate heuristic
 			calculateHeuristic(instance);		
 		}
 
+		// Remove finished instances
 		for (auto instance : finishedInstances) {
 			auto instanceIterator = std::find(audioInstances.begin(), audioInstances.end(), instance);
+			AudioInstance* instance = *instanceIterator;
+			if( instance->active )
+				deactivateInstance(instance);
+			instance->playing = false;
 			audioInstances.erase(instanceIterator);
-			// TODO: Remove from sources and fire on finished callback
+			if( instance->onFinishCallback != nullptr )
+				instance->onFinishCallback(instance);
 		}
 
 		// Sort instance with heuristic
@@ -129,21 +110,21 @@ namespace River {
 			return a1 - a2;
 		});
 
-		// Deactivate instances that should not be active, but are
+		// Deactivate instances that should not be active but are
 		if (sortedInstances.size() > ALData::NUM_SOURCES) {
 			for (auto iterator = sortedInstances.begin() + ALData::NUM_SOURCES; iterator != sortedInstances.end(); iterator++) {
 				AudioInstance* instance = *iterator;
-				if (instance->active)
-					instance->deactivate();
+				if( instance->active )
+					deactivateInstance(instance);
 			}
 		}
 
-
+		// Make sure the first 16 instances are active
 		for (int i = 0; i < ALData::NUM_SOURCES && i < sortedInstances.size(); i++) {
-			sortedInstances[i]->activate();
+			AudioInstance* instance = sortedInstances[i];
+			if( !instance->active )
+				activateInstance(sortedInstances[i]);
 		}
-		
-
 	}
 
 
@@ -193,23 +174,73 @@ namespace River {
 	}
 
 
-	void AudioSystem::playAudio(AudioAsset* asset) {
+	void AudioSystem::activateInstance(AudioInstance* instance) {
+		if (ALData::freeSources.empty())
+			throw new InvalidStateException("No OpenAL sources are available when activating AudioInstance");
 
+		ALuint sourceId = ALData::freeSources.top();
+		ALData::freeSources.pop();
+		ALData::instanceSourceMap[instance] = sourceId;
 
-		if (!asset->isStream()) {
-			AudioInstance* instance = new AudioInstance();
-			instance->asset = asset;
-			instance->length = asset->getLength();
-			instance->priority = 100;
-			audioInstances.push_back(instance);
+		alSourcei(sourceId, AL_BUFFER, *static_cast<ALuint*>(instance->asset->getData()));
+
+		alSourcei(sourceId, AL_SEC_OFFSET, instance->currentTime);
+
+		alSourcef(sourceId, AL_GAIN, (ALfloat)instance->volume);
+		alSourcef(sourceId, AL_PITCH, (ALfloat)instance->speed);
+		alSourcei(sourceId, AL_LOOPING, (ALfloat)instance->looping);
+
+		// Set position (in accordance with 3d flag)
+		if (instance->threeD) {
+			alSourcei(sourceId, AL_SOURCE_RELATIVE, 0);
+			alSource3f(sourceId, AL_POSITION, (ALfloat)instance->positionX, (ALfloat)instance->positionY, 0);
+			alSource3f(sourceId, AL_VELOCITY, (ALfloat)instance->velocityX, (ALfloat)instance->velocityY, 0);
 		}
+		else {
+			alSourcei(sourceId, AL_SOURCE_RELATIVE, 1);
+			alSource3f(sourceId, AL_POSITION, 0, 0, 0);
+			alSource3f(sourceId, AL_VELOCITY, 0, 0, 0);
+		}
+
+		alSourcePlay(sourceId);
+
+		ALUtility::checkErrors();
+
+		instance->active = true;
+	}
+
+
+	void AudioSystem::deactivateInstance(AudioInstance* instance) {
+		auto it = ALData::instanceSourceMap.find(instance);
+		if (it == ALData::instanceSourceMap.end()) return;
+
+		ALuint sourceId = it->second;
+		ALData::instanceSourceMap.erase(it);
+
+		alSourceStop(sourceId);
+		ALUtility::checkErrors();
+
+		ALData::freeSources.push(sourceId);
+
+		instance->active = false;
 	}
 
 
 	void AudioSystem::setMasterVolume(double volume) {
-		volume = volume > 1.0 ? 1.0 : volume;
-		volume = volume < 0   ?   0	: volume;
 		masterVolume = volume;
+		masterVolume = masterVolume > 1.0 ? 1.0 : masterVolume;
+		masterVolume = masterVolume < 0 ? 0 : masterVolume;
+		alListenerf(AL_GAIN, masterVolume);
+		ALUtility::checkErrors();
+	}
+
+
+	void AudioSystem::adjustMasterVolume(double volume) {
+		masterVolume += volume;
+		masterVolume = masterVolume > 1.0 ? 1.0 : masterVolume;
+		masterVolume = masterVolume < 0 ? 0 : masterVolume;
+		alListenerf(AL_GAIN, masterVolume);
+		ALUtility::checkErrors();
 	}
 
 

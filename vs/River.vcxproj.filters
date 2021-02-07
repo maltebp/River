@@ -141,9 +141,6 @@
     <ClInclude Include="src\River\Layer\SimpleLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\River\Audio\Sound.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\River\Audio\AudioSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -151,6 +148,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\River\Vendor\dr_wav\dr_wav.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Audio\AudioInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Audio\ALData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -233,9 +236,6 @@
     <ClCompile Include="src\River\Event\WindowEvent\WindowEventController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\River\Audio\Sound.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\River\Audio\AudioSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -246,6 +246,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\River\Audio\ALUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\River\Audio\AudioInstance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

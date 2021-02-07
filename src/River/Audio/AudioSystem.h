@@ -5,54 +5,52 @@
 #include <unordered_map>
 #include <vector>
 
+#include "AudioInstance.h"
+
 
 namespace River {
+	// TODO: Remove this if left unused
+	//struct AudioPlayArguments {
 
-	class AudioSystem;
+	//	double volume = 1.0;
 
+	//	bool looping = false;
 
-	// TODO: Clean up this class (and add comments)
-	class AudioInstance {
-		friend AudioSystem;
-	
-	private:
-		void deactivate();
-		void activate();
+	//	unsigned int priority = 100;
 
-	private:
-		AudioAsset* asset;
-		bool looping = false;
-		unsigned int priority;
-		double heuristic = 0;
+	//	bool is3d = false;
 
-		// TODO: Make sure this does not go over 1
-		double volume = 1.0;
+	//	double positionX = 0;
+	//	double positionY = 0;
 
-		bool active = false;
+	//	double velocityX = 0;
+	//	double velocityY = 0;
 
-		bool finished = false;
+	//	bool freeOnFinish;
 
-		double length;
-		double currentTime = 0;
+	//	std::function<void(AudioInstance*)> onFinish;
 
-		double positionX, positionY = 0;
-		double velocityX, velocityY = 0;
-	};
+	//	// TODO: Implement speed (pitch)
+	//	//double speed = 1.0;
+
+	//};
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 
 	class AudioSystem {
+		friend AudioInstance;
 	public:
 
 		static void initialize();
 
 		static void update(double time);
 
-		// TODO: JUST FOR TESTING (WILL BE DELETED!)
-		static void playAudio(AudioAsset* asset);
-
-		static inline const double DEFAULT_REFERENCE_DISTANCE = 1.0;
+		static void playAudio(AudioInstance* audio);
 
 		static void setMasterVolume(double volume);
+
+		static void adjustMasterVolume(double volume);
 
 		static double getMasterVolume();
 
@@ -64,12 +62,20 @@ namespace River {
 
 		static void setListenerVelocity(double velocityX, double velocityY);
 
+		static inline const double DEFAULT_REFERENCE_DISTANCE = 1.0;
+
 
 	private:
+
+		static void activateInstance(AudioInstance* instance);
+		
+		static void deactivateInstance(AudioInstance* instance);
+
 		static double calculateHeuristic(AudioInstance* audioInstance);
 
 
 	private:
+		
 		static inline bool initialized = false;
 
 		static inline double referenceDistance = DEFAULT_REFERENCE_DISTANCE;
