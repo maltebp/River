@@ -53,9 +53,9 @@ namespace River {
 		playingInstances.erase(std::find(playingInstances.begin(), playingInstances.end(), audio));
 
 		if (audio->active) {
+			// Stop and release AL source
 			ALuint sourceId = ALData::instanceSourceMap.at(audio);
 			alSourceStop(sourceId);
-
 			ALData::instanceSourceMap.erase(audio);
 			ALData::freeSources.push(sourceId);
 		}

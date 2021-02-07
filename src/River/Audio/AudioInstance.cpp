@@ -43,15 +43,30 @@ namespace River {
 		return true;
 	}
 
+	
+	void AudioInstance::setSpeed(double speed) {
+		speed = speed < 0.0 ? 0.0 : speed;
+		if (active) {
+			ALuint sourceId = ALData::instanceSourceMap.at(this);
+			alSourcef(sourceId, AL_PITCH, static_cast<ALfloat>(speed) );
+		}
+		this->speed = speed;
+	}
+
+
+	double AudioInstance::getSpeed(double speed) {
+		return speed;
+	}
+
 
 	void AudioInstance::setVolume(double volume) {
 		// Clamp volume to 0.0 - 1.0
 		this->volume = volume > 1.0 ? 1.0 : (volume < 0.0 ? 0.0 : volume);
 		if (active) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
-			alSourcef(sourceId, AL_GAIN, (ALfloat)this->volume);
+			alSourcef(sourceId, AL_GAIN, static_cast<ALfloat>(this->volume));
 		}
-		dirty = true;
+
 	}
 
 

@@ -24,6 +24,10 @@ namespace River {
 
 		bool isLooping();
 
+		void setSpeed(double speed);
+
+		double getSpeed(double speed);
+
 		void setVolume(double volume);
 
 		void setPosition(double positionX, double positionY);
@@ -80,8 +84,8 @@ namespace River {
 		double velocityX = 0;
 		double velocityY = 0;
 
-		bool dirty = false;
-		bool timeDirty = false;
+		bool dirty = false; // TODO: Remove this
+		bool timeDirty = false; // TODO: Remove this
 		double currentTime = 0;
 		bool active = false;
 		bool finished = false; // TODO: Is this ever used?
