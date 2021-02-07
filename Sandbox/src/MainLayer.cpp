@@ -8,7 +8,7 @@
 MainLayer::MainLayer(const std::string& arg) : 
 	music(GlobalAssets::Sounds::TEST_SOUND)
 {
-	music.loop(true);
+	music.loop(false);
 	std::cout << "Start arg: " << arg;
 }
 
@@ -114,7 +114,7 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 		camera->adjustY(-10);
 
 	if (e.key == River::Key::F && e.action == River::KeyEvent::Action::DOWN) {
-		music.stop();
+		music.setTime(18);
 	}
 };
 

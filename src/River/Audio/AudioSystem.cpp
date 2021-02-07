@@ -50,7 +50,6 @@ namespace River {
 
 	void AudioSystem::stopAudio(AudioInstance* audio) {
 		if (!audio->playing) return;
-		audio->playing = false;
 		playingInstances.erase(std::find(playingInstances.begin(), playingInstances.end(), audio));
 
 		if (audio->active) {
@@ -60,6 +59,9 @@ namespace River {
 			ALData::instanceSourceMap.erase(audio);
 			ALData::freeSources.push(sourceId);
 		}
+
+		audio->playing = false;
+		audio->active = false;
 	}
 
 

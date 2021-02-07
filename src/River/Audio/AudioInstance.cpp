@@ -104,6 +104,15 @@ namespace River {
 
 	void AudioInstance::setTime(double time) {
 		time = time < 0 ? 0 : time;
+
+		// Adjust according to length of audio clip
+		if (time > asset->getLength()) {
+			if (looping)
+				time = std::fmod(time, asset->getLength());
+			else
+				time = asset->getLength();
+		}
+
 		if (active) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
 			alSourcef(sourceId, AL_SEC_OFFSET, time);
