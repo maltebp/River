@@ -44,14 +44,29 @@ namespace River {
 	void AudioSystem::playAudio(AudioInstance* audio) {
 		if (audio->playing) return;
 		audio->playing = true;
-		audioInstances.push_back(audio);
+		playingInstances.push_back(audio);
+	}
+
+
+	void AudioSystem::stopAudio(AudioInstance* audio) {
+		if (!audio->playing) return;
+		audio->playing = false;
+		playingInstances.erase(std::find(playingInstances.begin(), playingInstances.end(), audio));
+
+		if (audio->active) {
+			ALuint sourceId = ALData::instanceSourceMap.at(audio);
+			alSourceStop(sourceId);
+
+			ALData::instanceSourceMap.erase(audio);
+			ALData::freeSources.push(sourceId);
+		}
 	}
 
 
 	void AudioSystem::update(double time) {
 		if (!initialized) throw new InvalidStateException("Audio system has not been initialized");
 
-		if (audioInstances.size() == 0) return;
+		if (playingInstances.size() == 0) return;
 
 		// Reset number of audio instances for assets
 		// (used for heuristic calculation)
@@ -60,7 +75,7 @@ namespace River {
 		
 		// Update time and heuristics
 		std::vector<AudioInstance*> finishedInstances;
-		for (auto instance : audioInstances) {
+		for (auto instance : playingInstances) {
 			if (instance->paused) continue;
 
 			bool finished = false;
@@ -96,11 +111,11 @@ namespace River {
 
 		// Remove finished instances
 		for (auto instance : finishedInstances) {
-			auto instanceIterator = std::find(audioInstances.begin(), audioInstances.end(), instance);
+			auto instanceIterator = std::find(playingInstances.begin(), playingInstances.end(), instance);
 			AudioInstance* instance = *instanceIterator;
 			if( instance->active )
 				deactivateInstance(instance);
-			audioInstances.erase(instanceIterator);
+			playingInstances.erase(instanceIterator);
 			if( instance->onFinishCallback != nullptr )
 				instance->onFinishCallback(instance);
 		}
@@ -108,7 +123,7 @@ namespace River {
 		// Sort instance with heuristic
 		// Sorting in new list, as a audioInstances, is in the order
 		// they have been "played"
-		std::vector<AudioInstance*> sortedInstances(audioInstances);
+		std::vector<AudioInstance*> sortedInstances(playingInstances);
 		std::sort(sortedInstances.begin(), sortedInstances.end(), [](AudioInstance* a1, AudioInstance* a2) {
 			return a1 - a2;
 		});

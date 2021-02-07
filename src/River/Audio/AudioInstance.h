@@ -18,6 +18,8 @@ namespace River {
 		
 		void play();
 
+		bool isPlaying();
+
 		void loop(bool toggle);
 
 		bool isLooping();

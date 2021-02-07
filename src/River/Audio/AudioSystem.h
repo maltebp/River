@@ -48,6 +48,8 @@ namespace River {
 
 		static void playAudio(AudioInstance* audio);
 
+		static void stopAudio(AudioInstance* audio);
+
 		static void setMasterVolume(double volume);
 
 		static void adjustMasterVolume(double volume);
@@ -86,7 +88,7 @@ namespace River {
 		static inline double masterVolume = 1.0;
 
 		// ALL audio instances that are currently registered
-		static inline std::vector<AudioInstance*> audioInstances;
+		static inline std::vector<AudioInstance*> playingInstances;
 
 		// Mapping of how many audio instances uses the a given AudioAsset
 		static inline std::unordered_map<AudioAsset*, unsigned int> assetInstanceCount;

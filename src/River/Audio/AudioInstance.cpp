@@ -15,16 +15,18 @@ namespace River {
 
 
 	AudioInstance::~AudioInstance(){
-		// TODO: Kill the audio from the audio system here
-
-		if( active )
-			// TODO: Convert this to logging
-			std::cout << "Audio is playing" << std::endl;
+		if (playing)
+			stop();
 	}
 	
 
 	void AudioInstance::play() {
 		AudioSystem::playAudio(this);
+	}
+
+
+	bool AudioInstance::isPlaying() {
+		return playing;
 	}
 
 
@@ -164,7 +166,7 @@ namespace River {
 
 
 	void AudioInstance::stop() {
-
+		AudioSystem::stopAudio(this);
 	}
 
 
