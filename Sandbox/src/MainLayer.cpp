@@ -117,12 +117,7 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 		camera->adjustY(-10);
 
 	if (e.key == River::Key::F && e.action == River::KeyEvent::Action::DOWN) {
-		if (music.isPaused()) {
-			music.unpause();
-		}
-		else {
-			music.pause();
-		}
+		music.loop(false);
 	}
 };
 

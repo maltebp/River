@@ -28,6 +28,20 @@ namespace River {
 	}
 
 
+	void AudioInstance::loop(bool toggle) {
+		if (active) {
+			ALuint sourceId = ALData::instanceSourceMap.at(this);
+			alSourcei(sourceId, AL_LOOPING, toggle);
+		}
+		looping = toggle;
+	}
+
+
+	bool AudioInstance::isLooping() {
+		return true;
+	}
+
+
 	void AudioInstance::setVolume(double volume) {
 		// Clamp volume to 0.0 - 1.0
 		this->volume = volume > 1.0 ? 1.0 : (volume < 0.0 ? 0.0 : volume);

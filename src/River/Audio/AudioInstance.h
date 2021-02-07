@@ -18,6 +18,10 @@ namespace River {
 		
 		void play();
 
+		void loop(bool toggle);
+
+		bool isLooping();
+
 		void setVolume(double volume);
 
 		void setPosition(double positionX, double positionY);
