@@ -82,8 +82,11 @@ namespace River {
 
 		static inline double referenceDistance = DEFAULT_REFERENCE_DISTANCE;
 
-		static inline double listenerPositionX, listenerPositionY = 0.0;
-		static inline double listenerVelocityX, listenerVelocityY = 0.0;
+		static inline double listenerPositionX = 0.0;
+		static inline double listenerPositionY = 0.0;
+		
+		static inline double listenerVelocityX = 0.0;
+		static inline double listenerVelocityY = 0.0;
 
 		static inline double masterVolume = 1.0;
 

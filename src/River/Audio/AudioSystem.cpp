@@ -1,4 +1,3 @@
-
 #include "AudioSystem.h"
 
 #include <vector>
@@ -127,7 +126,7 @@ namespace River {
 		// they have been "played"
 		std::vector<AudioInstance*> sortedInstances(playingInstances);
 		std::sort(sortedInstances.begin(), sortedInstances.end(), [](AudioInstance* a1, AudioInstance* a2) {
-			return a1 - a2;
+			return a1->heuristic < a2->heuristic;
 		});
 
 		// Make sure the first 16 instances are active
@@ -293,9 +292,10 @@ namespace River {
 
 
 	void AudioSystem::setListenerPosition(double positionX, double positionY) {
+		// Throws error when moving
 		listenerPositionX = positionX;
 		listenerPositionY = positionY;
-		alListener3f(AL_POSITION, positionX, positionY, 0.0f);
+ 		alListener3f(AL_POSITION, positionX, positionY, 0.0f);
 		ALUtility::checkErrors();
 	}
 

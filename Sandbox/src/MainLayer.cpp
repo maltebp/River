@@ -8,12 +8,10 @@
 MainLayer::MainLayer(const std::string& arg) : 
 	music(GlobalAssets::Sounds::TEST_SOUND)
 {
+	music.set3D(true);
 	music.loop(true);
-	music.setSpeed(2.0);
 	std::cout << "Start arg: " << arg;
 }
-
-
 
 
 void MainLayer::createSanta( double x, double y, unsigned int depth) {
@@ -57,7 +55,6 @@ void MainLayer::onCreate() {
 
 	River::AudioSystem::setReferenceDistance(100);
 
-	River::AudioSystem::playAudio(&music);
 
 	createSanta(0, 0, 20);
 	createSanta(50, 0, 20);
@@ -102,6 +99,7 @@ void MainLayer::onUpdate() {
 
 void MainLayer::onKeyEvent(River::KeyEvent& e) {
 	std::cout << "KeyEvent: " << (int) e.key << " " << (int) e.action << std::endl;
+
 	if (e.key == River::Key::RIGHT)
 		camera->adjustX(10);
 
@@ -115,8 +113,11 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 		camera->adjustY(-10);
 
 	if (e.key == River::Key::F && e.action == River::KeyEvent::Action::DOWN) {
-		if (music.isPaused()) music.unpause();
-		else music.pause();
+		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::TEST_SOUND);
+		//audio->loop(true);
+		River::AudioSystem::playAudio(audio);
+
+
 	}
 };
 
