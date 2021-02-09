@@ -8,7 +8,7 @@ namespace River {
 	class AudioAsset : public Asset {
 	public:
 
-		static inline const unsigned DEFAULT_PRIORITY = 10;
+		static inline const unsigned int DEFAULT_PRIORITY = 10;
 
 		/// <returns>A pointer to the native file handle</returns>
 		void* getFile();

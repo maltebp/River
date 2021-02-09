@@ -126,7 +126,7 @@ namespace River {
 		// they have been "played"
 		std::vector<AudioInstance*> sortedInstances(playingInstances);
 		std::sort(sortedInstances.begin(), sortedInstances.end(), [](AudioInstance* a1, AudioInstance* a2) {
-			return a1->heuristic < a2->heuristic;
+			return a1->heuristic > a2->heuristic;
 		});
 
 		// Make sure the first 16 instances are active
@@ -152,17 +152,25 @@ namespace River {
 	double AudioSystem::calculateHeuristic(AudioInstance* audioInstance) {
 		/*	An AudioInstance's heuristic is used to determine whether or not
 		*   it should be played, when there are more AudioInstances present
-		*   than there are OpenAL sounds (limited by number of hardware channels)
+		*   than there are OpenAL sources (limited by number of hardware channels)
 		*/
 		
 		double volumeComponent = 0;
 		{
-			double xDistance = audioInstance->positionX - listenerPositionX;
-			double yDistance = audioInstance->positionY - listenerPositionY;
-			double distance = std::sqrt(xDistance * xDistance + yDistance * yDistance);
+			if (audioInstance->threeD) {
+				double xDistance = audioInstance->positionX - listenerPositionX;
+				double yDistance = audioInstance->positionY - listenerPositionY;
+				double distance = std::sqrt(xDistance * xDistance + yDistance * yDistance);
 
-			if( distance != 0 )
-				volumeComponent += referenceDistance / distance;
+				if (distance != 0)
+					volumeComponent += referenceDistance / distance;
+
+				volumeComponent = volumeComponent > 1.0 ? 1.0 : volumeComponent;
+			}
+			else {
+				volumeComponent = 1.0;
+			}
+			
 			/*	Note on use of sqrt:
 			*	The use of sqrt here shoulld >>not<< be a bottle neck, as this heuristic
 			*   calculation should be done a reasonably low number of times per frame.
@@ -192,7 +200,7 @@ namespace River {
 			instanceCountComponent = assetInstanceCount[audioInstance->asset];
 		}
 
-		double heuristic = volumeComponent * priorityComponent / instanceCountComponent;
+		double heuristic = (volumeComponent * priorityComponent) / instanceCountComponent;
 		audioInstance->heuristic = heuristic;
 		return heuristic;
 	}

@@ -11,6 +11,8 @@ namespace River {
 	class AudioInstance {
 		friend AudioSystem;
 	public:
+
+		static inline const unsigned int DEFAULT_PRIORITY = AudioAsset::DEFAULT_PRIORITY;
 		
 		AudioInstance(AudioAsset* asset);
 
@@ -20,6 +22,10 @@ namespace River {
 
 		bool isPlaying();
 
+		void setPriority(unsigned int);
+
+		unsigned int getPriority();
+		
 		void loop(bool toggle);
 
 		bool isLooping();
@@ -59,7 +65,6 @@ namespace River {
 		// Not fired when loop has finished
 		void onFinish(std::function<void(AudioInstance*)> callback);
 
-
 	private:
 
 		AudioAsset* asset;
@@ -73,11 +78,14 @@ namespace River {
 		double speed = 1.0;
 		
 		bool looping = false;
-		unsigned int priority = 0;
+		
+		unsigned int priority = DEFAULT_PRIORITY;
+
 		bool threeD = false;
 
 		// TODO: Make sure this does not go over 1
 		double volume = 1.0;
+		
 		double positionX = 0;
 		double positionY = 0;
 		
@@ -85,11 +93,17 @@ namespace River {
 		double velocityY = 0;
 
 		bool dirty = false; // TODO: Remove this
+		
 		bool timeDirty = false; // TODO: Remove this
+		
 		double currentTime = 0;
+		
 		bool active = false;
+		
 		bool finished = false; // TODO: Is this ever used?
+		
 		double heuristic = 0;
+	
 	};
 
 }

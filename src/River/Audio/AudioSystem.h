@@ -9,35 +9,7 @@
 
 
 namespace River {
-	// TODO: Remove this if left unused
-	//struct AudioPlayArguments {
-
-	//	double volume = 1.0;
-
-	//	bool looping = false;
-
-	//	unsigned int priority = 100;
-
-	//	bool is3d = false;
-
-	//	double positionX = 0;
-	//	double positionY = 0;
-
-	//	double velocityX = 0;
-	//	double velocityY = 0;
-
-	//	bool freeOnFinish;
-
-	//	std::function<void(AudioInstance*)> onFinish;
-
-	//	// TODO: Implement speed (pitch)
-	//	//double speed = 1.0;
-
-	//};
-
-	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-
+	
 	class AudioSystem {
 		friend AudioInstance;
 	public:

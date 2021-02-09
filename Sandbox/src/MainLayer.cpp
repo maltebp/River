@@ -5,11 +5,7 @@
 #include "Assets.h"
 
 
-MainLayer::MainLayer(const std::string& arg) : 
-	music(GlobalAssets::Sounds::TEST_SOUND)
-{
-	music.set3D(true);
-	music.loop(true);
+MainLayer::MainLayer(const std::string& arg) {
 	std::cout << "Start arg: " << arg;
 }
 
@@ -68,7 +64,6 @@ void MainLayer::onCreate() {
 	createText("Hello world", 40, 0, 100);
 	createText("Hello world", 50, 0, 200);
 
-
 	camera = new River::Camera(1280, 720);
 
 	domain.clean();
@@ -86,14 +81,12 @@ void MainLayer::onUpdate() {
 	fpsText->getComponent<River::ECS::Text>()->text = std::to_string(River::Game::getFps()) ;
 
 	GlobalAssets::Fonts::ARIAL->load();
-	//camera->adjustRotation(0.250);
 
 	River::SpriteAnimationSystem::update(&domain, 0.016);
 	River::SpriteRenderingSystem::render(&domain, camera);
 	River::TextRenderingSystem::render(&domain, camera);
 
 	domain.clean();
-
 }
 
 
@@ -112,12 +105,24 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 	if (e.key == River::Key::DOWN)
 		camera->adjustY(-10);
 
+	if (e.key == River::Key::D && e.action == River::KeyEvent::Action::DOWN) {
+		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::COINS);
+		//audio->loop(true);
+		audio->set3D(true);
+		River::AudioSystem::playAudio(audio);
+	}
+
 	if (e.key == River::Key::F && e.action == River::KeyEvent::Action::DOWN) {
-		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::TEST_SOUND);
+		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::COUNTDOWN);
 		//audio->loop(true);
 		River::AudioSystem::playAudio(audio);
+	}
 
-
+	if (e.key == River::Key::G && e.action == River::KeyEvent::Action::DOWN) {
+		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::CLASSICAL_MUSIC);
+		//audio->loop(true);
+		audio->setVolume(0.5);
+		River::AudioSystem::playAudio(audio);
 	}
 };
 

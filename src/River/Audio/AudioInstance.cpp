@@ -30,6 +30,15 @@ namespace River {
 	}
 
 
+	void AudioInstance::setPriority(unsigned int priority) {
+		this->priority = priority;
+	}
+
+	unsigned int AudioInstance::getPriority() {
+		return priority;
+	}
+
+
 	void AudioInstance::loop(bool toggle) {
 		if (active) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
