@@ -22,12 +22,16 @@ namespace River {
 
 		// Not sure if we should check if eax2.0 exists here
 		// The OpenAL programming guide does, but the return
-		// result is never used
-		
+		// result is never 
+
 		// Open context
 		ALCcontext* context = alcCreateContext(device, nullptr);
 		alcMakeContextCurrent(context);
 		ALUtility::checkContextError(device);
+
+		// Set attenuation model
+		alDistanceModel(AL_LINEAR_DISTANCE_CLAMPED);
+		ALUtility::checkErrors();
 		
 		// Generate sources
 		for (int i = 0; i < ALData::NUM_SOURCES; i++) {
@@ -162,10 +166,14 @@ namespace River {
 				double yDistance = audioInstance->positionY - listenerPositionY;
 				double distance = std::sqrt(xDistance * xDistance + yDistance * yDistance);
 
-				if (distance != 0)
-					volumeComponent += referenceDistance / distance;
+				if (distance != 0) {
+					volumeComponent += 1 - (distance - audioInstance->size) / (audioInstance->range - audioInstance->size);
 
-				volumeComponent = volumeComponent > 1.0 ? 1.0 : volumeComponent;
+				}
+
+				volumeComponent = volumeComponent;
+				if (volumeComponent < 0) volumeComponent = 0;
+				if (volumeComponent > 1) volumeComponent = 1;
 			}
 			else {
 				volumeComponent = 1.0;
@@ -219,9 +227,13 @@ namespace River {
 		alSourcef(sourceId, AL_SEC_OFFSET, instance->currentTime);
 		std::cout << "ACtivation time: " << instance->currentTime << std::endl;
 
+		alSourcef(sourceId, AL_REFERENCE_DISTANCE, instance->size);
+		alSourcef(sourceId, AL_MAX_DISTANCE, instance->range);
+
 		alSourcef(sourceId, AL_GAIN, (ALfloat)instance->volume);
 		alSourcef(sourceId, AL_PITCH, (ALfloat)instance->speed);
 		alSourcei(sourceId, AL_LOOPING, (ALfloat)instance->looping);
+		
 
 		// Set position (in accordance with 3d flag)
 		if (instance->threeD) {
@@ -279,23 +291,6 @@ namespace River {
 
 	double AudioSystem::getMasterVolume() {
 		return masterVolume;
-	}
-
-
-	void AudioSystem::setReferenceDistance(double distance) {
-		if (distance <= 0)
-			throw new InvalidArgumentException("Reference distance must be larger than 0");
-		referenceDistance = distance;
-		
-		for(auto sourceId : ALData::allSources ) {
-			alSourcef(sourceId, AL_REFERENCE_DISTANCE, distance);
-			ALUtility::checkErrors();
-		}
-	}
-
-
-	double AudioSystem::getReferenceDistance() {
-		return referenceDistance;
 	}
 
 

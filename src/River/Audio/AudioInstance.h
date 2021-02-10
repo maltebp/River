@@ -12,6 +12,8 @@ namespace River {
 		friend AudioSystem;
 	public:
 
+		static inline const double DEFAULT_RANGE = 1000;
+
 		static inline const unsigned int DEFAULT_PRIORITY = AudioAsset::DEFAULT_PRIORITY;
 		
 		AudioInstance(AudioAsset* asset);
@@ -26,7 +28,7 @@ namespace River {
 
 		unsigned int getPriority();
 		
-		void loop(bool toggle);
+		void setLooping(bool toggle);
 
 		bool isLooping();
 
@@ -35,6 +37,15 @@ namespace River {
 		double getSpeed(double speed);
 
 		void setVolume(double volume);
+
+		// will also adjust range 
+		void setSize(double size);
+
+		double getSize();
+
+		void setRange(double range);
+
+		double getRange();
 
 		void setPosition(double positionX, double positionY);
 
@@ -83,8 +94,12 @@ namespace River {
 
 		bool threeD = false;
 
+		double range = DEFAULT_RANGE;
+
 		// TODO: Make sure this does not go over 1
 		double volume = 1.0;
+
+		double size = 0;
 		
 		double positionX = 0;
 		double positionY = 0;

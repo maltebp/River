@@ -28,15 +28,9 @@ namespace River {
 
 		static double getMasterVolume();
 
-		static void setReferenceDistance(double distance);
-
-		static double getReferenceDistance();
-
 		static void setListenerPosition(double positionX, double positionY);
 
-		static void setListenerVelocity(double velocityX, double velocityY);
-
-		static inline const double DEFAULT_REFERENCE_DISTANCE = 1.0;
+		static void setListenerVelocity(double velocityX, double velocityY);	
 
 
 	private:
@@ -52,7 +46,6 @@ namespace River {
 		
 		static inline bool initialized = false;
 
-		static inline double referenceDistance = DEFAULT_REFERENCE_DISTANCE;
 
 		static inline double listenerPositionX = 0.0;
 		static inline double listenerPositionY = 0.0;

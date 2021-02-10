@@ -49,8 +49,6 @@ void MainLayer::onCreate() {
 
 	std::cout << "Initialized" << std::endl;
 
-	River::AudioSystem::setReferenceDistance(100);
-
 
 	createSanta(0, 0, 20);
 	createSanta(50, 0, 20);
@@ -109,14 +107,15 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::COINS);
 		//audio->loop(true);
 		audio->set3D(true);
+		audio->setSize(300);
 		River::AudioSystem::playAudio(audio);
 	}
 
-	if (e.key == River::Key::F && e.action == River::KeyEvent::Action::DOWN) {
-		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::COUNTDOWN);
-		//audio->loop(true);
-		River::AudioSystem::playAudio(audio);
-	}
+	//if (e.key == River::Key::F && e.action == River::KeyEvent::Action::DOWN) {
+	//	River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::COUNTDOWN);
+	//	//audio->loop(true);
+	//	River::AudioSystem::playAudio(audio);
+	//}
 
 	if (e.key == River::Key::G && e.action == River::KeyEvent::Action::DOWN) {
 		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::CLASSICAL_MUSIC);

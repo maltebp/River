@@ -39,7 +39,7 @@ namespace River {
 	}
 
 
-	void AudioInstance::loop(bool toggle) {
+	void AudioInstance::setLooping(bool toggle) {
 		if (active) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
 			alSourcei(sourceId, AL_LOOPING, toggle);
@@ -69,8 +69,9 @@ namespace River {
 
 
 	void AudioInstance::setVolume(double volume) {
-		// Clamp volume to 0.0 - 1.0
-		this->volume = volume > 1.0 ? 1.0 : (volume < 0.0 ? 0.0 : volume);
+		if (volume < 0) volume = 0;
+		this->volume = volume;
+
 		if (active) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
 			alSourcef(sourceId, AL_GAIN, static_cast<ALfloat>(this->volume));
@@ -79,14 +80,56 @@ namespace River {
 	}
 
 
-	void AudioInstance::setPosition(double positionX, double positionY) {
+	void AudioInstance::setSize(double size) {
+		if (size < 0)
+			throw new InvalidArgumentException("Audio size must be larger than or equal to 0");
+		if (size >= range)
+			throw new InvalidArgumentException("Audio size must be less than its range");
+			
+		this->size = size;
+
 		if (active) {
+			ALuint sourceId = ALData::instanceSourceMap.at(this);
+			alSourcef(sourceId, AL_REFERENCE_DISTANCE, (ALfloat)size);
+			ALUtility::checkErrors();
+		}
+	}
+
+
+	double AudioInstance::getSize() {
+		return size;
+	}
+
+
+	void AudioInstance::setRange(double range) {
+		if (this->range <= 0)
+			throw new InvalidArgumentException("Audio range must be larger than 0");
+		if (this->range <= size)
+			throw new InvalidArgumentException("Audio range must be larger than its size");
+		this->range = range;
+
+		if (active) {
+			ALuint sourceId = ALData::instanceSourceMap.at(this);
+			alSourcef(sourceId, AL_MAX_DISTANCE, (ALfloat)range);
+			ALUtility::checkErrors();
+		}
+	}
+
+
+	double AudioInstance::getRange() {
+		return range;
+	}
+
+
+	void AudioInstance::setPosition(double positionX, double positionY) {
+		this->positionX = positionX;
+		this->positionY = positionY;
+
+		if (active && threeD) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
 			alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, 0);
 			ALUtility::checkErrors();
 		}
-		this->positionX = positionX;
-		this->positionY = positionY;
 	}
 
 
