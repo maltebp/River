@@ -224,6 +224,7 @@ namespace River {
 
 		alSourcei(sourceId, AL_BUFFER, *static_cast<ALuint*>(instance->asset->getData()));
 
+		// TODO: Cast values
 		alSourcef(sourceId, AL_SEC_OFFSET, instance->currentTime);
 		std::cout << "ACtivation time: " << instance->currentTime << std::endl;
 
@@ -238,7 +239,7 @@ namespace River {
 		// Set position (in accordance with 3d flag)
 		if (instance->threeD) {
 			alSourcei(sourceId, AL_SOURCE_RELATIVE, 0);
-			alSource3f(sourceId, AL_POSITION, (ALfloat)instance->positionX, (ALfloat)instance->positionY, 0);
+			alSource3f(sourceId, AL_POSITION, (ALfloat)instance->positionX, (ALfloat)instance->positionY, (ALfloat)instance->depth);
 			alSource3f(sourceId, AL_VELOCITY, (ALfloat)instance->velocityX, (ALfloat)instance->velocityY, 0);
 		}
 		else {
@@ -295,10 +296,9 @@ namespace River {
 
 
 	void AudioSystem::setListenerPosition(double positionX, double positionY) {
-		// Throws error when moving
 		listenerPositionX = positionX;
 		listenerPositionY = positionY;
- 		alListener3f(AL_POSITION, positionX, positionY, 0.0f);
+ 		alListener3f(AL_POSITION, (ALfloat)listenerPositionX, (ALfloat)listenerPositionY, (ALfloat)listenerDepth);
 		ALUtility::checkErrors();
 	}
 
@@ -306,10 +306,21 @@ namespace River {
 	void AudioSystem::setListenerVelocity(double velocityX, double velocityY) {
 		listenerVelocityX = velocityX;
 		listenerVelocityY = velocityY;
-		alListener3f(AL_VELOCITY, velocityX, velocityY, 0.0f);
+		alListener3f(AL_VELOCITY, (ALfloat)listenerVelocityX, (ALfloat)listenerVelocityY, 0);
 		ALUtility::checkErrors();
 	}
 
+	
+	void AudioSystem::setListenerDepth(double depth){
+		listenerDepth = depth;
+		alListener3f(AL_POSITION, (ALfloat)listenerPositionX, (ALfloat)listenerPositionY, (ALfloat)listenerDepth);
+		ALUtility::checkErrors();
+	}
+
+
+	double AudioSystem::getListenerDepth(){
+		return listenerDepth;
+	}
 
 }
 

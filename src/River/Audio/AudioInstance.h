@@ -38,11 +38,18 @@ namespace River {
 
 		void setVolume(double volume);
 
-		// will also adjust range 
+		void set3D(bool toggle);
+
+		bool is3D();
+
+		// Notes:
+		//  - May also adjust range
+		//  - Affects the depth
 		void setSize(double size);
 
 		double getSize();
 
+		// Also affects depth
 		void setRange(double range);
 
 		double getRange();
@@ -51,9 +58,9 @@ namespace River {
 
 		void setVelocity(double velocityX, double velocityY);
 
-		void set3D(bool toggle);
+		void setDepth(double depth);
 
-		bool is3D();
+		double getDepth(double depth);
 
 		// Relative to the non speed adjusted asset
 		void setTime(double time);
@@ -82,24 +89,23 @@ namespace River {
 		
 		bool playing = false;
 
-		std::function<void(AudioInstance*)> onFinishCallback = nullptr;
-
 		bool paused = false;
+		
+		double volume = 1.0;
 
 		double speed = 1.0;
-		
+
 		bool looping = false;
 		
 		unsigned int priority = DEFAULT_PRIORITY;
 
-		bool threeD = false;
+		bool threeD = false; 
 
 		double range = DEFAULT_RANGE;
 
-		// TODO: Make sure this does not go over 1
-		double volume = 1.0;
-
 		double size = 0;
+
+		double depth = 0;
 		
 		double positionX = 0;
 		double positionY = 0;
@@ -119,6 +125,7 @@ namespace River {
 		
 		double heuristic = 0;
 	
+		std::function<void(AudioInstance*)> onFinishCallback = nullptr;
 	};
 
 }

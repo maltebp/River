@@ -9,16 +9,17 @@
 
 namespace River {
 
+
 	AudioInstance::AudioInstance(AudioAsset* asset) {
 		this->asset = asset;
 	}
 
 
-	AudioInstance::~AudioInstance(){
-		if (playing)
+	AudioInstance::~AudioInstance() {
+		if( playing )
 			stop();
 	}
-	
+
 
 	void AudioInstance::play() {
 		AudioSystem::playAudio(this);
@@ -34,13 +35,14 @@ namespace River {
 		this->priority = priority;
 	}
 
+
 	unsigned int AudioInstance::getPriority() {
 		return priority;
 	}
 
 
 	void AudioInstance::setLooping(bool toggle) {
-		if (active) {
+		if( active ) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
 			alSourcei(sourceId, AL_LOOPING, toggle);
 		}
@@ -52,12 +54,12 @@ namespace River {
 		return true;
 	}
 
-	
+
 	void AudioInstance::setSpeed(double speed) {
 		speed = speed < 0.0 ? 0.0 : speed;
-		if (active) {
+		if( active ) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
-			alSourcef(sourceId, AL_PITCH, static_cast<ALfloat>(speed) );
+			alSourcef(sourceId, AL_PITCH, static_cast<ALfloat>(speed));
 		}
 		this->speed = speed;
 	}
@@ -69,26 +71,26 @@ namespace River {
 
 
 	void AudioInstance::setVolume(double volume) {
-		if (volume < 0) volume = 0;
+		if( volume < 0 )
+			throw new InvalidArgumentException("Audio volume may not be less than 0");
 		this->volume = volume;
 
-		if (active) {
+		if( active ) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
 			alSourcef(sourceId, AL_GAIN, static_cast<ALfloat>(this->volume));
 		}
-
 	}
 
 
 	void AudioInstance::setSize(double size) {
-		if (size < 0)
+		if( size < 0 )
 			throw new InvalidArgumentException("Audio size must be larger than or equal to 0");
-		if (size >= range)
+		if( size >= range )
 			throw new InvalidArgumentException("Audio size must be less than its range");
-			
+
 		this->size = size;
 
-		if (active) {
+		if( active ) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
 			alSourcef(sourceId, AL_REFERENCE_DISTANCE, (ALfloat)size);
 			ALUtility::checkErrors();
@@ -102,13 +104,13 @@ namespace River {
 
 
 	void AudioInstance::setRange(double range) {
-		if (this->range <= 0)
+		if( this->range <= 0 )
 			throw new InvalidArgumentException("Audio range must be larger than 0");
-		if (this->range <= size)
+		if( this->range <= size )
 			throw new InvalidArgumentException("Audio range must be larger than its size");
 		this->range = range;
 
-		if (active) {
+		if( active ) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
 			alSourcef(sourceId, AL_MAX_DISTANCE, (ALfloat)range);
 			ALUtility::checkErrors();
@@ -125,16 +127,16 @@ namespace River {
 		this->positionX = positionX;
 		this->positionY = positionY;
 
-		if (active && threeD) {
+		if( active && threeD ) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
-			alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, 0);
+			alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, depth);
 			ALUtility::checkErrors();
 		}
 	}
 
 
 	void AudioInstance::setVelocity(double velocityX, double velocityY) {
-		if (active) {
+		if( active ) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
 			alSource3f(sourceId, AL_VELOCITY, (ALfloat)velocityX, (ALfloat)velocityY, 0);
 			ALUtility::checkErrors();
@@ -144,13 +146,29 @@ namespace River {
 	}
 
 
-	void AudioInstance::set3D(bool toggle) {
-		if (active && toggle != threeD) {
+	void AudioInstance::setDepth(double depth){
+		this->depth = depth;
+
+		if( active && threeD ){
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
-			if (toggle) {
+			alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, this->depth);
+			ALUtility::checkErrors();
+		}
+	}
+
+
+	double AudioInstance::getDepth(double depth){
+		return depth;
+	}
+
+
+	void AudioInstance::set3D(bool toggle) {
+		if( active && toggle != threeD ) {
+			ALuint sourceId = ALData::instanceSourceMap.at(this);
+			if( toggle ) {
 				alSourcei(sourceId, AL_SOURCE_RELATIVE, 0);
-				alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, 0);
-				alSource3f(sourceId, AL_VELOCITY, (ALfloat)velocityX, (ALfloat)velocityY, 0);
+				alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, depth);
+				alSource3f(sourceId, AL_VELOCITY, (ALfloat)velocityX, (ALfloat)velocityY, depth);
 			}
 			else {
 				alSourcei(sourceId, AL_SOURCE_RELATIVE, 1);
@@ -163,7 +181,7 @@ namespace River {
 		dirty = true;
 	}
 
-	
+
 	bool AudioInstance::is3D() {
 		return threeD;
 	}
@@ -173,26 +191,26 @@ namespace River {
 		time = time < 0 ? 0 : time;
 
 		// Adjust according to length of audio clip
-		if (time > asset->getLength()) {
-			if (looping)
+		if( time > asset->getLength() ) {
+			if( looping )
 				time = std::fmod(time, asset->getLength());
 			else
 				time = asset->getLength();
 		}
 
-		if (active) {
+		if( active ) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
 			alSourcef(sourceId, AL_SEC_OFFSET, time);
 			ALUtility::checkErrors();
 		}
 		else {
 			currentTime = time;
-		}	
+		}
 	}
 
 
 	double AudioInstance::getTime() {
-		if (!active) return currentTime;
+		if( !active ) return currentTime;
 		ALuint sourceId = ALData::instanceSourceMap.at(this);
 		ALfloat time;
 		alGetSourcef(sourceId, AL_SEC_OFFSET, &time);
@@ -201,7 +219,7 @@ namespace River {
 
 
 	void AudioInstance::pause() {
-		if (!paused && active) {
+		if( !paused && active ) {
 			// Update current time to the time
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
 			ALfloat time;
@@ -225,7 +243,7 @@ namespace River {
 
 
 	void AudioInstance::restart() {
-		if (active) {
+		if( active ) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
 			alSourcef(sourceId, AL_SEC_OFFSET, 0);
 			ALUtility::checkErrors();

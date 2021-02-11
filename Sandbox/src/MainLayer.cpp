@@ -87,9 +87,10 @@ void MainLayer::onUpdate() {
 	domain.clean();
 }
 
+static double audioDepth = 0;
 
 void MainLayer::onKeyEvent(River::KeyEvent& e) {
-	std::cout << "KeyEvent: " << (int) e.key << " " << (int) e.action << std::endl;
+	//std::cout << "KeyEvent: " << (int) e.key << " " << (int) e.action << std::endl;
 
 	if (e.key == River::Key::RIGHT)
 		camera->adjustX(10);
@@ -107,7 +108,7 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::COINS);
 		//audio->loop(true);
 		audio->set3D(true);
-		audio->setSize(300);
+		audio->setDepth(audioDepth);
 		River::AudioSystem::playAudio(audio);
 	}
 
@@ -123,16 +124,26 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 		audio->setVolume(0.5);
 		River::AudioSystem::playAudio(audio);
 	}
+
+	if( e.key == River::Key::W && e.action == River::KeyEvent::Action::PRESSED ){
+		audioDepth += 5;
+		std::cout << "Audio depth: " << audioDepth << std::endl;
+	}
+
+	if( e.key == River::Key::E && e.action == River::KeyEvent::Action::PRESSED ){
+		audioDepth -= 5;
+		std::cout << "Audio depth: " << audioDepth << std::endl;
+	}
 };
 
 void MainLayer::onMouseMoveEvent(River::MouseMoveEvent& e) {
-	std::cout << "MouseMove: " << (double)e.positionX << " " << (double)e.positionY << std::endl;
+	//std::cout << "MouseMove: " << (double)e.positionX << " " << (double)e.positionY << std::endl;
 };
 
 void MainLayer::onMouseScrollEvent(River::MouseScrollEvent& e) {
-	std::cout << "MouseScroll: " << (double)e.amount << std::endl;
+	//std::cout << "MouseScroll: " << (double)e.amount << std::endl;
 };
 
 void MainLayer::onMouseButtonEvent(River::MouseButtonEvent& e) {
-	std::cout << "MouseButton: " << e.button << " " << (int)e.action << std::endl;
+	//std::cout << "MouseButton: " << e.button << " " << (int)e.action << std::endl;
 };

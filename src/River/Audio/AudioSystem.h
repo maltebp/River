@@ -32,6 +32,9 @@ namespace River {
 
 		static void setListenerVelocity(double velocityX, double velocityY);	
 
+		static void setListenerDepth(double depth);
+
+		static double getListenerDepth();
 
 	private:
 
@@ -46,12 +49,13 @@ namespace River {
 		
 		static inline bool initialized = false;
 
-
-		static inline double listenerPositionX = 0.0;
-		static inline double listenerPositionY = 0.0;
+		static inline double listenerPositionX = 0;
+		static inline double listenerPositionY = 0;
 		
-		static inline double listenerVelocityX = 0.0;
-		static inline double listenerVelocityY = 0.0;
+		static inline double listenerVelocityX = 0;
+		static inline double listenerVelocityY = 0;
+
+		static inline double listenerDepth = 0;
 
 		static inline double masterVolume = 1.0;
 
