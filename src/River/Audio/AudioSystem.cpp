@@ -59,6 +59,7 @@ namespace River {
 			// Stop and release AL source
 			ALuint sourceId = ALData::instanceSourceMap.at(audio);
 			alSourceStop(sourceId);
+			ALUtility::checkErrors();
 			ALData::instanceSourceMap.erase(audio);
 			ALData::freeSources.push(sourceId);
 		}
@@ -100,6 +101,7 @@ namespace River {
 				ALuint sourceId = ALData::instanceSourceMap.at(instance);
 				ALenum state;
 				alGetSourcei(sourceId, AL_SOURCE_STATE, &state);
+				ALUtility::checkErrors();
 				if (state == AL_STOPPED)
 					finished = true;
 			}
@@ -167,10 +169,11 @@ namespace River {
 				double distance = std::sqrt(xDistance * xDistance + yDistance * yDistance);
 
 				if (distance != 0) {
+					// Basically the linear attenuation function (with rolloff = 1)
 					volumeComponent += 1 - (distance - audioInstance->size) / (audioInstance->range - audioInstance->size);
-
 				}
 
+				// Clamp volume
 				volumeComponent = volumeComponent;
 				if (volumeComponent < 0) volumeComponent = 0;
 				if (volumeComponent > 1) volumeComponent = 1;
@@ -224,12 +227,10 @@ namespace River {
 
 		alSourcei(sourceId, AL_BUFFER, *static_cast<ALuint*>(instance->asset->getData()));
 
-		// TODO: Cast values
-		alSourcef(sourceId, AL_SEC_OFFSET, instance->currentTime);
-		std::cout << "ACtivation time: " << instance->currentTime << std::endl;
+		alSourcef(sourceId, AL_SEC_OFFSET, (ALfloat)instance->currentTime);
 
-		alSourcef(sourceId, AL_REFERENCE_DISTANCE, instance->size);
-		alSourcef(sourceId, AL_MAX_DISTANCE, instance->range);
+		alSourcef(sourceId, AL_REFERENCE_DISTANCE, (ALfloat)instance->size);
+		alSourcef(sourceId, AL_MAX_DISTANCE, (ALfloat)instance->range);
 
 		alSourcef(sourceId, AL_GAIN, (ALfloat)instance->volume);
 		alSourcef(sourceId, AL_PITCH, (ALfloat)instance->speed);
@@ -273,19 +274,10 @@ namespace River {
 
 
 	void AudioSystem::setMasterVolume(double volume) {
+		if( volume < 0 )
+			throw new InvalidArgumentException("Master volume may not be less than 0");
 		masterVolume = volume;
-		masterVolume = masterVolume > 1.0 ? 1.0 : masterVolume;
-		masterVolume = masterVolume < 0 ? 0 : masterVolume;
-		alListenerf(AL_GAIN, masterVolume);
-		ALUtility::checkErrors();
-	}
-
-
-	void AudioSystem::adjustMasterVolume(double volume) {
-		masterVolume += volume;
-		masterVolume = masterVolume > 1.0 ? 1.0 : masterVolume;
-		masterVolume = masterVolume < 0 ? 0 : masterVolume;
-		alListenerf(AL_GAIN, masterVolume);
+		alListenerf(AL_GAIN, (ALfloat)masterVolume);
 		ALUtility::checkErrors();
 	}
 

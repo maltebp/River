@@ -129,7 +129,7 @@ namespace River {
 
 		if( active && threeD ) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
-			alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, depth);
+			alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, (ALfloat)depth);
 			ALUtility::checkErrors();
 		}
 	}
@@ -151,7 +151,7 @@ namespace River {
 
 		if( active && threeD ){
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
-			alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, this->depth);
+			alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, (ALfloat)this->depth);
 			ALUtility::checkErrors();
 		}
 	}
@@ -167,8 +167,8 @@ namespace River {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
 			if( toggle ) {
 				alSourcei(sourceId, AL_SOURCE_RELATIVE, 0);
-				alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, depth);
-				alSource3f(sourceId, AL_VELOCITY, (ALfloat)velocityX, (ALfloat)velocityY, depth);
+				alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, (ALfloat)depth);
+				alSource3f(sourceId, AL_VELOCITY, (ALfloat)velocityX, (ALfloat)velocityY, 0);
 			}
 			else {
 				alSourcei(sourceId, AL_SOURCE_RELATIVE, 1);
@@ -200,7 +200,7 @@ namespace River {
 
 		if( active ) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
-			alSourcef(sourceId, AL_SEC_OFFSET, time);
+			alSourcef(sourceId, AL_SEC_OFFSET, (ALfloat)time);
 			ALUtility::checkErrors();
 		}
 		else {
@@ -214,6 +214,7 @@ namespace River {
 		ALuint sourceId = ALData::instanceSourceMap.at(this);
 		ALfloat time;
 		alGetSourcef(sourceId, AL_SEC_OFFSET, &time);
+		ALUtility::checkErrors();
 		return time;
 	}
 
