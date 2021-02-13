@@ -120,9 +120,10 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\River\Audio\AL.h" />
+    <ClInclude Include="src\River\Audio\AudioListener.h" />
     <ClInclude Include="src\River\Audio\AudioInstance.h" />
     <ClInclude Include="src\River\Audio\AudioAsset.h" />
-    <ClInclude Include="src\River\Audio\AudioSystem.h" />
     <ClInclude Include="src\River\Layer\SimpleLayer.h" />
     <ClInclude Include="src\River\Asset\AssetCreator.h" />
     <ClInclude Include="src\River\Asset\AssetCollection.h" />
@@ -168,13 +169,12 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Event\WindowEvent\WindowEventController.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\River\Audio\AL.cpp" />
+    <ClCompile Include="src\River\Audio\AudioListener.cpp" />
     <ClCompile Include="src\River\Audio\AudioInstance.cpp" />
-    <ClCompile Include="src\River\Audio\ALUtility.cpp" />
-    <ClCompile Include="src\River\Audio\ALUtility.h" />
     <ClCompile Include="src\River\Audio\AudioAsset.cpp" />
     <ClCompile Include="src\River\Asset\Asset.cpp" />
     <ClCompile Include="src\River\Asset\AssetCollection.cpp" />
-    <ClCompile Include="src\River\Audio\AudioSystem.cpp" />
     <ClCompile Include="src\River\Event\MouseEvent\MouseEventController.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteRenderingSystem.cpp" />
     <ClCompile Include="src\River\Graphics\Text\Font.cpp" />

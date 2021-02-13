@@ -6,10 +6,8 @@
 
 namespace River {
 
-	class AudioSystem;
 
 	class AudioInstance {
-		friend AudioSystem;
 	public:
 
 		static inline const double DEFAULT_RANGE = 1000;
@@ -38,6 +36,8 @@ namespace River {
 
 		void setVolume(double volume);
 
+		double getVolume();
+
 		void set3D(bool toggle);
 
 		bool is3D();
@@ -56,6 +56,10 @@ namespace River {
 
 		void setPosition(double positionX, double positionY);
 
+		double getPositionX();
+
+		double getPositionY();
+
 		void setVelocity(double velocityX, double velocityY);
 
 		void setDepth(double depth);
@@ -73,8 +77,6 @@ namespace River {
 
 		bool isPaused();
 		
-		void resume();
-
 		void stop();
 
 		// Also works when looping
@@ -83,14 +85,21 @@ namespace River {
 		// Not fired when loop has finished
 		void onFinish(std::function<void(AudioInstance*)> callback);
 
-	
+		AudioAsset* getAsset();
+
+		// Called by game
+		static void updateInstances(double time);
+
+
 	private:
 
-		void activate(void* nativeObject);
+		void activate();
 
-		void* deactivate();
+		void deactivate();
 
 		bool isActive();
+
+		double calculateHeuristic();
 
 
 	private:
@@ -124,12 +133,13 @@ namespace River {
 		double velocityY = 0;
 
 		double currentTime = 0;
-		
-		double heuristic = 0;
-	
-		void* nativeObject = nullptr;
 
 		std::function<void(AudioInstance*)> onFinishCallback = nullptr;
+
+		double heuristic = 0;
+
+		void* nativeObject = nullptr;
+
 	};
 
 }

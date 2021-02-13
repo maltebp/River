@@ -141,9 +141,6 @@
     <ClInclude Include="src\River\Layer\SimpleLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\River\Audio\AudioSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\River\Audio\AudioAsset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -151,6 +148,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\River\Audio\AudioInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Audio\AudioListener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\River\Audio\AL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -233,19 +236,16 @@
     <ClCompile Include="src\River\Event\WindowEvent\WindowEventController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\River\Audio\AudioSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\River\Audio\AudioAsset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\River\Audio\ALUtility.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\River\Audio\ALUtility.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\River\Audio\AudioInstance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\River\Audio\AudioListener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\River\Audio\AL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

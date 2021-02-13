@@ -1,4 +1,4 @@
-#include "ALUtility.h"
+#include "AL.h"
 
 #include <string>
 #include <sstream>
@@ -8,18 +8,78 @@
 #include "River/Error.h"
 
 
-
-// Just a small helper function to convert the AL int enum to hex
-static std::string intToHex4(int i) {
-	std::stringstream stream;
-	stream << "0x" << std::setfill('0') << std::setw(4) << std::hex << i;
-	return stream.str();
-}
-
 namespace River {
 
+	// Just a small helper function to convert the AL int enum to hex
+	static std::string intToHex4(int i) {
+		std::stringstream stream;
+		stream << "0x" << std::setfill('0') << std::setw(4) << std::hex << i;
+		return stream.str();
+	}
 
-	std::string ALUtility::errorToString(ALenum errorCode) {
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+
+	void AL::initialize() {
+		if( initialized ) throw new InvalidStateException("Audio system has already been initialized");
+		initialized = true;
+
+		// Open default device
+		ALCdevice* device = alcOpenDevice(nullptr);
+		if( device == nullptr ) throw new AudioException("Could not open preffered audio device");
+
+		// Not sure if we should check if eax2.0 exists here
+		// The OpenAL programming guide does, but the return
+		// result is never 
+
+		// Open context
+		ALCcontext* context = alcCreateContext(device, nullptr);
+		alcMakeContextCurrent(context);
+		checkContextError(device);
+
+		// Set attenuation model
+		alDistanceModel(AL_LINEAR_DISTANCE_CLAMPED);
+		checkErrors();
+
+		// Generate sources
+		for( int i = 0; i < NUM_SOURCES; i++ ) {
+			ALuint sourceId;
+			alGenSources(1, &sourceId);
+			checkErrors();
+			allSources[i] = sourceId;
+			freeSources.push(allSources + i);
+		}
+	}
+
+
+	bool AL::isInitialized() {
+		return initialized;
+	}
+
+
+	ALuint* AL::getSource() {
+		if( !initialized )
+			throw new InvalidStateException("OpenAL has not been initialized");
+
+		if( AL::freeSources.empty() )
+			throw new InvalidStateException("No OpenAL sources are available when activating AudioInstance");
+	
+		ALuint* sourceId = AL::freeSources.top();
+		AL::freeSources.pop();
+
+		return sourceId;
+	}
+
+
+	void AL::releaseSource(ALuint* source) {
+		if( !initialized )
+			throw new InvalidStateException("OpenAL has not been initialized");
+		AL::freeSources.push(source);
+	}
+
+
+	std::string AL::errorToString(ALenum errorCode) {
 		switch (errorCode) {
 			case AL_NO_ERROR: return "No error";
 			case AL_INVALID_NAME: return "Invalid name";
@@ -32,7 +92,7 @@ namespace River {
 	}
 
 
-	void ALUtility::checkErrors() {
+	void AL::checkErrors() {
 		ALenum error = alGetError();
 		if (error == AL_NO_ERROR) return;
 
@@ -62,7 +122,7 @@ namespace River {
 	}
 
 
-	std::string ALUtility::contextErrorToString(ALCenum errorCode) {
+	std::string AL::contextErrorToString(ALCenum errorCode) {
 		switch (errorCode) {
 			case ALC_NO_ERROR: return "No error";
 			case ALC_INVALID_DEVICE: return "Invalid device";
@@ -74,7 +134,8 @@ namespace River {
 		return "Unknown error";
 	}
 
-	void ALUtility::checkContextError(ALCdevice* device) {
+
+	void AL::checkContextError(ALCdevice* device) {
 		if (device == nullptr) return;
 		ALCenum error = alcGetError(device);
 		if (error == ALC_NO_ERROR) return;

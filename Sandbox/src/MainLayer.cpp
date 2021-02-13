@@ -73,9 +73,8 @@ void MainLayer::onCreate() {
 
 void MainLayer::onUpdate() {
 
-	River::AudioSystem::setListenerPosition(camera->getX(), camera->getY());
-	River::AudioSystem::setListenerDepth(400);
-	River::AudioSystem::update(0.016666);
+	River::AudioListener::setPosition(camera->getX(), camera->getY());
+	River::AudioListener::setDepth(400);
 
 	fpsText->getComponent<River::ECS::Text>()->text = std::to_string(River::Game::getFps()) ;
 
@@ -110,20 +109,20 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 		//audio->loop(true);
 		audio->set3D(true);
 		audio->setDepth(audioDepth);
-		River::AudioSystem::playAudio(audio);
+		audio->play();
 	}
 
 	//if (e.key == River::Key::F && e.action == River::KeyEvent::Action::DOWN) {
 	//	River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::COUNTDOWN);
 	//	//audio->loop(true);
-	//	River::AudioSystem::playAudio(audio);
+	//	River::AudioPlayer::playAudio(audio);
 	//}
 
 	if (e.key == River::Key::G && e.action == River::KeyEvent::Action::DOWN) {
 		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::CLASSICAL_MUSIC);
 		//audio->loop(true);
 		audio->setVolume(0.5);
-		River::AudioSystem::playAudio(audio);
+		audio->play();
 	}
 
 	if( e.key == River::Key::W && e.action == River::KeyEvent::Action::PRESSED ){
@@ -138,13 +137,13 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 
 	if( e.key == River::Key::A && e.action == River::KeyEvent::Action::PRESSED ){
 		camera->adjustRotation(5);
-		River::AudioSystem::setListenerRotation(camera->getRotation());
+		River::AudioListener::setRotation(camera->getRotation());
 		std::cout << "Rotation: " << camera->getRotation() << std::endl;
 	}
 
 	if( e.key == River::Key::S && e.action == River::KeyEvent::Action::PRESSED ){
 		camera->adjustRotation(-5);
-		River::AudioSystem::setListenerRotation(camera->getRotation());
+		River::AudioListener::setRotation(camera->getRotation());
 		std::cout << "Rotation: " << camera->getRotation() << std::endl;
 	}
 	

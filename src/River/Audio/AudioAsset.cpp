@@ -3,7 +3,7 @@
 
 #define DR_WAV_IMPLEMENTATION
 #include "River/Vendor/dr_wav/dr_wav.h"
-#include "ALUtility.h"
+#include "AL.h"
 
 namespace River {
 
@@ -54,10 +54,10 @@ namespace River {
 			ALuint bufferId;
 
 			alGenBuffers(1, &bufferId);
-			ALUtility::checkErrors();
+			AL::checkErrors();
 
 			alBufferData(bufferId, AL_FORMAT_MONO16, data, static_cast<ALsizei>(numSamples)*2, static_cast<ALsizei>(sampleRate));
-			ALUtility::checkErrors();
+			AL::checkErrors();
 
 			nativeData->bufferId = bufferId;
 		}

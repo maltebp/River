@@ -8,7 +8,8 @@
 #include <sstream>
 #include <algorithm>
 
-#include "Audio/AudioSystem.h"
+#include "Audio/AL.h"
+#include "Audio/AudioInstance.h"
 
 #include "Event/MouseEvent/MouseEventController.h"
 
@@ -55,7 +56,7 @@ namespace River {
 		std::cout << "Graphics card: " << glGetString(GL_RENDERER) << std::endl;
 
 		// Initialize audio system
-		AudioSystem::initialize();
+		AL::initialize();
 
 		window->setClearColor(clearColor);
 
@@ -93,6 +94,8 @@ namespace River {
 			for( auto& buttonEvent : MouseEventController::getMouseButtonEvents() )
 				rootLayer->mouseButtonEvent(buttonEvent);
 
+			// TODO: Use correct time here
+			AudioInstance::updateInstances(0.0166666666666);
 
 			rootLayer->update();
 		}
