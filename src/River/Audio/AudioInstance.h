@@ -83,6 +83,16 @@ namespace River {
 		// Not fired when loop has finished
 		void onFinish(std::function<void(AudioInstance*)> callback);
 
+	
+	private:
+
+		void activate(void* nativeObject);
+
+		void* deactivate();
+
+		bool isActive();
+
+
 	private:
 
 		AudioAsset* asset;
@@ -113,18 +123,12 @@ namespace River {
 		double velocityX = 0;
 		double velocityY = 0;
 
-		bool dirty = false; // TODO: Remove this
-		
-		bool timeDirty = false; // TODO: Remove this
-		
 		double currentTime = 0;
-		
-		bool active = false;
-		
-		bool finished = false; // TODO: Is this ever used?
 		
 		double heuristic = 0;
 	
+		void* nativeObject = nullptr;
+
 		std::function<void(AudioInstance*)> onFinishCallback = nullptr;
 	};
 

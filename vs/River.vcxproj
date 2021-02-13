@@ -120,7 +120,6 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\River\Audio\ALData.h" />
     <ClInclude Include="src\River\Audio\AudioInstance.h" />
     <ClInclude Include="src\River\Audio\AudioAsset.h" />
     <ClInclude Include="src\River\Audio\AudioSystem.h" />

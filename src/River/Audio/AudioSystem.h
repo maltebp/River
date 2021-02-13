@@ -65,7 +65,7 @@ namespace River {
 
 		static inline double listenerRotation = 0;
 
-		// ALL audio instances that are currently registered
+		// ALL audio instances that are currently playing
 		static inline std::vector<AudioInstance*> playingInstances;
 
 		// Mapping of how many audio instances uses the a given AudioAsset
