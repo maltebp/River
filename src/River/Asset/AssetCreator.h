@@ -5,10 +5,11 @@
 
 namespace River {
 
+
 	// Just there allow for template sample argument in Visual Studio
 	class AssetSample : public Asset{};
 	class CreatorSample;
-	
+
 
 	/**
 	 * @brief	Class which supplies some generic methods for a builder-like pattern

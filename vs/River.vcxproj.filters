@@ -153,7 +153,7 @@
     <ClInclude Include="src\River\Audio\AudioListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\River\Audio\AL.h">
+    <ClInclude Include="src\River\Audio\AL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -245,7 +245,7 @@
     <ClCompile Include="src\River\Audio\AudioListener.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\River\Audio\AL.cpp">
+    <ClCompile Include="src\River\Audio\AL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

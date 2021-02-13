@@ -120,7 +120,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\River\Audio\AL.h" />
+    <ClInclude Include="src\River\Audio\AL.h" />
     <ClInclude Include="src\River\Audio\AudioListener.h" />
     <ClInclude Include="src\River\Audio\AudioInstance.h" />
     <ClInclude Include="src\River\Audio\AudioAsset.h" />
@@ -169,7 +169,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Event\WindowEvent\WindowEventController.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\River\Audio\AL.cpp" />
+    <ClCompile Include="src\River\Audio\AL.cpp" />
     <ClCompile Include="src\River\Audio\AudioListener.cpp" />
     <ClCompile Include="src\River\Audio\AudioInstance.cpp" />
     <ClCompile Include="src\River\Audio\AudioAsset.cpp" />

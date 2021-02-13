@@ -79,9 +79,6 @@ namespace River {
 		
 		void stop();
 
-		// Also works when looping
-		void restart();
-
 		// Not fired when loop has finished
 		void onFinish(std::function<void(AudioInstance*)> callback);
 
