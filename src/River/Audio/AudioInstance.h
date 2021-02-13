@@ -67,10 +67,12 @@ namespace River {
 		double getDepth(double depth);
 
 		// Relative to the non speed adjusted asset
+		// If set to longer than asset length, it is stopped
 		void setTime(double time);
 
 		double getTime();
 
+		// Does not pause if not playing (pause flag isnt set -> isPaused would return false)
 		void pause();
 
 		void unpause();

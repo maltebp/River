@@ -7,10 +7,10 @@
 
 namespace River {
 
+
 	struct NativeData {
 		ALuint bufferId = 0;
 	};
-	
 	
 
 	void AudioAsset::onLoad() {
@@ -108,6 +108,7 @@ namespace River {
 		asset = new AudioAsset();
 		asset->filePath = filePath;
 	}
+
 
 	void AudioAsset::Creator::setPriority(unsigned int priority) {
 		asset->priority = priority;

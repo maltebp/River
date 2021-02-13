@@ -52,29 +52,29 @@ namespace River {
 
 
 	void AudioInstance::stop() {
-		if( !playing ) return;
+		if( playing ) {
+			// Stop from playing
+			deactivate();
+			auto instanceIterator = std::find(Globals::playingInstances.begin(), Globals::playingInstances.end(), this);
+			Globals::playingInstances.erase(instanceIterator);
+			playing = false;
+		}
 
-		deactivate();
-
-		auto instanceIterator = std::find(Globals::playingInstances.begin(), Globals::playingInstances.end(), this);
-		Globals::playingInstances.erase(instanceIterator);
-
-		playing = false;
+		// Clear the paused state
+		setTime(0);
+		paused = false;
 	}
 
 
 	void AudioInstance::pause() {
 		if( !playing ) return;
+	
+		// Stop from playing
+		deactivate();
+		auto instanceIterator = std::find(Globals::playingInstances.begin(), Globals::playingInstances.end(), this);
+		Globals::playingInstances.erase(instanceIterator);
 		
-		if( isActive() ) {
-			// TODO: Try to leave this out
-			ALuint sourceId = *static_cast<ALuint*>(nativeObject);
-			ALfloat time;
-			alGetSourcef(sourceId, AL_SEC_OFFSET, &time);
-			currentTime = time;
-		}
-
-		stop();
+		playing = false;
 		paused = true;
 	}
 
@@ -264,8 +264,8 @@ namespace River {
 
 
 	void AudioInstance::setTime(double time) {
-		// TODO: THROW EXCEPTION
-		time = time < 0 ? 0 : time;
+		if( time < 0 )
+			throw InvalidArgumentException("Time must not be less than 0");
 
 		// Adjust according to length of audio clip
 		if( time > asset->getLength() ) {
@@ -275,24 +275,18 @@ namespace River {
 				time = asset->getLength();
 		}
 
-		if( nativeObject != nullptr ) {
+		currentTime = time;
+
+		if( isActive() ) {
 			ALuint sourceId = *static_cast<ALuint*>(nativeObject);
 			alSourcef(sourceId, AL_SEC_OFFSET, (ALfloat)time);
 			AL::checkErrors();
-		}
-		else {
-			currentTime = time;
 		}
 	}
 
 
 	double AudioInstance::getTime() {
-		if( nativeObject == nullptr ) return currentTime;
-		ALuint sourceId = *static_cast<ALuint*>(nativeObject);
-		ALfloat time;
-		alGetSourcef(sourceId, AL_SEC_OFFSET, &time);
-		AL::checkErrors();
-		return time;
+		return currentTime;
 	}	
 
 
@@ -439,12 +433,6 @@ namespace River {
 		// Update time and heuristics
 		std::vector<AudioInstance*> finishedInstances;
 		for( auto instance : Globals::playingInstances ) {
-			instance->heuristic = 0;
-
-			if( instance->paused ) {
-				if( instance->isActive() ) instance->deactivate();
-			};
-
 			bool finished = false;
 
 			if( !instance->isActive() ) {
@@ -458,14 +446,15 @@ namespace River {
 				}
 			}
 			else {
-
 				// Use AL to check if finished
 				ALuint sourceId = *static_cast<ALuint*>(instance->nativeObject);
-				ALenum state;
-				alGetSourcei(sourceId, AL_SOURCE_STATE, &state);
+				
+				ALfloat time;
+				alGetSourcef(sourceId, AL_SEC_OFFSET, &time);
 				AL::checkErrors();
-				if( state == AL_STOPPED )
-					finished = true;
+				instance->currentTime = time;
+				if( !instance->looping && time >= instance->asset->getLength() )
+					finished = true;	
 			}
 
 			// Check if finished

@@ -5,6 +5,9 @@
 #include "Assets.h"
 
 
+River::AudioInstance countdown(GlobalAssets::Sounds::COUNTDOWN);
+
+
 MainLayer::MainLayer(const std::string& arg) {
 	std::cout << "Start arg: " << arg;
 }
@@ -116,6 +119,33 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 			std::cout << "Asset loaded" << std::endl;
 		}
 	}
+
+
+	if( e.key == River::Key::I && e.action == River::KeyEvent::Action::DOWN ) {
+		if( countdown.isPaused() ) {
+			countdown.unpause();
+			std::cout << "Unpaused countdown" << std::endl;
+		}
+		else {
+			countdown.pause();
+			if( countdown.isPaused() )
+				std::cout << "Paused countdown" << std::endl;
+			else
+				std::cout << "Attempted to pause countdown" << std::endl;
+		}
+	}
+
+	if( e.key == River::Key::O && e.action == River::KeyEvent::Action::DOWN ) {
+		countdown.stop();
+		std::cout << "Stopped countdown" << std::endl;
+	}
+
+
+	if( e.key == River::Key::P && e.action == River::KeyEvent::Action::DOWN ) {
+		countdown.play();
+		std::cout << "Started countdown" << std::endl;
+	}
+
 
 	if (e.key == River::Key::D && e.action == River::KeyEvent::Action::DOWN) {
 		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::COINS);
