@@ -24,8 +24,6 @@ namespace River {
 
 		static void setMasterVolume(double volume);
 
-		static void adjustMasterVolume(double volume);
-
 		static double getMasterVolume();
 
 		static void setListenerPosition(double positionX, double positionY);

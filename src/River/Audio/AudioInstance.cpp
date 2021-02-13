@@ -129,14 +129,14 @@ namespace River {
 
 		if( active && threeD ) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
-			alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, (ALfloat)depth);
+			alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, (ALfloat)-depth);
 			ALUtility::checkErrors();
 		}
 	}
 
 
 	void AudioInstance::setVelocity(double velocityX, double velocityY) {
-		if( active ) {
+		if( active && threeD ) {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
 			alSource3f(sourceId, AL_VELOCITY, (ALfloat)velocityX, (ALfloat)velocityY, 0);
 			ALUtility::checkErrors();
@@ -151,7 +151,7 @@ namespace River {
 
 		if( active && threeD ){
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
-			alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, (ALfloat)this->depth);
+			alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, (ALfloat)-this->depth);
 			ALUtility::checkErrors();
 		}
 	}
@@ -167,7 +167,7 @@ namespace River {
 			ALuint sourceId = ALData::instanceSourceMap.at(this);
 			if( toggle ) {
 				alSourcei(sourceId, AL_SOURCE_RELATIVE, 0);
-				alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, (ALfloat)depth);
+				alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, (ALfloat)-depth);
 				alSource3f(sourceId, AL_VELOCITY, (ALfloat)velocityX, (ALfloat)velocityY, 0);
 			}
 			else {
