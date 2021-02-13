@@ -74,6 +74,7 @@ void MainLayer::onCreate() {
 void MainLayer::onUpdate() {
 
 	River::AudioSystem::setListenerPosition(camera->getX(), camera->getY());
+	River::AudioSystem::setListenerDepth(400);
 	River::AudioSystem::update(0.016666);
 
 	fpsText->getComponent<River::ECS::Text>()->text = std::to_string(River::Game::getFps()) ;
@@ -134,7 +135,21 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 		audioDepth -= 5;
 		std::cout << "Audio depth: " << audioDepth << std::endl;
 	}
+
+	if( e.key == River::Key::A && e.action == River::KeyEvent::Action::PRESSED ){
+		camera->adjustRotation(5);
+		River::AudioSystem::setListenerRotation(camera->getRotation());
+		std::cout << "Rotation: " << camera->getRotation() << std::endl;
+	}
+
+	if( e.key == River::Key::S && e.action == River::KeyEvent::Action::PRESSED ){
+		camera->adjustRotation(-5);
+		River::AudioSystem::setListenerRotation(camera->getRotation());
+		std::cout << "Rotation: " << camera->getRotation() << std::endl;
+	}
+	
 };
+
 
 void MainLayer::onMouseMoveEvent(River::MouseMoveEvent& e) {
 	//std::cout << "MouseMove: " << (double)e.positionX << " " << (double)e.positionY << std::endl;

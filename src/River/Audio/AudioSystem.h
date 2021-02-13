@@ -36,6 +36,12 @@ namespace River {
 
 		static double getListenerDepth();
 
+		// Will clamp the angle
+		static void setListenerRotation(double rotation);
+
+		static double getListenerRotation();
+
+
 	private:
 
 		static void activateInstance(AudioInstance* instance);
@@ -49,6 +55,8 @@ namespace River {
 		
 		static inline bool initialized = false;
 
+		static inline double masterVolume = 1.0;
+
 		static inline double listenerPositionX = 0;
 		static inline double listenerPositionY = 0;
 		
@@ -57,7 +65,7 @@ namespace River {
 
 		static inline double listenerDepth = 0;
 
-		static inline double masterVolume = 1.0;
+		static inline double listenerRotation = 0;
 
 		// ALL audio instances that are currently registered
 		static inline std::vector<AudioInstance*> playingInstances;

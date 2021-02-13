@@ -66,6 +66,8 @@ namespace River{
 		*/
 		void adjustRotation(float rotationAdjustment);
 
+		float getRotation();
+
 		/**
 		 * @brief	Sets the Camera's zoom level
 		 * @param zoom	The zoom level in percentage. 1 is no zoom (default), <1 is negative zoom (objects are smaller) and >1 is positive zoom (objects are larger.

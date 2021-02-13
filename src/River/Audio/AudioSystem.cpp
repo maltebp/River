@@ -314,6 +314,40 @@ namespace River {
 		return listenerDepth;
 	}
 
+
+	void AudioSystem::setListenerRotation(double rotation){
+		rotation = fmod(rotation, 360);
+		if( rotation < 0 ) rotation += 360;
+		listenerRotation = rotation;
+		
+		// Adjust rotation by adding 90 degrees, to make 0 degrees
+		// point upwards, and convert it to radians in range -PI to PI
+		double radianRotation;
+		radianRotation = listenerRotation + 90;
+		if( radianRotation >= 360 ) radianRotation - 360; // Reclamp to 0-360
+		if( radianRotation > 180 ) radianRotation - 360; // Adjust to -180 to 108
+		radianRotation *= 0.01745329251;
+
+		// Get 2D direction vector
+		double directionX = cos(radianRotation);
+		double directionY = sin(radianRotation);
+
+		// With an "at" vector looking "towards the screen" (along
+		// the negative z-axis), we can use the up vector to rotate,
+		// around the direction, effectively rotation our 2D listener
+		ALfloat orientation[] = {
+							  0,				   0, -1.0f, // At vector
+			(ALfloat)directionX, (ALfloat)directionY,     0  // Up vector
+		};
+		alListenerfv(AL_ORIENTATION, orientation);
+		ALUtility::checkErrors();
+	}
+
+	
+	double AudioSystem::getListenerRotation(){
+		return listenerRotation;
+	}
+
 }
 
 

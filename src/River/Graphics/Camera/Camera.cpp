@@ -63,6 +63,12 @@ namespace River{
 		dirty = true;
 	}
 
+
+	float Camera::getRotation(){
+		return rotation;
+	}
+
+
 	void Camera::setZoom(float zoom){
 		this->zoom = zoom;
 		if( zoom < 0.01f ) this->zoom = 0.01f; 
@@ -75,8 +81,8 @@ namespace River{
 
 	glm::mat4& Camera::getCameraMatrix(){
 		if( dirty ){
-			cameraMatrix = glm::mat4(1.0f); // Identit	y matrix (diagonal is 1's)
-			cameraMatrix = glm::rotate(cameraMatrix, glm::radians(rotation), glm::vec3(0, 0, 1));
+			cameraMatrix = glm::mat4(1.0f); // Identity matrix
+			cameraMatrix = glm::rotate(cameraMatrix, glm::radians(rotation), glm::vec3(0, 0, -1));
 			cameraMatrix = glm::translate(cameraMatrix, glm::vec3(-x, -y,  0.0f));
 			cameraMatrix = glm::scale(cameraMatrix, glm::vec3(zoom, zoom, 1));
 			cameraMatrix = projectionMatrix * cameraMatrix;
