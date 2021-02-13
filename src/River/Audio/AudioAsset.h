@@ -10,14 +10,8 @@ namespace River {
 
 		static inline const unsigned int DEFAULT_PRIORITY = 10;
 
-		/// <returns>A pointer to the native file handle</returns>
-		void* getFile();
-
 		/// <returns>A pointer to the native audio data</returns>
 		void* getData();
-
-		/// <returns>True if this AudioAsset is a stream</returns>
-		bool isStream();
 
 		/**
 	     *	@returns  The length of this AudioAsset in seconds

@@ -352,6 +352,9 @@ namespace River {
 		alSourceStop(*sourceId);
 		AL::checkErrors();
 
+		alSourcei(*sourceId, AL_BUFFER, NULL);
+		AL::checkErrors();
+
 		AL::releaseSource(sourceId);
 	
 		nativeObject = nullptr;

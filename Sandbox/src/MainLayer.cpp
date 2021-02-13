@@ -89,6 +89,7 @@ void MainLayer::onUpdate() {
 
 static double audioDepth = 0;
 
+
 void MainLayer::onKeyEvent(River::KeyEvent& e) {
 	//std::cout << "KeyEvent: " << (int) e.key << " " << (int) e.action << std::endl;
 
@@ -103,6 +104,18 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 
 	if (e.key == River::Key::DOWN)
 		camera->adjustY(-10);
+
+	if( e.key == River::Key::L && e.action == River::KeyEvent::Action::DOWN ) {
+		auto asset = GlobalAssets::Sounds::COINS;
+		if( asset->isLoaded() ) {
+			asset->unload();
+			std::cout << "Asset unloaded" << std::endl;
+		}
+		else {
+			asset->load();
+			std::cout << "Asset loaded" << std::endl;
+		}
+	}
 
 	if (e.key == River::Key::D && e.action == River::KeyEvent::Action::DOWN) {
 		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::COINS);

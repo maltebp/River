@@ -73,10 +73,8 @@ namespace River {
 
 
 	void AudioAsset::onUnload() {
-		// TODO: Free native Data
-		// TODO: Free file
-		// TODO: Free buffer id
-		// TODO: Unhook from playback system (not decided how this is to be done)
+		alDeleteBuffers(1, &static_cast<NativeData*>(nativeData)->bufferId);
+		AL::checkErrors();
 	}
 
 
@@ -97,7 +95,6 @@ namespace River {
 	unsigned int AudioAsset::getPriority() {
 		return priority;
 	}
-
 
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - -
