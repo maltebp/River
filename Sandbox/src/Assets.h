@@ -85,7 +85,7 @@ namespace GlobalAssets {
 			.finish();
 
 		inline River::AudioAsset* COINS = River::AudioAsset::create("assets/test.wav")
-			//.addToCollection(COLLECTION)
+			.addToCollection(COLLECTION)
 			.finish();
 
 		inline River::AudioAsset* CLASSICAL_MUSIC = River::AudioAsset::create("assets/music.wav")

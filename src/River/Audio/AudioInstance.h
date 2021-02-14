@@ -82,6 +82,8 @@ namespace River {
 		void stop();
 
 		// Not fired when loop has finished
+		// Not fired if stopped prematurely
+		// The AUdio is entirely free from the playing system at this point
 		void onFinish(std::function<void(AudioInstance*)> callback);
 
 		AudioAsset* getAsset();

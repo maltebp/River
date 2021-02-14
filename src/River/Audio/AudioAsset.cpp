@@ -62,7 +62,7 @@ namespace River {
 			nativeData->bufferId = bufferId;
 		}
 
-		// The file is not needed for non-streamed audio
+		// Clean up
 		drwav_uninit(&file);
 		delete[] data;
 

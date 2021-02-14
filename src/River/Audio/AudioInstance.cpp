@@ -3,6 +3,7 @@
 #include <iostream>
 #include <functional>
 #include <algorithm>
+#include <set>
 
 #include "AL.h"
 #include "AudioListener.h"
@@ -13,12 +14,16 @@ namespace River {
 	class Globals {
 	public:
 
-		// ALL audio instances that are currently playing
-		static inline std::vector<AudioInstance*> playingInstances; // TODO: Convert to unordered set
+		// ALL audio instances that are currently playing (in the order they were triggered)
+		static inline std::set<AudioInstance*> playingInstances;
 
 		// Mapping of how many audio instances uses the a given AudioAsset
 		static inline std::unordered_map<AudioAsset*, unsigned int> assetInstanceCount;
 	
+
+		// These repeatedly cleared and used in the update function
+		static inline std::vector<AudioInstance*> finishedInstances;
+		static inline std::vector<AudioInstance*> sortedInstances;
 	};
 
 
@@ -40,7 +45,7 @@ namespace River {
 		paused = false;
 
 		if( !playing ) {
-			Globals::playingInstances.push_back(this);
+			Globals::playingInstances.insert(this);
 			playing = true;
 		}
 	}
@@ -55,8 +60,7 @@ namespace River {
 		if( playing ) {
 			// Stop from playing
 			deactivate();
-			auto instanceIterator = std::find(Globals::playingInstances.begin(), Globals::playingInstances.end(), this);
-			Globals::playingInstances.erase(instanceIterator);
+			Globals::playingInstances.erase(Globals::playingInstances.find(this));
 			playing = false;
 		}
 
@@ -71,8 +75,7 @@ namespace River {
 	
 		// Stop from playing
 		deactivate();
-		auto instanceIterator = std::find(Globals::playingInstances.begin(), Globals::playingInstances.end(), this);
-		Globals::playingInstances.erase(instanceIterator);
+		Globals::playingInstances.erase(Globals::playingInstances.find(this));
 		
 		playing = false;
 		paused = true;
@@ -82,7 +85,7 @@ namespace River {
 	void AudioInstance::unpause() {
 		if( !paused ) return;
 
-		Globals::playingInstances.push_back(this);
+		Globals::playingInstances.insert(this);
 		playing = true;
 		paused = false;
 	}
@@ -431,7 +434,8 @@ namespace River {
 			it.second = 0;
 
 		// Update time and heuristics
-		std::vector<AudioInstance*> finishedInstances;
+		std::vector<AudioInstance*>& finishedInstances = Globals::finishedInstances; // TODO: Move out of loop
+		finishedInstances.clear();
 		for( auto instance : Globals::playingInstances ) {
 			bool finished = false;
 
@@ -453,7 +457,10 @@ namespace River {
 				alGetSourcef(sourceId, AL_SEC_OFFSET, &time);
 				AL::checkErrors();
 				instance->currentTime = time;
-				if( !instance->looping && time >= instance->asset->getLength() )
+
+				ALint state;
+				alGetSourcei(sourceId, AL_SOURCE_STATE, &state);
+				if( state == AL_STOPPED )
 					finished = true;	
 			}
 
@@ -477,7 +484,10 @@ namespace River {
 		// Sort instance with heuristic
 		// Sorting in new list, as a audioInstances, is in the order
 		// they have been "played"
-		std::vector<AudioInstance*> sortedInstances(Globals::playingInstances);
+		std::vector<AudioInstance*>& sortedInstances = Globals::sortedInstances;
+		sortedInstances.clear();
+		sortedInstances.resize(Globals::playingInstances.size());
+		std::copy(Globals::playingInstances.begin(), Globals::playingInstances.end(), Globals::sortedInstances.begin());
 		std::sort(sortedInstances.begin(), sortedInstances.end(), [](AudioInstance* a1, AudioInstance* a2) {
 			return a1->heuristic > a2->heuristic;
 			});

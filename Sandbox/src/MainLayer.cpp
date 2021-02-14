@@ -77,7 +77,7 @@ void MainLayer::onCreate() {
 void MainLayer::onUpdate() {
 
 	River::AudioListener::setPosition(camera->getX(), camera->getY());
-	River::AudioListener::setDepth(400);
+	//River::AudioListener::setDepth(400);
 
 	fpsText->getComponent<River::ECS::Text>()->text = std::to_string(River::Game::getFps()) ;
 
@@ -107,6 +107,22 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 
 	if (e.key == River::Key::DOWN)
 		camera->adjustY(-10);
+
+
+	if( e.key == River::Key::X && e.action == River::KeyEvent::Action::DOWN ) {
+		auto masterVolume = River::AudioListener::getVolume();
+		masterVolume += 0.10;
+		River::AudioListener::setVolume(masterVolume);
+		std::cout << "Set master volume to: " << masterVolume << std::endl;
+	}
+
+	if( e.key == River::Key::Z && e.action == River::KeyEvent::Action::DOWN ) {
+		auto masterVolume = River::AudioListener::getVolume();
+		masterVolume -= 0.10;
+		if( masterVolume < 0 ) masterVolume = 0;
+		River::AudioListener::setVolume(masterVolume);
+		std::cout << "Set master volume to: " << masterVolume << std::endl;
+	}
 
 	if( e.key == River::Key::L && e.action == River::KeyEvent::Action::DOWN ) {
 		auto asset = GlobalAssets::Sounds::COINS;
@@ -146,20 +162,30 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 		std::cout << "Started countdown" << std::endl;
 	}
 
+	if( e.key == River::Key::U && e.action == River::KeyEvent::Action::DOWN ) {
+		countdown.setTime(7);
+		std::cout << "Set countdown to 7 seconds" << std::endl;
+	}
+
 
 	if (e.key == River::Key::D && e.action == River::KeyEvent::Action::DOWN) {
 		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::COINS);
-		//audio->loop(true);
 		audio->set3D(true);
+		audio->setRange(500);
+		audio->setSize(499);
 		audio->setDepth(audioDepth);
+		audio->onFinish([](auto i) {
+			delete i;
+			std::cout << "Audio has finished!" << std::endl;
+		});
 		audio->play();
 	}
 
-	//if (e.key == River::Key::F && e.action == River::KeyEvent::Action::DOWN) {
-	//	River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::COUNTDOWN);
-	//	//audio->loop(true);
-	//	River::AudioPlayer::playAudio(audio);
-	//}
+	if (e.key == River::Key::F && e.action == River::KeyEvent::Action::DOWN) {
+		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::COUNTDOWN);
+		//audio->loop(true);
+		audio->play();
+	}
 
 	if (e.key == River::Key::G && e.action == River::KeyEvent::Action::DOWN) {
 		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::CLASSICAL_MUSIC);
