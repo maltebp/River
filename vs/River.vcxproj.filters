@@ -147,13 +147,13 @@
     <ClInclude Include="src\River\Vendor\dr_wav\dr_wav.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\River\Audio\AudioInstance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\River\Audio\AudioListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\River\Audio\AL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Audio\AudioPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -239,13 +239,13 @@
     <ClCompile Include="src\River\Audio\AudioAsset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\River\Audio\AudioInstance.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\River\Audio\AudioListener.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\River\Audio\AL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\River\Audio\AudioPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

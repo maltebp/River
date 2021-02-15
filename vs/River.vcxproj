@@ -122,7 +122,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
   <ItemGroup>
     <ClInclude Include="src\River\Audio\AL.h" />
     <ClInclude Include="src\River\Audio\AudioListener.h" />
-    <ClInclude Include="src\River\Audio\AudioInstance.h" />
+    <ClInclude Include="src\River\Audio\AudioPlayer.h" />
     <ClInclude Include="src\River\Audio\AudioAsset.h" />
     <ClInclude Include="src\River\Layer\SimpleLayer.h" />
     <ClInclude Include="src\River\Asset\AssetCreator.h" />
@@ -171,7 +171,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
   <ItemGroup>
     <ClCompile Include="src\River\Audio\AL.cpp" />
     <ClCompile Include="src\River\Audio\AudioListener.cpp" />
-    <ClCompile Include="src\River\Audio\AudioInstance.cpp" />
+    <ClCompile Include="src\River\Audio\AudioPlayer.cpp" />
     <ClCompile Include="src\River\Audio\AudioAsset.cpp" />
     <ClCompile Include="src\River\Asset\Asset.cpp" />
     <ClCompile Include="src\River\Asset\AssetCollection.cpp" />

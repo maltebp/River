@@ -1,4 +1,4 @@
-#include "AudioInstance.h"
+#include "AudioPlayer.h"
 
 #include <iostream>
 #include <functional>
@@ -15,99 +15,98 @@ namespace River {
 	public:
 
 		// ALL audio instances that are currently playing (in the order they were triggered)
-		static inline std::set<AudioInstance*> playingInstances;
+		static inline std::set<AudioPlayer*> playingPlayers;
 
 		// Mapping of how many audio instances uses the a given AudioAsset
-		static inline std::unordered_map<AudioAsset*, unsigned int> assetInstanceCount;
+		static inline std::unordered_map<AudioAsset*, unsigned int> assetPlayerCount;
 	
 
 		// These repeatedly cleared and used in the update function
-		static inline std::vector<AudioInstance*> finishedInstances;
-		static inline std::vector<AudioInstance*> sortedInstances;
+		static inline std::vector<AudioPlayer*> finishedPlayers;
+		static inline std::vector<AudioPlayer*> sortedPlayers;
 	};
-
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-
-	AudioInstance::AudioInstance(AudioAsset* asset) {
-		this->asset = asset;
+	AudioPlayer::AudioPlayer() {
 	}
 
 
-	AudioInstance::~AudioInstance() {
+	AudioPlayer::~AudioPlayer() {
 		stop();
 	}
 
 
-	void AudioInstance::play() {
+	void AudioPlayer::play(AudioAsset* asset) {
+		this->asset = asset;
 		setTime(0);
 		paused = false;
 
 		if( !playing ) {
-			Globals::playingInstances.insert(this);
+			Globals::playingPlayers.insert(this);
 			playing = true;
 		}
 	}
 
 
-	bool AudioInstance::isPlaying() {
+	bool AudioPlayer::isPlaying() {
 		return playing;
 	}
 
 
-	void AudioInstance::stop() {
+	void AudioPlayer::stop() {
 		if( playing ) {
 			// Stop from playing
 			deactivate();
-			Globals::playingInstances.erase(Globals::playingInstances.find(this));
+			Globals::playingPlayers.erase(Globals::playingPlayers.find(this));
 			playing = false;
 		}
 
 		// Clear the paused state
+		asset = nullptr;
 		setTime(0);
 		paused = false;
 	}
 
 
-	void AudioInstance::pause() {
+	void AudioPlayer::pause() {
 		if( !playing ) return;
 	
 		// Stop from playing
 		deactivate();
-		Globals::playingInstances.erase(Globals::playingInstances.find(this));
+		Globals::playingPlayers.erase(Globals::playingPlayers.find(this));
 		
 		playing = false;
 		paused = true;
 	}
 
 
-	void AudioInstance::unpause() {
+	void AudioPlayer::unpause() {
 		if( !paused ) return;
 
-		Globals::playingInstances.insert(this);
+		Globals::playingPlayers.insert(this);
 		playing = true;
 		paused = false;
 	}
 
 
-	bool AudioInstance::isPaused() {
+	bool AudioPlayer::isPaused() {
 		return paused;
 	}
 
 
-	void AudioInstance::setPriority(unsigned int priority) {
+	void AudioPlayer::setPriority(unsigned int priority) {
 		this->priority = priority;
 	}
 
 
-	unsigned int AudioInstance::getPriority() {
+	unsigned int AudioPlayer::getPriority() {
 		return priority;
 	}
 
 
-	void AudioInstance::setLooping(bool toggle) {
-		if( nativeObject != nullptr && threeD ){
+	void AudioPlayer::setLooping(bool toggle) {
+		if( nativeObject != nullptr && spatial ){
 			ALuint sourceId = *static_cast<ALuint*>(nativeObject);
 			alSourcei(sourceId, AL_LOOPING, toggle);
 		}
@@ -115,14 +114,15 @@ namespace River {
 	}
 
 
-	bool AudioInstance::isLooping() {
+	bool AudioPlayer::isLooping() {
 		return true;
 	}
 
 
-	void AudioInstance::setSpeed(double speed) {
-		speed = speed < 0.0 ? 0.0 : speed;
-		if( nativeObject != nullptr && threeD ){
+	void AudioPlayer::setSpeed(double speed) {
+		if( speed <= 0 )
+			throw new InvalidArgumentException("AudioPlayer speed must be above 0");
+		if( nativeObject != nullptr && spatial ){
 			ALuint sourceId = *static_cast<ALuint*>(nativeObject);
 			alSourcef(sourceId, AL_PITCH, static_cast<ALfloat>(speed));
 		}
@@ -130,29 +130,29 @@ namespace River {
 	}
 
 
-	double AudioInstance::getSpeed(double speed) {
+	double AudioPlayer::getSpeed(double speed) {
 		return speed;
 	}
 
 
-	void AudioInstance::setVolume(double volume) {
+	void AudioPlayer::setVolume(double volume) {
 		if( volume < 0 )
 			throw new InvalidArgumentException("Audio volume may not be less than 0");
 		this->volume = volume;
 
-		if( nativeObject != nullptr && threeD ){
+		if( nativeObject != nullptr && spatial ){
 			ALuint sourceId = *static_cast<ALuint*>(nativeObject);
 			alSourcef(sourceId, AL_GAIN, static_cast<ALfloat>(this->volume));
 		}
 	}
 
 
-	double AudioInstance::getVolume() {
+	double AudioPlayer::getVolume() {
 		return volume;
 	}
 
 
-	void AudioInstance::setSize(double size) {
+	void AudioPlayer::setSize(double size) {
 		if( size < 0 )
 			throw new InvalidArgumentException("Audio size must be larger than or equal to 0");
 		if( size >= range )
@@ -160,7 +160,7 @@ namespace River {
 
 		this->size = size;
 
-		if( nativeObject != nullptr && threeD ){
+		if( nativeObject != nullptr && spatial ){
 			ALuint sourceId = *static_cast<ALuint*>(nativeObject);
 			alSourcef(sourceId, AL_REFERENCE_DISTANCE, (ALfloat)size);
 			AL::checkErrors();
@@ -168,19 +168,19 @@ namespace River {
 	}
 
 
-	double AudioInstance::getSize() {
+	double AudioPlayer::getSize() {
 		return size;
 	}
 
 
-	void AudioInstance::setRange(double range) {
+	void AudioPlayer::setRange(double range) {
 		if( this->range <= 0 )
 			throw new InvalidArgumentException("Audio range must be larger than 0");
 		if( this->range <= size )
 			throw new InvalidArgumentException("Audio range must be larger than its size");
 		this->range = range;
 
-		if( nativeObject != nullptr && threeD ){
+		if( nativeObject != nullptr && spatial ){
 			ALuint sourceId = *static_cast<ALuint*>(nativeObject);
 			alSourcef(sourceId, AL_MAX_DISTANCE, (ALfloat)range);
 			AL::checkErrors();
@@ -188,16 +188,16 @@ namespace River {
 	}
 
 
-	double AudioInstance::getRange() {
+	double AudioPlayer::getRange() {
 		return range;
 	}
 
 
-	void AudioInstance::setPosition(double positionX, double positionY) {
+	void AudioPlayer::setPosition(double positionX, double positionY) {
 		this->positionX = positionX;
 		this->positionY = positionY;
 
-		if( nativeObject != nullptr && threeD ){
+		if( nativeObject != nullptr && spatial ){
 			ALuint sourceId = *static_cast<ALuint*>(nativeObject);
 			alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, (ALfloat)-depth);
 			AL::checkErrors();
@@ -205,18 +205,18 @@ namespace River {
 	}
 
 
-	double AudioInstance::getPositionX() {
+	double AudioPlayer::getPositionX() {
 		return positionX;
 	}
 
 
-	double AudioInstance::getPositionY() {
+	double AudioPlayer::getPositionY() {
 		return positionY;
 	}
 
 
-	void AudioInstance::setVelocity(double velocityX, double velocityY) {
-		if( nativeObject != nullptr && threeD ){
+	void AudioPlayer::setVelocity(double velocityX, double velocityY) {
+		if( nativeObject != nullptr && spatial ){
 			ALuint sourceId = *static_cast<ALuint*>(nativeObject);
 			alSource3f(sourceId, AL_VELOCITY, (ALfloat)velocityX, (ALfloat)velocityY, 0);
 			AL::checkErrors();
@@ -226,10 +226,12 @@ namespace River {
 	}
 
 
-	void AudioInstance::setDepth(double depth){
+	void AudioPlayer::setDepth(double depth){
+		if( depth < 0 )
+			throw new InvalidArgumentException("Depth must not be less than 0");
 		this->depth = depth;
-
-		if( nativeObject != nullptr && threeD ){
+			
+		if( nativeObject != nullptr && spatial ){
 			ALuint sourceId = *static_cast<ALuint*>(nativeObject);
 			alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, (ALfloat)-this->depth);
 			AL::checkErrors();
@@ -237,13 +239,13 @@ namespace River {
 	}
 
 
-	double AudioInstance::getDepth(double depth){
+	double AudioPlayer::getDepth(double depth){
 		return depth;
 	}
 
 
-	void AudioInstance::set3D(bool toggle) {
-		if( nativeObject != nullptr && toggle != threeD ) {
+	void AudioPlayer::setSpatial(bool toggle) {
+		if( nativeObject != nullptr && toggle != spatial ) {
 			ALuint sourceId = *static_cast<ALuint*>(nativeObject);
 			if( toggle ) {
 				alSourcei(sourceId, AL_SOURCE_RELATIVE, 0);
@@ -257,16 +259,16 @@ namespace River {
 			}
 			AL::checkErrors();
 		}
-		threeD = toggle;
+		spatial = toggle;
 	}
 
 
-	bool AudioInstance::is3D() {
-		return threeD;
+	bool AudioPlayer::isSpatial() {
+		return spatial;
 	}
 
 
-	void AudioInstance::setTime(double time) {
+	void AudioPlayer::setTime(double time) {
 		if( time < 0 )
 			throw InvalidArgumentException("Time must not be less than 0");
 
@@ -288,22 +290,22 @@ namespace River {
 	}
 
 
-	double AudioInstance::getTime() {
+	double AudioPlayer::getTime() {
 		return currentTime;
 	}	
 
 
-	void AudioInstance::onFinish(std::function<void(AudioInstance*)> callback) {
+	void AudioPlayer::onFinish(std::function<void(AudioPlayer*)> callback) {
 		onFinishCallback = callback;
 	}
 
 
-	AudioAsset* AudioInstance::getAsset() {
+	AudioAsset* AudioPlayer::getAsset() {
 		return asset;
 	}
 
 
-	void AudioInstance::activate(){
+	void AudioPlayer::activate(){
 		if( nativeObject != nullptr )
 			throw new InvalidStateException("AudioInstance is already active");
 
@@ -323,7 +325,7 @@ namespace River {
 		alSourcei(sourceId, AL_LOOPING, (ALint)looping);
 
 		// Set position (in accordance with 3d flag)
-		if( threeD ){
+		if( spatial ){
 			alSourcei(sourceId, AL_SOURCE_RELATIVE, 0);
 			alSource3f(sourceId, AL_POSITION, (ALfloat)positionX, (ALfloat)positionY, (ALfloat)-depth);
 			alSource3f(sourceId, AL_VELOCITY, (ALfloat)velocityX, (ALfloat)velocityY, 0);
@@ -341,7 +343,7 @@ namespace River {
 	}
 
 	
-	void AudioInstance::deactivate(){
+	void AudioPlayer::deactivate(){
 		if( !isActive() )
 			throw new InvalidStateException("Audio instance is not active");
 		
@@ -358,20 +360,20 @@ namespace River {
 	}
 
 
-	bool AudioInstance::isActive() {
+	bool AudioPlayer::isActive() {
 		return nativeObject != nullptr;
 	}
 
 
-	double AudioInstance::calculateHeuristic() {
-		/*	An AudioInstance's heuristic is used to determine whether or not
+	double AudioPlayer::calculateHeuristic() {
+		/*	An AudioPlayer's heuristic is used to determine whether or not
 		*   it should be played, when there are more AudioInstances present
 		*   than there are OpenAL sources (limited by number of hardware channels)
 		*/
 
 		double volumeComponent = 0;
 		{
-			if( threeD ) {
+			if( spatial ) {
 				double xDistance = positionX - AudioListener::getPositionX();
 				double yDistance = positionY - AudioListener::getPositionY();
 				double distance = std::sqrt(xDistance * xDistance + yDistance * yDistance);
@@ -410,12 +412,12 @@ namespace River {
 		double instanceCountComponent = 0;
 		{
 			/*
-				* The order that the heuristics are calculated for each
-				* AudioInstance influences this, as the first AudioInstance
-				* of a given asset will get the highest priority
-				*/
-			Globals::assetInstanceCount[asset]++;
-			instanceCountComponent = Globals::assetInstanceCount[asset];
+			* The order that the heuristics are calculated for each
+			* AudioPlayer influences this, as the first AudioPlayer
+			* of a given asset will get the highest priority
+			*/
+			Globals::assetPlayerCount[asset]++;
+			instanceCountComponent = Globals::assetPlayerCount[asset];
 		}
 
 		heuristic = (volumeComponent * priorityComponent) / instanceCountComponent;
@@ -423,20 +425,20 @@ namespace River {
 	}
 
 
-	void AudioInstance::updateInstances(double time) {
+	void AudioPlayer::updatePlayers(double time) {
 		if( !AL::isInitialized() ) throw new InvalidStateException("Audio system has not been initialized");
 
-		if( Globals::playingInstances.size() == 0 ) return;
+		if( Globals::playingPlayers.size() == 0 ) return;
 
 		// Reset number of audio instances for assets
 		// (used for heuristic calculation)
-		for( auto& it : Globals::assetInstanceCount )
+		for( auto& it : Globals::assetPlayerCount )
 			it.second = 0;
 
 		// Update time and heuristics
-		std::vector<AudioInstance*>& finishedInstances = Globals::finishedInstances; // TODO: Move out of loop
-		finishedInstances.clear();
-		for( auto instance : Globals::playingInstances ) {
+		std::vector<AudioPlayer*>& finishedPlayers = Globals::finishedPlayers;
+		finishedPlayers.clear();
+		for( auto instance : Globals::playingPlayers ) {
 			bool finished = false;
 
 			if( !instance->isActive() ) {
@@ -466,7 +468,7 @@ namespace River {
 
 			// Check if finished
 			if( finished ) {
-				finishedInstances.push_back(instance);
+				finishedPlayers.push_back(instance);
 				continue;
 			}
 
@@ -475,7 +477,7 @@ namespace River {
 		}
 
 		// Remove finished instances
-		for( auto instance : finishedInstances ) {
+		for( auto instance : finishedPlayers ) {
 			instance->stop();
 			if( instance->onFinishCallback != nullptr )
 				instance->onFinishCallback(instance);
@@ -484,23 +486,23 @@ namespace River {
 		// Sort instance with heuristic
 		// Sorting in new list, as a audioInstances, is in the order
 		// they have been "played"
-		std::vector<AudioInstance*>& sortedInstances = Globals::sortedInstances;
-		sortedInstances.clear();
-		sortedInstances.resize(Globals::playingInstances.size());
-		std::copy(Globals::playingInstances.begin(), Globals::playingInstances.end(), Globals::sortedInstances.begin());
-		std::sort(sortedInstances.begin(), sortedInstances.end(), [](AudioInstance* a1, AudioInstance* a2) {
+		std::vector<AudioPlayer*>& sortedPlayers = Globals::sortedPlayers;
+		sortedPlayers.clear();
+		sortedPlayers.resize(Globals::playingPlayers.size());
+		std::copy(Globals::playingPlayers.begin(), Globals::playingPlayers.end(), Globals::sortedPlayers.begin());
+		std::sort(sortedPlayers.begin(), sortedPlayers.end(), [](AudioPlayer* a1, AudioPlayer* a2) {
 			return a1->heuristic > a2->heuristic;
 			});
 
 		// Stop all instances that are playing but shouldn't be
-		for( int i = AL::NUM_SOURCES; i < sortedInstances.size() ; i++ ) {
-			AudioInstance* instance = sortedInstances[i];
+		for( int i = AL::NUM_SOURCES; i < sortedPlayers.size() ; i++ ) {
+			AudioPlayer* instance = sortedPlayers[i];
 			if( instance->isActive() ) instance->deactivate();
 		}
 
 		// Start all instances that aren't playing but should be
-		for( int i = 0; i < sortedInstances.size() && i < AL::NUM_SOURCES; i++ ) {
-			AudioInstance* instance = sortedInstances[i];
+		for( int i = 0; i < sortedPlayers.size() && i < AL::NUM_SOURCES; i++ ) {
+			AudioPlayer* instance = sortedPlayers[i];
 			if( !instance->isActive() ) instance->activate();
 		}
 	}

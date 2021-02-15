@@ -5,7 +5,7 @@
 #include "Assets.h"
 
 
-River::AudioInstance countdown(GlobalAssets::Sounds::COUNTDOWN);
+River::AudioPlayer countdown(GlobalAssets::Sounds::COUNTDOWN);
 
 
 MainLayer::MainLayer(const std::string& arg) {
@@ -169,8 +169,8 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 
 
 	if (e.key == River::Key::D && e.action == River::KeyEvent::Action::DOWN) {
-		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::COINS);
-		audio->set3D(true);
+		River::AudioPlayer* audio = new River::AudioPlayer(GlobalAssets::Sounds::COINS);
+		audio->setSpatial(true);
 		audio->setRange(500);
 		audio->setSize(499);
 		audio->setDepth(audioDepth);
@@ -182,13 +182,13 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 	}
 
 	if (e.key == River::Key::F && e.action == River::KeyEvent::Action::DOWN) {
-		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::COUNTDOWN);
+		River::AudioPlayer* audio = new River::AudioPlayer(GlobalAssets::Sounds::COUNTDOWN);
 		//audio->loop(true);
 		audio->play();
 	}
 
 	if (e.key == River::Key::G && e.action == River::KeyEvent::Action::DOWN) {
-		River::AudioInstance* audio = new River::AudioInstance(GlobalAssets::Sounds::CLASSICAL_MUSIC);
+		River::AudioPlayer* audio = new River::AudioPlayer(GlobalAssets::Sounds::CLASSICAL_MUSIC);
 		//audio->loop(true);
 		audio->setVolume(0.5);
 		audio->play();

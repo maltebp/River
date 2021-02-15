@@ -95,7 +95,7 @@ namespace River {
 				rootLayer->mouseButtonEvent(buttonEvent);
 
 			// TODO: Use correct time here
-			AudioInstance::updateInstances(0.0166666666666);
+			AudioPlayer::updatePlayers(0.0166666666666);
 
 			rootLayer->update();
 		}

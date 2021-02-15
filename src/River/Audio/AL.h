@@ -8,6 +8,9 @@
 
 namespace River {
 	
+	/**
+	* @brief Utility functions for using OpenAL internally
+	*/
 	class AL {
 	public:
 
@@ -16,6 +19,9 @@ namespace River {
 		// time
 		static inline const int NUM_SOURCES = 16;
 
+		/**
+		* @brief Initialize the OpenAL API
+		*/
 		static void initialize();
 
 		static bool isInitialized();
