@@ -33,5 +33,5 @@
 #include "River/Graphics/Text/Text.h"
 
 #include "River/Audio/AudioListener.h"
-#include "River/Audio/AudioInstance.h"
+#include "River/Audio/AudioPlayer.h"
 #include "River/Audio/AudioAsset.h"

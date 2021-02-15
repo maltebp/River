@@ -9,7 +9,7 @@
 #include <algorithm>
 
 #include "Audio/AL.h"
-#include "Audio/AudioInstance.h"
+#include "Audio/AudioPlayer.h"
 
 #include "Event/MouseEvent/MouseEventController.h"
 

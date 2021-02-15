@@ -5,7 +5,7 @@
 #include "Assets.h"
 
 
-River::AudioPlayer countdown(GlobalAssets::Sounds::COUNTDOWN);
+River::AudioPlayer countdown;
 
 
 MainLayer::MainLayer(const std::string& arg) {
@@ -158,7 +158,7 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 
 
 	if( e.key == River::Key::P && e.action == River::KeyEvent::Action::DOWN ) {
-		countdown.play();
+		countdown.play(GlobalAssets::Sounds::COUNTDOWN);
 		std::cout << "Started countdown" << std::endl;
 	}
 
@@ -169,7 +169,7 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 
 
 	if (e.key == River::Key::D && e.action == River::KeyEvent::Action::DOWN) {
-		River::AudioPlayer* audio = new River::AudioPlayer(GlobalAssets::Sounds::COINS);
+		River::AudioPlayer* audio = new River::AudioPlayer();
 		audio->setSpatial(true);
 		audio->setRange(500);
 		audio->setSize(499);
@@ -178,20 +178,20 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 			delete i;
 			std::cout << "Audio has finished!" << std::endl;
 		});
-		audio->play();
+		audio->play(GlobalAssets::Sounds::COINS);
 	}
 
 	if (e.key == River::Key::F && e.action == River::KeyEvent::Action::DOWN) {
-		River::AudioPlayer* audio = new River::AudioPlayer(GlobalAssets::Sounds::COUNTDOWN);
+		River::AudioPlayer* audio = new River::AudioPlayer();
 		//audio->loop(true);
-		audio->play();
+		audio->play(GlobalAssets::Sounds::COUNTDOWN);
 	}
 
 	if (e.key == River::Key::G && e.action == River::KeyEvent::Action::DOWN) {
-		River::AudioPlayer* audio = new River::AudioPlayer(GlobalAssets::Sounds::CLASSICAL_MUSIC);
+		River::AudioPlayer* audio = new River::AudioPlayer();
 		//audio->loop(true);
 		audio->setVolume(0.5);
-		audio->play();
+		audio->play(GlobalAssets::Sounds::CLASSICAL_MUSIC);
 	}
 
 	if( e.key == River::Key::W && e.action == River::KeyEvent::Action::PRESSED ){
