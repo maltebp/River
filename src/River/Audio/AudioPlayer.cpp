@@ -63,7 +63,7 @@ namespace River {
 		}
 
 		// Clear the paused state
-		setTime(0);
+		currentTime = 0;
 		paused = false;
 	}
 
