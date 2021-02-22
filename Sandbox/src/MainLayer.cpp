@@ -4,11 +4,15 @@
 
 #include "Assets.h"
 
-
 River::AudioPlayer countdown;
 
 
-MainLayer::MainLayer(const std::string& arg) {
+MainLayer::MainLayer(const std::string& arg)
+	:	resolutionCallback([](River::Resolution resolution) {
+			printf("Resolution: %ix%i\n", resolution.width, resolution.height);
+		})
+{
+	River::Window::addResolutionListener(&resolutionCallback);
 	std::cout << "Start arg: " << arg;
 }
 
@@ -92,6 +96,7 @@ void MainLayer::onUpdate() {
 
 static double audioDepth = 0;
 
+bool listenerAdded = false;
 
 void MainLayer::onKeyEvent(River::KeyEvent& e) {
 	//std::cout << "KeyEvent: " << (int) e.key << " " << (int) e.action << std::endl;
@@ -108,20 +113,31 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 	if (e.key == River::Key::DOWN)
 		camera->adjustY(-10);
 
-
-	if( e.key == River::Key::X && e.action == River::KeyEvent::Action::DOWN ) {
-		auto masterVolume = River::AudioListener::getVolume();
-		masterVolume += 0.10;
-		River::AudioListener::setVolume(masterVolume);
-		std::cout << "Set master volume to: " << masterVolume << std::endl;
+	if( e.key == River::Key::ESCAPE && e.action == River::KeyEvent::Action::DOWN ) {
+		River::Game::exit();
+		return;
 	}
 
-	if( e.key == River::Key::Z && e.action == River::KeyEvent::Action::DOWN ) {
-		auto masterVolume = River::AudioListener::getVolume();
-		masterVolume -= 0.10;
-		if( masterVolume < 0 ) masterVolume = 0;
-		River::AudioListener::setVolume(masterVolume);
-		std::cout << "Set master volume to: " << masterVolume << std::endl;
+	if( e.key == River::Key::B && e.action == River::KeyEvent::Action::DOWN ) {
+		if( River::Window::isFullscreen() ) {
+			printf("Disabling fullscreen\n");
+			River::Window::disableFullscreen({ 400, 400 });
+			auto actualResolution = River::Window::getResolution();
+			printf("Windowed resolution: %ix%i\n", actualResolution.width, actualResolution.height);
+		}
+		else {
+			printf("Setting fullscreen\n");
+			River::Window::enableFullscreen();
+			auto actualResolution = River::Window::getResolution();
+			printf("Fullscreen resolution: %ix%i\n", actualResolution.width, actualResolution.height);
+		}
+	}	
+
+
+	if( e.key == River::Key::X && e.action == River::KeyEvent::Action::DOWN ) {
+		River::Window::setResolution({1500, 700});
+		auto actualResolution = River::Window::getResolution();
+		std::cout << "Resolution was set to: " << actualResolution.width << "x" << actualResolution.height << std::endl;
 	}
 
 	if( e.key == River::Key::L && e.action == River::KeyEvent::Action::DOWN ) {

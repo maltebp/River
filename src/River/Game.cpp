@@ -111,6 +111,7 @@ namespace River {
 
 
 	void Game::setWindowSize(unsigned int width, unsigned int height) {
+
 		if( started )
 			throw new InvalidStateException("Game has already been started, so window size can't be changed");
 		Game::windowWidth = width;

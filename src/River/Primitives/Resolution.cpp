@@ -6,10 +6,10 @@ namespace River {
 	Resolution::Resolution() { }
 
 
-	Resolution::Resolution(unsigned int width, unsigned int height) {
-		this->width = width;
-		this->height = height;
-	}
+	Resolution::Resolution(unsigned int width, unsigned int height)
+		:	width(width),
+			height(height)
+	{ }
 
 
 	double Resolution::getAspectRatio() {

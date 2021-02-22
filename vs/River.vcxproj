@@ -152,6 +152,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Graphics\Camera\Camera.h" />
     <ClInclude Include="src\River\Graphics\Texture\ImageBinder.h" />
     <ClInclude Include="src\River\Layer\Layer.h" />
+    <ClInclude Include="src\River\Primitives\Resolution.h" />
     <ClInclude Include="src\River\Vendor\dr_wav\dr_wav.h" />
     <ClInclude Include="src\River\Vendor\stb_image\stb_image.h" />
     <ClInclude Include="src\River\Graphics\Shader\ShaderProgram.h" />
@@ -189,6 +190,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClCompile Include="src\River\Graphics\GL.cpp" />
     <ClCompile Include="src\River\Graphics\Texture\ImageBinder.cpp" />
     <ClCompile Include="src\River\Layer\Layer.cpp" />
+    <ClCompile Include="src\River\Primitives\Resolution.cpp" />
     <ClCompile Include="src\River\Vendor\stb_image\stb_image.cpp" />
     <ClCompile Include="src\River\Graphics\Shader\ShaderProgram.cpp" />
     <ClCompile Include="src\River\Graphics\Shader\Shader.cpp" />
