@@ -73,7 +73,7 @@ namespace River {
 		static inline unsigned int windowHeight = 720;
 
 
-		static inline Color clearColor = Colors::LAWN_GREEN;
+		static inline Color clearColor = Colors::BLACK;
 
 		/**
 		 * @brief	An "abstract" layer in that it has no callback, only serves as a container for sub layers and will never be deleted

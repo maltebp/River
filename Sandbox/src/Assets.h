@@ -18,9 +18,12 @@ namespace GlobalAssets {
 
 
 	namespace Images {
+
 		inline River::Image* CAR = River::Image::create("assets/car.png")
 			.setScaleMode(River::Image::ScaleMode::NEAREST)
 			.finish();
+
+		
 	}
 
 
@@ -30,6 +33,10 @@ namespace GlobalAssets {
 		inline River::Texture* CAR = River::Texture::create(Images::CAR, true)
 			.addToCollection(COLLECTION)
 			.setPartiallyTransparent()
+			.finish();
+
+		inline River::Texture* PIXEL = River::Texture::create(River::Image::create("assets/pixel.png").setScaleMode(River::Image::ScaleMode::NEAREST).finish(), true)
+			.addToCollection(COLLECTION)
 			.finish();
 
 		inline River::Texture* SANTA_JUMP_1 = River::Texture::create(River::Image::create("assets/santa/Jump (1).png").setScaleMode(River::Image::ScaleMode::LINEAR).finish(), true)

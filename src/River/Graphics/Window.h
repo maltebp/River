@@ -47,6 +47,12 @@ namespace River {
 		// removes first instant
 		static void removeResolutionListener(const ResolutionListener* listener);
 
+		// Clamped to 0.
+		// 0 means no limit
+		static void setViewportRatioLimits(double min, double max);
+
+		static const Resolution& getViewport();
+
 		// dont resize within this listener
 		static void addViewportListener(const ResolutionListener* listener);
 
@@ -78,6 +84,12 @@ namespace River {
 	private:
 
 		static inline Resolution resolution = { 720, 480 };
+
+		static inline double viewportMinRatio = 0;
+		static inline double viewportMaxRatio = 0;
+
+		// TODO: Set this on startup
+		static inline Resolution viewport = { 0, 0 };
 
         GLFWwindow* glfwWindow;
         int width;

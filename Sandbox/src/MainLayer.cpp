@@ -9,10 +9,10 @@ River::AudioPlayer countdown;
 
 MainLayer::MainLayer(const std::string& arg)
 	:	resolutionCallback([](River::Resolution resolution) {
-			printf("Resolution: %ix%i\n", resolution.width, resolution.height);
+			printf("Viewport callback: %ix%i\n", resolution.width, resolution.height);
 		})
 {
-	River::Window::addResolutionListener(&resolutionCallback);
+	River::Window::addViewportListener(&resolutionCallback);
 	std::cout << "Start arg: " << arg;
 }
 
@@ -47,6 +47,7 @@ River::ECS::Entity* MainLayer::createText(const std::string& msg, unsigned int s
 	text->font = GlobalAssets::Fonts::ARIAL;
 	text->text = msg;
 	text->size = size;
+	text->color = River::Colors::BLACK;
 
 	return entity;
 }
@@ -69,6 +70,17 @@ void MainLayer::onCreate() {
 	createText("Hello world", 40, 0, 100);
 	createText("Hello world", 50, 0, 200);
 
+	// Background
+	{ 
+		auto entity = domain.createEntity();
+		auto transform = entity->addComponent<River::ECS::Transform>();
+		transform->width = 10000;
+		transform->height = 10000;
+		transform->depth = 100;
+		auto sprite = entity->addComponent<River::ECS::Sprite>();
+		sprite->texture = GlobalAssets::Textures::PIXEL;
+	}
+	
 	camera = new River::Camera(1280, 720);
 
 	domain.clean();

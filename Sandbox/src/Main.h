@@ -10,9 +10,12 @@
 
 
 using River::Game;
+using River::Window;
 
 
 void main() {
+
+	Window::setViewportRatioLimits(1.0, 16.0 / 9.0);
 
 	Game::setTitle("Sandbox Game");
 	Game::setWindowSize(1280, 720);
