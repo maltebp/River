@@ -4,6 +4,8 @@
 #include <vector>
 #include <functional>
 
+#include "River/Event/Event.h"
+#include "River/Graphics/ResolutionEvent.h"
 #include "River/Primitives/Resolution.h"
 #include "River/Primitives/Color.h"
 #include "River/Event/KeyEvent/KeyEventController.h"
@@ -20,8 +22,7 @@ namespace River {
 	class Window {
 	public:
 		friend Game;
-		struct ResolutionListener; friend ResolutionListener;
-		class NativeWindow; friend NativeWindow;
+		class NativeWindow; friend NativeWindow;	
 		
 		Window(std::string title, unsigned int width, unsigned int height);
 		~Window();
@@ -37,31 +38,21 @@ namespace River {
 
 		// Note:
 		//  - User should query the actual resolution with getResolution(..)
-		static void setResolution(const Resolution& resolution);
+		static void setResolution(const Resolution& size);
 
 		static const Resolution& getResolution();
 
 		// dont resize within this listener
-		static void addResolutionListener(const ResolutionListener* listener);
+		static inline ListenerMap<ResolutionEvent&> resolutionChangedListeners;
 
 		// removes first instant
-		static void removeResolutionListener(const ResolutionListener* listener);
+		static const Resolution& getViewportResolution();
 
-		// Clamped to 0.
-		// 0 means no limit
-		static void setViewportRatioLimits(double min, double max);
+		static inline ListenerMap<ResolutionEvent&> viewportChangedListeners;
 
-		static const Resolution& getViewport();
+		static void enableFullscreen(const Resolution& windowResolution = resolution);
 
-		// dont resize within this listener
-		static void addViewportListener(const ResolutionListener* listener);
-
-		// removes first instant
-		static void removeViewportListener(const ResolutionListener* listener);
-
-		static void enableFullscreen(const Resolution& resolution = resolution);
-
-		static void disableFullscreen(const Resolution& resolution = resolution);
+		static void disableFullscreen(const Resolution& windowResolution = resolution);
 
 		static bool isFullscreen();
 
@@ -69,12 +60,11 @@ namespace River {
 		// Has no effect if fullscreen
 		static void center();
 
-		struct ResolutionListener {
-			ResolutionListener(std::function<void(Resolution)> callback) : callback(callback) {}
-			const std::function<void(Resolution)> callback;
-		};
 		
 	private:
+
+		static void invokeEvents();
+
 		static std::unordered_map<GLFWwindow*, Window*> glfwWindowMap;
 		static void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 		static void glfwMousePosCallback(GLFWwindow* window, double xpos, double ypos);
@@ -89,7 +79,7 @@ namespace River {
 		static inline double viewportMaxRatio = 0;
 
 		// TODO: Set this on startup
-		static inline Resolution viewport = { 0, 0 };
+		static inline Resolution viewportResolution = { 0, 0 };
 
         GLFWwindow* glfwWindow;
         int width;
@@ -114,8 +104,9 @@ namespace River {
 
 		static inline bool fullscreen = false;
 
-		static inline std::vector<const ResolutionListener*> resolutionListeners;
-		static inline std::vector<const ResolutionListener*> viewportListeners;
+		static inline ListenerInvoker resolutionChangedInvoker = (resolutionChangedListeners);
+
+		static inline ListenerInvoker viewportChangedInvoker = (viewportChangedListeners);
 
 	};
 }

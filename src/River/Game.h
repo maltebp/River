@@ -16,7 +16,7 @@ namespace River {
 	
 		static void setTitle(const std::string&);
 
-		static void setWindowSize(unsigned int width, unsigned int height);
+		static void setResolution(unsigned int width, unsigned int height);
 
 		static void start();
 		

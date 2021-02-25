@@ -12,6 +12,8 @@ namespace River {
 
 		static Resolution getResolution();
 
+		// Doc notes:
+		//  - Also returns Resolutions that are higher than current
 		static std::vector<Resolution> getSupportedResolutions();
 		
 	};

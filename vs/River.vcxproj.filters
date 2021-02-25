@@ -135,9 +135,6 @@
     <ClInclude Include="src\River\Asset\AssetCreator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\River\Event\WindowEvent\WindowEventController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\River\Layer\SimpleLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -157,6 +154,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\River\Primitives\Resolution.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Graphics\Screen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Graphics\ResolutionEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Utility\Listener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -192,9 +198,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\River\Graphics\Camera\Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\River\Event\Event.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\River\Event\KeyEvent\Key.h">
@@ -236,9 +239,6 @@
     <ClCompile Include="src\River\Graphics\TextRenderingSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\River\Event\WindowEvent\WindowEventController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\River\Audio\AudioAsset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -252,6 +252,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\River\Primitives\Resolution.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\River\Graphics\Screen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

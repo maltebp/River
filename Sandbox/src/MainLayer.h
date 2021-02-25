@@ -38,7 +38,6 @@ private:
 
 	River::Layer* layer;
 
-	River::Window::ResolutionListener resolutionCallback;
 };
 
 

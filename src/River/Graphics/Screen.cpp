@@ -26,8 +26,6 @@ namespace River {
 
 			if( resolution == previousResolution ) continue;
 
-			if( resolution.width > currentResolution.width || resolution.height > currentResolution.height ) continue;
-			
 			resolutions.push_back(resolution);
 			previousResolution = resolution;
 		}

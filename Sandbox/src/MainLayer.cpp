@@ -8,11 +8,15 @@ River::AudioPlayer countdown;
 
 
 MainLayer::MainLayer(const std::string& arg)
-	:	resolutionCallback([](River::Resolution resolution) {
-			printf("Viewport callback: %ix%i\n", resolution.width, resolution.height);
-		})
 {
-	River::Window::addViewportListener(&resolutionCallback);
+	River::Window::resolutionChangedListeners.add(this, [](River::ResolutionEvent& event) {
+		auto resolution = event.getResolution();
+		printf("Resolution listener: %ix%i\n", resolution.width, resolution.height);
+		});
+	River::Window::viewportChangedListeners.add(this, [](River::ResolutionEvent& event) {
+		auto resolution = event.getResolution();
+		printf("Viewport listener: %ix%i\n", resolution.width, resolution.height);
+	});
 	std::cout << "Start arg: " << arg;
 }
 
@@ -56,7 +60,6 @@ River::ECS::Entity* MainLayer::createText(const std::string& msg, unsigned int s
 void MainLayer::onCreate() {
 
 	std::cout << "Initialized" << std::endl;
-
 
 	createSanta(0, 0, 20);
 	createSanta(50, 0, 20);
@@ -139,7 +142,7 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 		}
 		else {
 			printf("Setting fullscreen\n");
-			River::Window::enableFullscreen();
+			River::Window::enableFullscreen({800, 600});
 			auto actualResolution = River::Window::getResolution();
 			printf("Fullscreen resolution: %ix%i\n", actualResolution.width, actualResolution.height);
 		}
@@ -147,7 +150,7 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 
 
 	if( e.key == River::Key::X && e.action == River::KeyEvent::Action::DOWN ) {
-		River::Window::setResolution({1500, 700});
+		River::Window::setResolution({1920, 1080});
 		auto actualResolution = River::Window::getResolution();
 		std::cout << "Resolution was set to: " << actualResolution.width << "x" << actualResolution.height << std::endl;
 	}

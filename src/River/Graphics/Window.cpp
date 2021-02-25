@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 
+#include "Screen.h"
 #include "River/Event/MouseEvent/MouseEventController.h"
 
 
@@ -28,62 +29,38 @@ namespace River {
 
 			Window::resolution = newResolution;
 
-			for( auto& listener : Window::resolutionListeners ) {
-				listener->callback(Window::resolution);
-			}
-
-			updateViewport();
+			resolutionChanged = true;
 		}
 
 
 		static void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
-			updateViewport();
-		}
+			Resolution newViewport((unsigned int)width, (unsigned int)height);
 
-		
-		// Clamp the framebuffer, updates the GL viewport, and fires viewport listeners
-		static void updateViewport() {
-			
-			int framebufferWidth;
-			int framebufferHeight;
-			glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
-
-			if( framebufferWidth == 0 || framebufferHeight == 0 )
-				return;
-
-			Resolution newViewportResolution = {(unsigned int) framebufferWidth, (unsigned int) framebufferHeight};
-
-			// Clamp the ratio
-			double ratio = (double)framebufferWidth / framebufferHeight;
-			if( Window::viewportMinRatio > 0 && ratio < Window::viewportMinRatio ) {
-				newViewportResolution.height = (unsigned int)(newViewportResolution.width / Window::viewportMinRatio);
+			if( newViewport.width < 0 || newViewport.height < 0 ) {
+				// Just a safety precaution (not sure if it's ever possible)
+				throw new Exception("GLFW window size callback passed negative width or height");
 			}
-			else if( Window::viewportMaxRatio > 0 && ratio > Window::viewportMaxRatio ) {
-				newViewportResolution.width = (unsigned int)(newViewportResolution.height * Window::viewportMaxRatio);
-			}
-			
-			// Center the viewport in the window
-			int viewportX = ((int)Window::resolution.width - (int)newViewportResolution.width) / 2;
-			int viewportY = ((int)Window::resolution.height - (int)newViewportResolution.height) / 2;
 
-			// The viewport position must be updated even if the viewport size has
-			// not been changed. This is due to the framebuffer size being updated
-			// before the window resolution is updated, so position may need re-
-			// adjustments
-			glViewport(viewportX, viewportY, (GLsizei)newViewportResolution.width, (GLsizei)newViewportResolution.height);
+			// Window size is set to 0x0 when it gets minimized (both fullscreen and windowed mode)
+			if( newViewport.width == 0 || newViewport.height == 0 ) return;
 
-			if( newViewportResolution == Window::viewport ) return;
-			Window::viewport = newViewportResolution;
+			if( newViewport == Window::viewportResolution ) return;
 
-			for( auto& listener : Window::viewportListeners ) {
-				listener->callback(viewport);
-			}
-		}
+			Window::viewportResolution = newViewport;
+
+			glViewport(0, 0, (GLsizei)viewportResolution.width, (GLsizei)viewportResolution.height);
+
+			viewportChanged = true;
+		}	
 
 
 	public:
 		
 		static inline GLFWwindow* window = nullptr;
+
+		static inline bool resolutionChanged = false;
+
+		static inline bool viewportChanged = false;
 
 	};
 
@@ -210,14 +187,14 @@ namespace River {
 		glfwSetFramebufferSizeCallback(glfwWindow, Window::NativeWindow::framebufferSizeCallback);
 
 		// TODO: Remove this
-		// Get supported video modes
-		int count;
-		const GLFWvidmode* modes = glfwGetVideoModes(glfwGetPrimaryMonitor(), &count);
-
-		std::cout << "Video modes:" << std::endl;
-		for( int i = 0; i < count; i++ ) {
-			std::cout << "  " << "Width: " << modes->width << ", " << "Height: " << modes->height << ", " << "Refresh: " << modes->refreshRate << ", " << std::endl;
-			modes++;
+		printf("\nScreen resolutions:\n");
+		Resolution currentResolution = Screen::getResolution();
+		for( auto& resolution : Screen::getSupportedResolutions() ) {
+			std::cout << "  " << resolution.width << "x" << resolution.height;
+			if( resolution == currentResolution ) {
+				std::cout << "  (Current)";
+			}
+			std::cout << std::endl;
 		}
 	}
 
@@ -229,8 +206,6 @@ namespace River {
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
 	
-
-
 
 	void Window::enableFullscreen(const Resolution& resolution) {
 		if( resolution.width == 0 || resolution.height == 0 ) {
@@ -245,7 +220,7 @@ namespace River {
 	
 		int fWidth, fHeight;
 		glfwGetFramebufferSize(NativeWindow::window, &fWidth, &fHeight);
-		glViewport(0, 0, fWidth, fHeight);
+		//glViewport(0, 0, fWidth, fHeight);
 
 		std::cout << "Fullscreen was set to " << width << "x" << height << std::endl;
 		std::cout << "Framebuffersize was set to " << fWidth << "x" << fHeight << std::endl;
@@ -282,66 +257,15 @@ namespace River {
 	}
 
 
-	void Window::addResolutionListener(const ResolutionListener* listener) {
-		auto iterator = std::find(resolutionListeners.begin(), resolutionListeners.end(), listener);
-		if( iterator != resolutionListeners.end() ) {
-			throw new InvalidArgumentException("Resolution listener has already been added");
-		}
-		resolutionListeners.push_back(listener);
-	}
-
-	
-	void Window::removeResolutionListener(const ResolutionListener* listener) {
-		auto iterator = std::find(resolutionListeners.begin(), resolutionListeners.end(), listener);
-		
-		if( iterator == resolutionListeners.end() ) {
-			throw new InvalidArgumentException("Resolution listener was not found");
-		}
-
-		resolutionListeners.erase(iterator);
-	}
-
-
-	void Window::setViewportRatioLimits(double min, double max) {
-		min = min > 0 ? min : 0;
-		max = max > 0 ? max : 0;
-
-		if( min > 0 && max > 0 && min > max ) {
-			throw new InvalidArgumentException("Minimum viewport ratio must less than max");
-		}
-
-		viewportMinRatio = min;
-		viewportMaxRatio = max;
-	}
-
-
-	const Resolution& Window::getViewport() {
-		return viewport;
-	}
-
-
-	void Window::addViewportListener(const ResolutionListener* listener) {
-		auto iterator = std::find(viewportListeners.begin(), viewportListeners.end(), listener);
-		if( iterator != viewportListeners.end() ) {
-			throw new InvalidArgumentException("Resolution listener has already been added");
-		}
-		viewportListeners.push_back(listener);
-	}
-
-
-	void Window::removeViewportListener(const ResolutionListener* listener) {
-		auto iterator = std::find(viewportListeners.begin(), viewportListeners.end(), listener);
-
-		if( iterator == viewportListeners.end() ) {
-			throw new InvalidArgumentException("Resolution listener was not found");
-		}
-
-		viewportListeners.erase(iterator);
+	const Resolution& Window::getViewportResolution() {
+		return viewportResolution;
 	}
 
 
 	void Window::center() {
 		if( fullscreen ) return;
+
+		// TODO: Utilize screen class
 
 		// Retrieve primary monitor info to center window
 		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
@@ -386,7 +310,7 @@ namespace River {
 		return glfwWindowShouldClose(glfwWindow);
 	}
 
-
+	
 	void Window::clearDepth() {
 		GL(glClear(GL_DEPTH_BUFFER_BIT));
 	}
@@ -396,6 +320,32 @@ namespace River {
 			throw River::Exception("Number of texture slots is 0");
 		return numTextureSlots;
 	}
+
+
+	void Window::invokeEvents() {
+
+		// Fire resolution changed event
+		if( NativeWindow::resolutionChanged ) {
+			ResolutionEvent event(resolution);
+			for( auto& listener : resolutionChangedInvoker.listeners ) {
+				listener.second(event);
+				if( event.isConsumed() ) break;
+			}
+			NativeWindow::resolutionChanged = false;
+		}
+
+		// Fire viewport changed event
+		if( NativeWindow::viewportChanged ) {
+			ResolutionEvent event(viewportResolution);
+			for( auto& listener : viewportChangedInvoker.listeners ) {
+				listener.second(event);
+				if( event.isConsumed() ) break;
+			}
+			NativeWindow::viewportChanged = false;
+		}
+
+	}
+
 
 	void Window::glfwKeyCallback(GLFWwindow *glfwWindow, int glfwKey, int scancode, int glfwAction, int mods){
 		Window *window = glfwWindowMap[glfwWindow];
@@ -423,7 +373,15 @@ namespace River {
 
 	void Window::glfwMousePosCallback(GLFWwindow* glfwWindow, double mouseX, double mouseY) {
 		Window* window = glfwWindowMap[glfwWindow];
-		MouseEventController::registerMouseMovement(mouseX-window->width/2.0, mouseY*(-1)+window->height/2.0);
+
+		mouseX *= viewportResolution.width / (double)resolution.width;
+		mouseY *= viewportResolution.height / (double)resolution.height;
+		
+		mouseX -= viewportResolution.width / 2.0;
+		mouseY *= -1;
+		mouseY += viewportResolution.height / 2.0;
+
+		MouseEventController::registerMouseMovement(mouseX, mouseY);
 	}
 
 

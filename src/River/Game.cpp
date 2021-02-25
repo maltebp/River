@@ -71,6 +71,8 @@ namespace River {
 
 			rootLayer->clean();
 
+			Window::invokeEvents();
+
 			// Fire Key Events 
 			auto keyEvents = window->getKeyEvents();
 			for( auto& keyEvent : keyEvents ) {
@@ -110,7 +112,7 @@ namespace River {
 	}
 
 
-	void Game::setWindowSize(unsigned int width, unsigned int height) {
+	void Game::setResolution(unsigned int width, unsigned int height) {
 
 		if( started )
 			throw new InvalidStateException("Game has already been started, so window size can't be changed");

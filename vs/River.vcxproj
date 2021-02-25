@@ -120,6 +120,8 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\Graphics\ResolutionEvent.h" />
+    <ClInclude Include="src\River\Graphics\Screen.h" />
     <ClInclude Include="src\River\Audio\AL.h" />
     <ClInclude Include="src\River\Audio\AudioListener.h" />
     <ClInclude Include="src\River\Audio\AudioPlayer.h" />
@@ -153,6 +155,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Graphics\Texture\ImageBinder.h" />
     <ClInclude Include="src\River\Layer\Layer.h" />
     <ClInclude Include="src\River\Primitives\Resolution.h" />
+    <ClInclude Include="src\River\Utility\Listener.h" />
     <ClInclude Include="src\River\Vendor\dr_wav\dr_wav.h" />
     <ClInclude Include="src\River\Vendor\stb_image\stb_image.h" />
     <ClInclude Include="src\River\Graphics\Shader\ShaderProgram.h" />
@@ -167,9 +170,9 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Graphics\VertexArray.h" />
     <ClInclude Include="src\River\Graphics\TextRenderer.h" />
     <ClInclude Include="src\River\Graphics\TextRenderingSystem.h" />
-    <ClInclude Include="src\River\Event\WindowEvent\WindowEventController.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\River\Graphics\Screen.cpp" />
     <ClCompile Include="src\River\Audio\AL.cpp" />
     <ClCompile Include="src\River\Audio\AudioListener.cpp" />
     <ClCompile Include="src\River\Audio\AudioPlayer.cpp" />
@@ -184,7 +187,6 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClCompile Include="src\River\Graphics\Texture\Image.cpp" />
     <ClCompile Include="src\River\Event\KeyEvent\KeyEventController.cpp" />
     <ClCompile Include="src\River\Event\KeyEvent\KeyEvent.cpp" />
-    <ClCompile Include="src\River\Event\Event.cpp" />
     <ClCompile Include="src\River\Event\KeyEvent\Key.h" />
     <ClCompile Include="src\River\Graphics\Camera\Camera.cpp" />
     <ClCompile Include="src\River\Graphics\GL.cpp" />
@@ -200,7 +202,6 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClCompile Include="src\River\Graphics\ImageRenderer.cpp" />
     <ClCompile Include="src\River\Graphics\VertexArray.cpp" />
     <ClCompile Include="src\River\Graphics\TextRenderingSystem.cpp" />
-    <ClCompile Include="src\River\Event\WindowEvent\WindowEventController.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
