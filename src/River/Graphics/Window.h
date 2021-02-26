@@ -9,8 +9,6 @@
 #include "River/Primitives/Resolution.h"
 #include "River/Primitives/Color.h"
 #include "River/Event/KeyEvent/KeyEventController.h"
-#include "River/Error.h"
-#include "River/Graphics/GL.h"
 
 
 namespace River {
@@ -24,8 +22,6 @@ namespace River {
 		friend Game;
 		class NativeWindow; friend NativeWindow;	
 		
-		
-
 		static bool isOpen();
 
 		static void setTitle(std::string title);
@@ -70,7 +66,6 @@ namespace River {
 
 		static unsigned int getNumTextureSlots();
 
-
 		
 	private:
 
@@ -84,44 +79,33 @@ namespace River {
 
 		static bool shouldClose();
 
-		static std::unordered_map<GLFWwindow*, Window*> glfwWindowMap;
-		static void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-		static void glfwMousePosCallback(GLFWwindow* window, double xpos, double ypos);
-		static void glfwMouseScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
-		static void glfwMouseButtonCallback(GLFWwindow* glfwWindow, int button, int action, int mode);
 
 	private:
 
-		static inline std::string title = "Game";
+		static inline	bool opened = false;
 
-		static inline Resolution resolution = { 800, 600 };
+		static inline	std::string title = "Game";
 
-		static inline double viewportMinRatio = 0;
-		static inline double viewportMaxRatio = 0;
+		static inline	Resolution resolution = { 800, 600 };
+		
+		static inline	Resolution viewportResolution = { 0, 0 };
 
-		static inline bool opened = false;
-
-		// TODO: Set this on startup
-		static inline Resolution viewportResolution = { 0, 0 };
-
-		static inline double mouseXTransform;
-		static inline double mouseYTransform;
-
-        //std::string title = "River Window";
+		static inline	bool fullscreen = false;
+			
 
 		/* The number of texture slots (or units) accessible from the fragment shader */
 		static inline int numTextureSlots;
-
 		
 		static inline double fps = 0;
+		
 		static inline double previousFpsTime;
+		
 		static inline unsigned int frameCount = 0;
 
 		static inline Color clearColor;
 
 		static inline KeyEventController keyEventController;
 
-		static inline bool fullscreen = false;
 
 		static inline ListenerInvoker resolutionChangedInvoker = (resolutionChangedListeners);
 

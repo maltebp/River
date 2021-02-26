@@ -8,33 +8,20 @@
 #include <sstream>
 #include <algorithm>
 
+#include "Graphics/GL.h"
+
 #include "Audio/AL.h"
 #include "Audio/AudioPlayer.h"
-
 #include "Event/MouseEvent/MouseEventController.h"
 
 
 namespace River {
-	
-	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// Utility functions / variables
 
-	static int glfwErrorCode = 0;
-	static std::string glfwErrorMsg;
-
-
-	static void glfwErrorCallback(int errCode, const char* errStr) {
-		glfwErrorCode = errCode;
-		glfwErrorMsg = std::string(errStr);
-	}
-
-
-	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// Game
 
 	void Game::start() {
 		Game::start(nullptr);
 	}
+
 
 	void Game::start(std::function<void()> onStart) {
 
