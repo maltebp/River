@@ -41,7 +41,7 @@ namespace River {
 		if( started )
 			throw new InvalidStateException("Game has already been started");
 
-		window = new Window(title, 1280, 720);
+		Window::open();
 
 		// Initialize glew
 		const GLenum glewResult = glewInit();
@@ -58,7 +58,7 @@ namespace River {
 		// Initialize audio system
 		AL::initialize();
 
-		window->setClearColor(clearColor);
+		Window::setClearColor(Colors::BLACK);
 
 		if( onStart != nullptr ) {
 			printf("Running on start callback\n");	
@@ -66,15 +66,15 @@ namespace River {
 		}
 
 		printf("Starting game loop\n");
-		while( !window->shouldClose() ) {
-			window->clear();
+		while( !Window::shouldClose() ) {
+			Window::clear();
 
 			rootLayer->clean();
 
 			Window::invokeEvents();
 
 			// Fire Key Events 
-			auto keyEvents = window->getKeyEvents();
+			auto keyEvents = Window::getKeyEvents();
 			for( auto& keyEvent : keyEvents ) {
 				rootLayer->keyEvent(keyEvent);
 			}
@@ -91,7 +91,6 @@ namespace River {
 				rootLayer->mouseScrollEvent(e);
 			}
 
-
 			// Fire Mouse Button Events
 			for( auto& buttonEvent : MouseEventController::getMouseButtonEvents() )
 				rootLayer->mouseButtonEvent(buttonEvent);
@@ -106,38 +105,6 @@ namespace River {
 	}
 
 
-
-	void Game::setTitle(const std::string& title) {
-		Game::title = title;
-	}
-
-
-	void Game::setResolution(unsigned int width, unsigned int height) {
-
-		if( started )
-			throw new InvalidStateException("Game has already been started, so window size can't be changed");
-		Game::windowWidth = width;
-		Game::windowHeight = height;
-	}
-
-
-	Window* Game::getWindow() {
-		return window;
-	}
-
-
-	double Game::getFps() {
-		return window->getFps();
-	}
-
-
-	void Game::setClearColor(Color color) {
-		clearColor = color;
-		if( window != nullptr )
-			window->setClearColor(color);
-	}
-
-
 	void Game::removeLayer(Layer* layer) {
 		rootLayer->removeLayer(layer);
 	}
@@ -149,7 +116,7 @@ namespace River {
 
 
 	void Game::exit() {
-		window->close();
+		Window::close();
 	}
 	
 }

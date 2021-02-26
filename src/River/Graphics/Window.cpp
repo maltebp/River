@@ -1,6 +1,8 @@
 #include "Window.h"
 
 #include <string>
+#include <sstream>
+#include <iomanip>
 #include <iostream>
 
 #include "Screen.h"
@@ -54,6 +56,16 @@ namespace River {
 		}	
 
 
+		static void errorCallback(int errCode, const char* errStr) {
+			std::stringstream stream;
+			stream << "0x"
+				<< std::setfill('0') << std::setw(8)
+				<< std::hex << errCode;
+			std::string codeStr(stream.str());
+			throw new Exception("GLFW error: '" + std::string(errStr) + "' (code: " + codeStr + ")");
+		}
+
+
 	public:
 		
 		static inline GLFWwindow* window = nullptr;
@@ -63,14 +75,6 @@ namespace River {
 		static inline bool viewportChanged = false;
 
 	};
-
-	// GLFW error callback
-	static int glfwErrorCode = 0;
-	static std::string glfwErrorMsg;
-	static void glfwErrorCallback(int errCode, const char* errStr) {
-		glfwErrorCode = errCode;
-		glfwErrorMsg = std::string(errStr);
-	}
 
 	std::unordered_map<GLFWwindow*, Window*> Window::glfwWindowMap;
 
@@ -119,105 +123,209 @@ namespace River {
 
 	// =================================================================================================================
 
+	//Window::Window(std::string title, unsigned int width, unsigned int height) {
+	//	this->title = title;
 
-	Window::Window(std::string title, unsigned int width, unsigned int height) {
-		this->title = title;
+	//	// TODO: Make the user able to adjust this
+	//	this->width = width;
+	//	this->height = height;
 
-		// TODO: Make the user able to adjust this
-		this->width = width;
-		this->height = height;
+	//	glfwSetErrorCallback(glfwErrorCallback);
 
-		// Initialize glfw
-		if (!glfwInit()) {   
-			throw River::Exception("GLFW initialization error '" + glfwErrorMsg + "'" + " (code: " + std::to_string(glfwErrorCode) + ")");
+	//	// Initialize glfw
+	//	if (!glfwInit()) {   
+	//		throw River::Exception("GLFW initialization error '" + glfwErrorMsg + "'" + " (code: " + std::to_string(glfwErrorCode) + ")");
+	//	}
+
+
+	//	// TODO: Figure out to handle sampling per texture
+	//	//glfwWindowHint(GLFW_SAMPLES, 16);
+
+	//	//TODO: Remove monitor variable
+	//	GLFWmonitor* monitor;
+	//	monitor = NULL;
+	//	//monitor = glfwGetPrimaryMonitor();
+	//	fullscreen = false;
+
+	//	glfwWindow = glfwCreateWindow(width, height, this->title.c_str(), monitor, NULL);
+	//	if (!glfwWindow) {
+	//		glfwTerminate();
+	//		throw River::Exception("GLFW initialization error '" + glfwErrorMsg + "'" + " (code: " + std::to_string(glfwErrorCode) + ")");
+	//	}
+	//	NativeWindow::window = glfwWindow;
+
+	//	glfwSetKeyCallback(glfwWindow, glfwKeyCallback);
+
+
+	//	glfwWindowMap[glfwWindow] = this;
+
+	//	// Set window to current
+	//	glfwMakeContextCurrent(glfwWindow);
+
+	//	// Get number of texture slots
+	//	GL(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextureSlots));
+	//
+	//	// TODO: Set this up a proper place
+	//	GL(
+	//		glEnable(GL_ALPHA_TEST);
+	//		glEnable(GL_BLEND);
+	//		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//		glEnable(GL_DEPTH_TEST);
+	//		glDepthFunc(GL_LESS); // TODO: This is redundandt (GL_LESS is default)
+	//	);
+
+	//	// This enable binary alpha blending
+	//	glAlphaFunc(GL_GREATER, 0);
+
+
+	//	previousFpsTime = glfwGetTime();
+
+	//	double mouseX, mouseY;
+	//	glfwGetCursorPos(glfwWindow, &mouseX, &mouseY);
+	//	MouseEventController::initialize(mouseX, mouseY);
+
+	//	glfwSetCursorPosCallback(glfwWindow, glfwMousePosCallback);
+	//	glfwSetScrollCallback(glfwWindow, glfwMouseScrollCallback);
+	//	glfwSetMouseButtonCallback(glfwWindow, glfwMouseButtonCallback);
+
+	//	glfwSetWindowSizeCallback(glfwWindow, Window::NativeWindow::windowSizeCallback);
+	//	glfwSetFramebufferSizeCallback(glfwWindow, Window::NativeWindow::framebufferSizeCallback);
+
+	//	// TODO: Remove this
+	//	printf("\nScreen resolutions:\n");
+	//	Resolution currentResolution = Screen::getResolution();
+	//	for( auto& resolution : Screen::getSupportedResolutions() ) {
+	//		std::cout << "  " << resolution.width << "x" << resolution.height;
+	//		if( resolution == currentResolution ) {
+	//			std::cout << "  (Current)";
+	//		}
+	//		std::cout << std::endl;
+	//	}
+	//}
+
+
+	//Window::~Window() { }
+
+
+	void Window::open() {
+		if( opened ) {
+			throw InvalidStateException("Window is already open");
 		}
 
-		glfwSetErrorCallback(glfwErrorCallback);
+		opened = true;
 
-		// TODO: Figure out to handle sampling per texture
-		//glfwWindowHint(GLFW_SAMPLES, 16);
+		bool initialized = glfwInit();
+		if( !initialized ) {
+			// Error is triggered from callback
+			return;
+		}
+	
+		NativeWindow::window = glfwCreateWindow(
+				resolution.width,
+				resolution.height,
+				title.c_str(),
+				fullscreen ? glfwGetPrimaryMonitor() : NULL,
+				NULL
+			);
 
-		//TODO: Remove monitor variable
-		GLFWmonitor* monitor;
-		monitor = NULL;
-		//monitor = glfwGetPrimaryMonitor();
-		fullscreen = false;
-
-		glfwWindow = glfwCreateWindow(width, height, this->title.c_str(), monitor, NULL);
-		if (!glfwWindow) {
+		if( !NativeWindow::window ) {
 			glfwTerminate();
-			throw River::Exception("GLFW initialization error '" + glfwErrorMsg + "'" + " (code: " + std::to_string(glfwErrorCode) + ")");
+			// Error is triggered from callback
+			return;
 		}
-		NativeWindow::window = glfwWindow;
 
-		glfwSetKeyCallback(glfwWindow, glfwKeyCallback);
+		if( !fullscreen ) {
+			center();
+		}
 
-
-		glfwWindowMap[glfwWindow] = this;
 
 		// Set window to current
-		glfwMakeContextCurrent(glfwWindow);
+		glfwMakeContextCurrent(NativeWindow::window);
+
+		// TODO: Set this up a proper place (GL stuff)
 
 		// Get number of texture slots
 		GL(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextureSlots));
-	
+
 		GL(
 			glEnable(GL_ALPHA_TEST);
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glEnable(GL_DEPTH_TEST);
-			glDepthFunc(GL_LESS); // TODO: This is redundandt (GL_LESS is default)
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS); // TODO: This is redundandt (GL_LESS is default)
 		);
 
 		// This enable binary alpha blending
 		glAlphaFunc(GL_GREATER, 0);
 
-
 		previousFpsTime = glfwGetTime();
 
+		glfwSetKeyCallback(NativeWindow::window, glfwKeyCallback);
+
 		double mouseX, mouseY;
-		glfwGetCursorPos(glfwWindow, &mouseX, &mouseY);
+		glfwGetCursorPos(NativeWindow::window, &mouseX, &mouseY);
 		MouseEventController::initialize(mouseX, mouseY);
 
-		glfwSetCursorPosCallback(glfwWindow, glfwMousePosCallback);
-		glfwSetScrollCallback(glfwWindow, glfwMouseScrollCallback);
-		glfwSetMouseButtonCallback(glfwWindow, glfwMouseButtonCallback);
+		glfwSetCursorPosCallback(NativeWindow::window, glfwMousePosCallback);
+		glfwSetScrollCallback(NativeWindow::window, glfwMouseScrollCallback);
+		glfwSetMouseButtonCallback(NativeWindow::window, glfwMouseButtonCallback);
 
-		glfwSetWindowSizeCallback(glfwWindow, Window::NativeWindow::windowSizeCallback);
-		glfwSetFramebufferSizeCallback(glfwWindow, Window::NativeWindow::framebufferSizeCallback);
+		glfwSetWindowSizeCallback(NativeWindow::window, Window::NativeWindow::windowSizeCallback);
+		glfwSetFramebufferSizeCallback(NativeWindow::window, Window::NativeWindow::framebufferSizeCallback);
 
-		// TODO: Remove this
-		printf("\nScreen resolutions:\n");
-		Resolution currentResolution = Screen::getResolution();
-		for( auto& resolution : Screen::getSupportedResolutions() ) {
-			std::cout << "  " << resolution.width << "x" << resolution.height;
-			if( resolution == currentResolution ) {
-				std::cout << "  (Current)";
-			}
-			std::cout << std::endl;
-		}
-	}
-
-
-	Window::~Window() { }
-
-
-	void Window::setClearColor(Color color) {
-		glClearColor(color.r, color.g, color.b, color.a);
 	}
 	
 
-	void Window::enableFullscreen(const Resolution& resolution) {
+	bool Window::isOpen() {
+		return opened;
+	}
+
+
+	void Window::setResolution(const Resolution& resolution) {
 		if( resolution.width == 0 || resolution.height == 0 ) {
 			throw new InvalidArgumentException("Cannot set window width or height to 0");
 		}
+
+		if( !opened ) {
+			// If window is 1, the resolution will be updated through the callback
+			Window::resolution = resolution;
+			return;
+		}
+
+		glfwSetWindowSize(NativeWindow::window, (int)resolution.width, (int)resolution.height);
+	}
+
+	
+	const Resolution& Window::getResolution() {
+		return resolution;
+	}
+
+
+	const Resolution& Window::getViewportResolution() {
+		return viewportResolution;
+	}
+
+
+	void Window::enableFullscreen(const Resolution& resolution) {
+		if( resolution.width == 0 || resolution.height == 0 ) {
+			throw new InvalidArgumentException("Window width and height must be larger than 0");
+		}
+
 		fullscreen = true;
 
+		if( !opened ) {
+			// If window is open, the resolution will be updated through the callback
+			Window::resolution = resolution;
+			return;
+		}
+
+		// TODO: CLean up below
+
 		glfwSetWindowMonitor(NativeWindow::window, glfwGetPrimaryMonitor(), 0, 0, resolution.width, resolution.height, GLFW_DONT_CARE);
-		
+
 		int width, height;
 		glfwGetWindowSize(NativeWindow::window, &width, &height);
-	
+
 		int fWidth, fHeight;
 		glfwGetFramebufferSize(NativeWindow::window, &fWidth, &fHeight);
 		//glViewport(0, 0, fWidth, fHeight);
@@ -226,12 +334,18 @@ namespace River {
 		std::cout << "Framebuffersize was set to " << fWidth << "x" << fHeight << std::endl;
 	}
 
-	
+
 	void Window::disableFullscreen(const Resolution& resolution) {
 		if( resolution.width == 0 || resolution.height == 0 ) {
 			throw new InvalidArgumentException("Cannot set window width or height to 0");
 		}
+
 		fullscreen = false;
+		if( !opened ) {
+			// If window is open, the resolution will be updated through the callback
+			Window::resolution = resolution;
+			return;
+		}
 
 		glfwSetWindowMonitor(NativeWindow::window, NULL, 0, 0, resolution.width, resolution.height, GLFW_DONT_CARE);
 
@@ -244,21 +358,22 @@ namespace River {
 	}
 
 
-	void Window::setResolution(const Resolution& resolution) {
-		if( resolution.width == 0 || resolution.height == 0 ) {
-			throw new InvalidArgumentException("Cannot set window width or height to 0");
-		}
-		glfwSetWindowSize(NativeWindow::window, (int)resolution.width, (int)resolution.height);
+	void Window::setTitle(std::string title) {
+		Window::title = title;
+		
+		if( !opened ) return;
+
+		glfwSetWindowTitle(NativeWindow::window, title.c_str());
 	}
 
 	
-	const Resolution& Window::getResolution() {
-		return resolution;
+	std::string Window::getTitle() {
+		return title;
 	}
 
 
-	const Resolution& Window::getViewportResolution() {
-		return viewportResolution;
+	void Window::setClearColor(Color color) {
+		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
 
@@ -281,40 +396,22 @@ namespace River {
 	}
 
 
-	void Window::clear() {	
 
-		// Measure speed
-		double currentTime = glfwGetTime();
-		frameCount++;
-		// If a second has passed.
-		double timePassed = currentTime - previousFpsTime;
-		if( timePassed >= 1.0 ) {
-			fps = frameCount / timePassed;
-
-			frameCount = 0;
-			previousFpsTime = currentTime;
-		}
-
-		glfwSwapBuffers(this->glfwWindow);
-		glfwPollEvents();
-		GL(glDepthMask(GL_TRUE)); // We must be able to write to the depth buffer in order to clear the bit
-		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-	}
 
 
 	void Window::close() {
-		glfwSetWindowShouldClose(glfwWindow, GL_TRUE);
+		glfwSetWindowShouldClose(NativeWindow::window, GL_TRUE);
 	}
 
+
 	bool Window::shouldClose() {
-		return glfwWindowShouldClose(glfwWindow);
+		return glfwWindowShouldClose(NativeWindow::window);
 	}
 
 	
-	void Window::clearDepth() {
-		GL(glClear(GL_DEPTH_BUFFER_BIT));
-	}
+	
 
+	// TODO: This should not be here
 	unsigned int Window::getNumTextureSlots() {
 		if (numTextureSlots == 0)
 			throw River::Exception("Number of texture slots is 0");
@@ -343,6 +440,8 @@ namespace River {
 			}
 			NativeWindow::viewportChanged = false;
 		}
+
+		glfwPollEvents();
 
 	}
 
@@ -407,6 +506,31 @@ namespace River {
 
 	double Window::getFps() {
 		return fps;
+	}
+
+
+	void Window::clear() {
+
+		// Measure speed
+		double currentTime = glfwGetTime();
+		frameCount++;
+		// If a second has passed.
+		double timePassed = currentTime - previousFpsTime;
+		if( timePassed >= 1.0 ) {
+			fps = frameCount / timePassed;
+
+			frameCount = 0;
+			previousFpsTime = currentTime;
+		}
+
+		glfwSwapBuffers(NativeWindow::window);
+		GL(glDepthMask(GL_TRUE)); // We must be able to write to the depth buffer in order to clear the bit
+		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+	}
+
+
+	void Window::clearDepth() {
+		GL(glClear(GL_DEPTH_BUFFER_BIT));
 	}
 
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderer.h"
+#include "River/Graphics/Camera/Camera.h"
 #include "Texture/Sprite.h"
 #include "Texture/Texture.h"
 #include "Texture/ImageBinder.h"
@@ -14,7 +14,7 @@ namespace River {
 
 
 	// ImageRenderer -----------------------------------------
-	class ImageRenderer : public Renderer {
+	class ImageRenderer {
 	public:
 		struct TextureData {
 			Image* texture = nullptr;
@@ -31,24 +31,22 @@ namespace River {
 
 
 	public:
-		ImageRenderer(Window *window);
+		ImageRenderer();
 
 		void drawRectangle(const TransformData& transformData);
 		void drawSprite(const Texture *sprite, const TransformData& transformData);
 		void drawTexture(const TextureData& textureData, const TransformData& transformData);
 
-
 		void enableBlending();
 		void disableBlending();
 
-		void onFlush();
+		void setCamera(Camera* camera);
+
+		void flush();
 
 		// TODO: Function -> Draw rotated texture
 
 		// TODO: Function -> draw texture with texture size
-
-
-
 
 	private:
 		// Vertex Array ------------------------------------------
@@ -72,7 +70,6 @@ namespace River {
 		};
 
 
-
 	private:
 		ImageVertexArray vertexArray;
 
@@ -80,6 +77,8 @@ namespace River {
 		ImageBinder textureBinder;
 
 		bool blending = false;
+
+		Camera* camera = nullptr;
 	};
 
 

@@ -64,9 +64,8 @@ namespace River{
 	)";
 
 
-	ImageRenderer::ImageRenderer(River::Window* window) :
-		River::Renderer(window),
-		textureBinder(window->getNumTextureSlots())
+	ImageRenderer::ImageRenderer()
+		:	textureBinder(Window::getNumTextureSlots())
 	{
 		// Shader program
 		Shader vertexShader(Shader::Type::VERTEX, vertexShaderSource);
@@ -80,10 +79,16 @@ namespace River{
 		vertexArray.initialize();
 	}
 
+	
+	void ImageRenderer::setCamera(Camera* camera) {
+		this->camera = camera;
+	}
 
+	
 	void ImageRenderer::drawRectangle(const TransformData& transformData) {
 		drawTexture({}, transformData);
 	}
+
 
 	void ImageRenderer::drawSprite(const Texture* sprite, const TransformData& transformData){
 		ImageRenderer::TextureData textureData{ sprite->getImage(), sprite->getTextureCoordinates() };
@@ -178,7 +183,7 @@ namespace River{
 	}
 
 
-	void ImageRenderer::onFlush(){
+	void ImageRenderer::flush(){
 
 		// Enable alpha testing, and discarding any fragment, which has an alpha of 0
 		GL(glEnable(GL_ALPHA_TEST));

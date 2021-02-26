@@ -24,18 +24,14 @@ namespace River {
 		friend Game;
 		class NativeWindow; friend NativeWindow;	
 		
-		Window(std::string title, unsigned int width, unsigned int height);
-		~Window();
+		
 
-		void clear();
-		void clearDepth();
-		bool shouldClose();
-		void close();
-		unsigned int getNumTextureSlots();
-		std::vector<KeyEvent> getKeyEvents();
-		double getFps();
-		void setClearColor(Color color);
+		static bool isOpen();
 
+		static void setTitle(std::string title);
+
+		static std::string getTitle();
+		
 		// Note:
 		//  - User should query the actual resolution with getResolution(..)
 		static void setResolution(const Resolution& size);
@@ -60,10 +56,33 @@ namespace River {
 		// Has no effect if fullscreen
 		static void center();
 
+		// TODO: Should be seperated from window class
+		static std::vector<KeyEvent> getKeyEvents();
+
+		// TODO: Below functions should be moved to seperate "graphics context" class
+		static void setClearColor(Color color);
+
+		static void clear();
+
+		static void clearDepth();
+
+		static double getFps();
+
+		static unsigned int getNumTextureSlots();
+
+
 		
 	private:
 
+		Window() = delete;
+
+		static void open();
+
 		static void invokeEvents();
+
+		static void close();
+
+		static bool shouldClose();
 
 		static std::unordered_map<GLFWwindow*, Window*> glfwWindowMap;
 		static void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -73,34 +92,34 @@ namespace River {
 
 	private:
 
-		static inline Resolution resolution = { 720, 480 };
+		static inline std::string title = "Game";
+
+		static inline Resolution resolution = { 800, 600 };
 
 		static inline double viewportMinRatio = 0;
 		static inline double viewportMaxRatio = 0;
 
+		static inline bool opened = false;
+
 		// TODO: Set this on startup
 		static inline Resolution viewportResolution = { 0, 0 };
 
-        GLFWwindow* glfwWindow;
-        int width;
-        int height;
+		static inline double mouseXTransform;
+		static inline double mouseYTransform;
 
-		double mouseXTransform;
-		double mouseYTransform;
-
-        std::string title = "River Window";
+        //std::string title = "River Window";
 
 		/* The number of texture slots (or units) accessible from the fragment shader */
-		int numTextureSlots;
+		static inline int numTextureSlots;
 
 		
-		double fps = 0;
-		double previousFpsTime;
-		unsigned int frameCount;
+		static inline double fps = 0;
+		static inline double previousFpsTime;
+		static inline unsigned int frameCount = 0;
 
-		Color clearColor;
+		static inline Color clearColor;
 
-		KeyEventController keyEventController;
+		static inline KeyEventController keyEventController;
 
 		static inline bool fullscreen = false;
 

@@ -15,13 +15,13 @@ using River::Window;
 
 void main() {
 
-	Game::setTitle("Sandbox Game");
-	Game::setResolution(1280, 720);
+	Window::setTitle("Sandbox Game");
+	Window::setResolution({ 1280, 720 });
 
 	Game::start([]() {
 		GlobalAssets::COLLECTION->load();
-		River::SpriteRenderingSystem::initialize(Game::getWindow());
-		River::TextRenderingSystem::initialize(Game::getWindow());
+		River::SpriteRenderingSystem::initialize();
+		River::TextRenderingSystem::initialize();
 		Game::pushLayer<MainLayer>("This is a layer starting argument!");
 	});
 

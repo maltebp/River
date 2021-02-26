@@ -161,7 +161,6 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Graphics\Shader\ShaderProgram.h" />
     <ClInclude Include="src\River\Graphics\GL.h" />
     <ClInclude Include="src\River\Graphics\Shader\Shader.h" />
-    <ClInclude Include="src\River\Graphics\Renderer.h" />
     <ClInclude Include="src\River\Graphics\Window.h" />
     <ClInclude Include="src\River\Game.h" />
     <ClInclude Include="src\River.h" />
@@ -196,7 +195,6 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClCompile Include="src\River\Vendor\stb_image\stb_image.cpp" />
     <ClCompile Include="src\River\Graphics\Shader\ShaderProgram.cpp" />
     <ClCompile Include="src\River\Graphics\Shader\Shader.cpp" />
-    <ClCompile Include="src\River\Graphics\Renderer.cpp" />
     <ClCompile Include="src\River\Graphics\Window.cpp" />
     <ClCompile Include="src\River\Game.cpp" />
     <ClCompile Include="src\River\Graphics\ImageRenderer.cpp" />

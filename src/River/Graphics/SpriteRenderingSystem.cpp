@@ -13,10 +13,10 @@ namespace River {
 	ImageRenderer* SpriteRenderingSystem::imageRenderer = nullptr;
 
 
-	void SpriteRenderingSystem::initialize(Window* window) {
+	void SpriteRenderingSystem::initialize() {
 		if( imageRenderer != nullptr )
 			throw new AlreadyInitializedException("SpriteRenderingSystem");
-		imageRenderer = new ImageRenderer(window);
+		imageRenderer = new ImageRenderer();
 	}
 
 	

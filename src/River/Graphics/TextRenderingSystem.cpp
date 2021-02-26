@@ -13,10 +13,10 @@
 namespace River {
 
 
-	void TextRenderingSystem::initialize(Window* window) {
+	void TextRenderingSystem::initialize() {
 		if( imageRenderer != nullptr )
 			throw new AlreadyInitializedException("TextRenderingSystem");
-		imageRenderer = new ImageRenderer(window);
+		imageRenderer = new ImageRenderer();
 	}
 
 

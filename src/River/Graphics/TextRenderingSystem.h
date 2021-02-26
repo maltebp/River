@@ -12,7 +12,7 @@ namespace River {
 	public:
 
 		// TODO: Remove this at some point
-		static void initialize(Window* window);
+		static void initialize();
 
 		static void render(ECS::Domain* domain, Camera* camera);
 

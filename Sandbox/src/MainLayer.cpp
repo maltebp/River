@@ -98,7 +98,7 @@ void MainLayer::onUpdate() {
 	River::AudioListener::setPosition(camera->getX(), camera->getY());
 	//River::AudioListener::setDepth(400);
 
-	fpsText->getComponent<River::ECS::Text>()->text = std::to_string(River::Game::getFps()) ;
+	fpsText->getComponent<River::ECS::Text>()->text = std::to_string(River::Window::getFps()) ;
 
 	GlobalAssets::Fonts::ARIAL->load();
 
