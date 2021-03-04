@@ -17,6 +17,7 @@ namespace River {
 			return key;
 		}
 
+
 		/**
 		 * @brief	Consumes the event if its key matches the argument
 		 * @return	True if the key matches the argument and the event was not already consumed
