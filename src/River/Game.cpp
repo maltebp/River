@@ -9,9 +9,9 @@
 #include <algorithm>
 
 #include "Graphics/GL.h"
-
 #include "Audio/AL.h"
 #include "Audio/AudioPlayer.h"
+#include "Keyboard/KeyboardController.h"
 #include "Event/MouseEvent/MouseEventController.h"
 
 
@@ -59,12 +59,7 @@ namespace River {
 			rootLayer->clean();
 
 			Window::invokeEvents();
-
-			// Fire Key Events 
-			auto keyEvents = Window::getKeyEvents();
-			for( auto& keyEvent : keyEvents ) {
-				rootLayer->keyEvent(keyEvent);
-			}
+			KeyboardController::invokeEvents();
 
 			// Fire Mouse Movement Events
 			if( MouseEventController::hasMovementOccured() ) {

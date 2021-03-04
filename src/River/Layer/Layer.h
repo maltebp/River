@@ -6,7 +6,7 @@
 #include "River/Event/MouseEvent/MouseMoveEvent.h"
 #include "River/Event/MouseEvent/MouseScrollEvent.h"
 #include "River/Event/MouseEvent/MouseButtonEvent.h"
-#include "River/Event/KeyEvent/KeyEvent.h"
+
 
 namespace River {
 
@@ -90,10 +90,6 @@ namespace River {
 		*/
 		void onDestroy(std::function<void()> action);
 
-		/**
-		 * @brief	Sets an action function to be called immediately after the matching virtual function.
-		*/
-		void onKeyEvent(std::function<void(KeyEvent&)> action);
 
 		/**
 		 * @brief	Sets an action function to be called immediately after the matching virtual function.
@@ -122,7 +118,6 @@ namespace River {
 		virtual void onUpdate(){}
 		virtual void onDestroy(){}
 
-		virtual void onKeyEvent(KeyEvent&) {}
 		virtual void onMouseMoveEvent(MouseMoveEvent&) {}
 		virtual void onMouseScrollEvent(MouseScrollEvent&) {}
 		virtual void onMouseButtonEvent(MouseButtonEvent&) {}
@@ -139,7 +134,7 @@ namespace River {
 
 		void update();
 		void destroy();
-		void keyEvent(KeyEvent&);
+
 		void mouseMoveEvent(MouseMoveEvent&);
 		void mouseScrollEvent(MouseScrollEvent&);
 		void mouseButtonEvent(MouseButtonEvent&);
@@ -158,7 +153,6 @@ namespace River {
 		std::function<void()> onUpdateAction = [](){};
 		std::function<void()> onDestroyAction = [](){};
 		
-		std::function<void(KeyEvent&)> onKeyEventAction = [](auto e){};
 		std::function<void(MouseMoveEvent&)> onMouseMoveEventAction = [](auto e){};
 		std::function<void(MouseScrollEvent&)> onMouseScrollEventAction = [](auto e){};
 		std::function<void(MouseButtonEvent&)> onMouseButtonEventAction = [](auto e){};

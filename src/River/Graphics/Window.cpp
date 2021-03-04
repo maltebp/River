@@ -7,6 +7,7 @@
 
 #include "GL.h"
 #include "Screen.h"
+#include "River/Keyboard/KeyboardController.h"
 #include "River/Event/MouseEvent/MouseEventController.h"
 
 
@@ -97,25 +98,23 @@ namespace River {
 
 
 		static void keyCallback(GLFWwindow* glfwWindow, int glfwKey, int scancode, int glfwAction, int mods) {
-
 			Key key = (Key)glfwKey;
 
-			KeyEvent::Action action;
 			switch( glfwAction ) {
 			case GLFW_PRESS:
-				action = KeyEvent::Action::DOWN;
+				KeyboardController::registerKeyDown(key);
 				break;
 			case GLFW_RELEASE:
-				action = KeyEvent::Action::UP;
+				KeyboardController::registerKeyUp(key);
 				break;
-			case GLFW_REPEAT: return; // We don't use this
+			case GLFW_REPEAT:
+				return; // We don't use this
 			default:
 				// TODO: Implement correct logging
 				std::cout << "WARNING: GLFW action '" << glfwAction << "' is not handled!" << std::endl;
 				return;
 			}
 
-			Window::keyEventController.registerEvent(key, action);
 		}
 
 
@@ -409,11 +408,6 @@ namespace River {
 		glfwPollEvents();
 
 	}
-
-
-	std::vector<KeyEvent> Window::getKeyEvents(){
-		return keyEventController.getEvents();
-	}	
 
 
 	double Window::getFps() {

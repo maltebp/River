@@ -11,6 +11,7 @@
 
 #include "River/Graphics/Transform.h"
 
+#include "River/Keyboard/Keyboard.h"
 
 #include "River/Primitives/Alignment.h"
 #include "River/Primitives/Color.h"

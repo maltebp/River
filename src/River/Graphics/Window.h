@@ -8,7 +8,6 @@
 #include "River/Graphics/ResolutionEvent.h"
 #include "River/Primitives/Resolution.h"
 #include "River/Primitives/Color.h"
-#include "River/Event/KeyEvent/KeyEventController.h"
 
 
 namespace River {
@@ -20,6 +19,7 @@ namespace River {
 	class Window {
 	public:
 		friend Game;
+		
 		class NativeWindow; friend NativeWindow;	
 		
 		static bool isOpen();
@@ -51,9 +51,6 @@ namespace River {
 		// Centers on primary monitor
 		// Has no effect if fullscreen
 		static void center();
-
-		// TODO: Should be seperated from window class
-		static std::vector<KeyEvent> getKeyEvents();
 
 		// TODO: Below functions should be moved to seperate "graphics context" class
 		static void setClearColor(Color color);
@@ -91,25 +88,21 @@ namespace River {
 		static inline	Resolution viewportResolution = { 0, 0 };
 
 		static inline	bool fullscreen = false;
-			
-
-		/* The number of texture slots (or units) accessible from the fragment shader */
-		static inline int numTextureSlots;
 		
-		static inline double fps = 0;
-		
-		static inline double previousFpsTime;
-		
-		static inline unsigned int frameCount = 0;
-
-		static inline Color clearColor;
-
-		static inline KeyEventController keyEventController;
-
-
 		static inline ListenerInvoker resolutionChangedInvoker = (resolutionChangedListeners);
 
 		static inline ListenerInvoker viewportChangedInvoker = (viewportChangedListeners);
+
+		/* The number of texture slots (or units) accessible from the fragment shader */
+		static inline int numTextureSlots;
+
+		static inline double fps = 0;
+
+		static inline double previousFpsTime;
+
+		static inline unsigned int frameCount = 0;
+
+		static inline Color clearColor;
 
 	};
 }

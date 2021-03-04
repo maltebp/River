@@ -6,7 +6,7 @@
 
 namespace River {
 
-	struct ResolutionEvent : Event {
+	class ResolutionEvent : public Event {
 	public:
 
 		ResolutionEvent(const Resolution& resolution)

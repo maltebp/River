@@ -12,7 +12,8 @@ public:
 	void onCreate() override;
 	void onUpdate() override;
 
-	void onKeyEvent(River::KeyEvent& e) override;
+	void onKeyDownEvent(River::KeyEvent& e);
+
 	void onMouseMoveEvent(River::MouseMoveEvent& e) override;
 	void onMouseScrollEvent(River::MouseScrollEvent& e) override;
 	void onMouseButtonEvent(River::MouseButtonEvent& e) override;

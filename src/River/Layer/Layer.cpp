@@ -78,16 +78,6 @@ namespace River {
 	}
 
 
-	void Layer::keyEvent(KeyEvent& e) {
-		for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
-			if( e.isConsumed() ) break;
-			(*it)->keyEvent(e);
-		}
-		if( !e.isConsumed() ) onKeyEvent(e);
-		if( !e.isConsumed() ) onKeyEventAction(e);
-	}
-
-
 	void Layer::mouseMoveEvent(MouseMoveEvent& e) {
 		for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
 			if( e.isConsumed() ) break;
@@ -142,13 +132,6 @@ namespace River {
 			onDestroyAction = action;
 		}
 
-		/**
-		 * @brief	Sets an action function to be called immediately after the matching virtual function.
-		*/
-		void Layer::onKeyEvent(std::function<void(KeyEvent&)> action) {
-			if( action == nullptr ) throw InvalidArgumentException("Action must not be nullptr");
-			onKeyEventAction = action;
-		}
 
 		/**
 		 * @brief	Sets an action function to be called immediately after the matching virtual function.

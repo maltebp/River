@@ -120,6 +120,9 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\Keyboard\KeyboardController.h" />
+    <ClInclude Include="src\River\Keyboard\CharacterEvent.h" />
+    <ClInclude Include="src\River\Keyboard\Keyboard.h" />
     <ClInclude Include="src\River\Graphics\ResolutionEvent.h" />
     <ClInclude Include="src\River\Graphics\Screen.h" />
     <ClInclude Include="src\River\Audio\AL.h" />
@@ -148,8 +151,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Graphics\Text\FontInstance.h" />
     <ClInclude Include="src\River\Graphics\Texture\Texture.h" />
     <ClInclude Include="src\River\Graphics\Texture\Image.h" />
-    <ClInclude Include="src\River\Event\KeyEvent\KeyEventController.h" />
-    <ClInclude Include="src\River\Event\KeyEvent\KeyEvent.h" />
+    <ClInclude Include="src\River\Keyboard\KeyEvent.h" />
     <ClInclude Include="src\River\Event\Event.h" />
     <ClInclude Include="src\River\Graphics\Camera\Camera.h" />
     <ClInclude Include="src\River\Graphics\Texture\ImageBinder.h" />
@@ -171,6 +173,8 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Graphics\TextRenderingSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\River\Keyboard\Keyboard.cpp" />
+    <ClCompile Include="src\River\Keyboard\KeyboardController.cpp" />
     <ClCompile Include="src\River\Graphics\Screen.cpp" />
     <ClCompile Include="src\River\Audio\AL.cpp" />
     <ClCompile Include="src\River\Audio\AudioListener.cpp" />
@@ -184,9 +188,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClCompile Include="src\River\Graphics\Text\FontInstance.cpp" />
     <ClCompile Include="src\River\Graphics\Texture\Texture.cpp" />
     <ClCompile Include="src\River\Graphics\Texture\Image.cpp" />
-    <ClCompile Include="src\River\Event\KeyEvent\KeyEventController.cpp" />
-    <ClCompile Include="src\River\Event\KeyEvent\KeyEvent.cpp" />
-    <ClCompile Include="src\River\Event\KeyEvent\Key.h" />
+    <ClCompile Include="src\River\Keyboard\Key.h" />
     <ClCompile Include="src\River\Graphics\Camera\Camera.cpp" />
     <ClCompile Include="src\River\Graphics\GL.cpp" />
     <ClCompile Include="src\River\Graphics\Texture\ImageBinder.cpp" />

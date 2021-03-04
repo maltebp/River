@@ -7,8 +7,17 @@
 River::AudioPlayer countdown;
 
 
+static double audioDepth = 0;
+
+bool listenerAdded = false;
+
+
+
 MainLayer::MainLayer(const std::string& arg)
 {
+
+	River::Keyboard::keyDownListeners.add(this, [this](auto e) { onKeyDownEvent(e); });
+
 	River::Window::resolutionChangedListeners.add(this, [](River::ResolutionEvent& event) {
 		auto resolution = event.getResolution();
 		printf("Resolution listener: %ix%i\n", resolution.width, resolution.height);
@@ -95,6 +104,29 @@ void MainLayer::onCreate() {
 
 void MainLayer::onUpdate() {
 
+	if( River::Keyboard::isKeyPressed(River::Key::W, true) ) {
+		audioDepth += 5;
+		std::cout << "Audio depth: " << audioDepth << std::endl;
+	}
+
+	if( River::Keyboard::isKeyPressed(River::Key::E, true)) {
+		audioDepth -= 5;
+		std::cout << "Audio depth: " << audioDepth << std::endl;
+	}
+
+	if( River::Keyboard::isKeyPressed(River::Key::A, true)) {
+		camera->adjustRotation(5);
+		River::AudioListener::setRotation(camera->getRotation());
+		std::cout << "Rotation: " << camera->getRotation() << std::endl;
+	}
+
+	if( River::Keyboard::isKeyPressed(River::Key::S, true) ) {
+		camera->adjustRotation(-5);
+		River::AudioListener::setRotation(camera->getRotation());
+		std::cout << "Rotation: " << camera->getRotation() << std::endl;
+	}
+
+
 	River::AudioListener::setPosition(camera->getX(), camera->getY());
 	//River::AudioListener::setDepth(400);
 
@@ -109,31 +141,29 @@ void MainLayer::onUpdate() {
 	domain.clean();
 }
 
-static double audioDepth = 0;
+void MainLayer::onKeyDownEvent(River::KeyEvent& e) {
+	std::cout << "KeyDown: " << (int) e.getKey() << std::endl;
 
-bool listenerAdded = false;
+	River::Key key = e.getKey();
 
-void MainLayer::onKeyEvent(River::KeyEvent& e) {
-	//std::cout << "KeyEvent: " << (int) e.key << " " << (int) e.action << std::endl;
-
-	if (e.key == River::Key::RIGHT)
+	if (key == River::Key::RIGHT)
 		camera->adjustX(10);
 
-	if (e.key == River::Key::LEFT)
+	if (key == River::Key::LEFT)
 		camera->adjustX(-10);
 
-	if (e.key == River::Key::UP)
+	if (key == River::Key::UP)
 		camera->adjustY(10);
 
-	if (e.key == River::Key::DOWN)
+	if (key == River::Key::DOWN)
 		camera->adjustY(-10);
 
-	if( e.key == River::Key::ESCAPE && e.action == River::KeyEvent::Action::DOWN ) {
+	if( key == River::Key::ESCAPE) {
 		River::Game::exit();
 		return;
 	}
 
-	if( e.key == River::Key::B && e.action == River::KeyEvent::Action::DOWN ) {
+	if( key == River::Key::B ) {
 		if( River::Window::isFullscreen() ) {
 			printf("Disabling fullscreen\n");
 			River::Window::disableFullscreen({ 400, 400 });
@@ -149,13 +179,13 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 	}	
 
 
-	if( e.key == River::Key::X && e.action == River::KeyEvent::Action::DOWN ) {
+	if( key == River::Key::X ) {
 		River::Window::setResolution({1920, 1080});
 		auto actualResolution = River::Window::getResolution();
 		std::cout << "Resolution was set to: " << actualResolution.width << "x" << actualResolution.height << std::endl;
 	}
 
-	if( e.key == River::Key::L && e.action == River::KeyEvent::Action::DOWN ) {
+	if( key == River::Key::L ) {
 		auto asset = GlobalAssets::Sounds::COINS;
 		if( asset->isLoaded() ) {
 			asset->unload();
@@ -168,7 +198,7 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 	}
 
 
-	if( e.key == River::Key::I && e.action == River::KeyEvent::Action::DOWN ) {
+	if( key == River::Key::I  ) {
 		if( countdown.isPaused() ) {
 			countdown.unpause();
 			std::cout << "Unpaused countdown" << std::endl;
@@ -182,24 +212,24 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 		}
 	}
 
-	if( e.key == River::Key::O && e.action == River::KeyEvent::Action::DOWN ) {
+	if( key == River::Key::O  ) {
 		countdown.stop();
 		std::cout << "Stopped countdown" << std::endl;
 	}
 
 
-	if( e.key == River::Key::P && e.action == River::KeyEvent::Action::DOWN ) {
+	if( key == River::Key::P  ) {
 		countdown.play(GlobalAssets::Sounds::COUNTDOWN);
 		std::cout << "Started countdown" << std::endl;
 	}
 
-	if( e.key == River::Key::U && e.action == River::KeyEvent::Action::DOWN ) {
+	if( key == River::Key::U  ) {
 		countdown.setTime(7);
 		std::cout << "Set countdown to 7 seconds" << std::endl;
 	}
 
 
-	if (e.key == River::Key::D && e.action == River::KeyEvent::Action::DOWN) {
+	if (key == River::Key::D ) {
 		River::AudioPlayer* audio = new River::AudioPlayer();
 		audio->setSpatial(true);
 		audio->setRange(500);
@@ -212,41 +242,18 @@ void MainLayer::onKeyEvent(River::KeyEvent& e) {
 		audio->play(GlobalAssets::Sounds::COINS);
 	}
 
-	if (e.key == River::Key::F && e.action == River::KeyEvent::Action::DOWN) {
+	if (key == River::Key::F) {
 		River::AudioPlayer* audio = new River::AudioPlayer();
 		//audio->loop(true);
 		audio->play(GlobalAssets::Sounds::COUNTDOWN);
 	}
 
-	if (e.key == River::Key::G && e.action == River::KeyEvent::Action::DOWN) {
+	if (key == River::Key::G) {
 		River::AudioPlayer* audio = new River::AudioPlayer();
 		//audio->loop(true);
 		audio->setVolume(0.5);
 		audio->play(GlobalAssets::Sounds::CLASSICAL_MUSIC);
 	}
-
-	if( e.key == River::Key::W && e.action == River::KeyEvent::Action::PRESSED ){
-		audioDepth += 5;
-		std::cout << "Audio depth: " << audioDepth << std::endl;
-	}
-
-	if( e.key == River::Key::E && e.action == River::KeyEvent::Action::PRESSED ){
-		audioDepth -= 5;
-		std::cout << "Audio depth: " << audioDepth << std::endl;
-	}
-
-	if( e.key == River::Key::A && e.action == River::KeyEvent::Action::PRESSED ){
-		camera->adjustRotation(5);
-		River::AudioListener::setRotation(camera->getRotation());
-		std::cout << "Rotation: " << camera->getRotation() << std::endl;
-	}
-
-	if( e.key == River::Key::S && e.action == River::KeyEvent::Action::PRESSED ){
-		camera->adjustRotation(-5);
-		River::AudioListener::setRotation(camera->getRotation());
-		std::cout << "Rotation: " << camera->getRotation() << std::endl;
-	}
-	
 };
 
 
