@@ -18,6 +18,10 @@ MainLayer::MainLayer(const std::string& arg)
 
 	River::Keyboard::keyDownListeners.add(this, [this](auto e) { onKeyDownEvent(e); });
 
+	River::Keyboard::characterInputListeners.add(this, [this](auto e) {
+		std::cout << "Character: " << (char)e.getCharacter() << std::endl;
+	});
+
 	River::Window::resolutionChangedListeners.add(this, [](River::ResolutionEvent& event) {
 		auto resolution = event.getResolution();
 		printf("Resolution listener: %ix%i\n", resolution.width, resolution.height);

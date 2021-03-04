@@ -118,6 +118,12 @@ namespace River {
 		}
 
 
+		static void characterCallback(GLFWwindow* glfwWindow, unsigned int codepoint) {
+			char32_t character = (char32_t)codepoint;
+			KeyboardController::registerCharacterEvent(character);
+		}
+
+
 		static void mousePosCallback(GLFWwindow* glfwWindow, double mouseX, double mouseY) {
 
 			mouseX *= Window::viewportResolution.width / (double)Window::resolution.width;
@@ -225,6 +231,7 @@ namespace River {
 		previousFpsTime = glfwGetTime();
 
 		glfwSetKeyCallback(NativeWindow::window, NativeWindow::keyCallback);
+		glfwSetCharCallback(NativeWindow::window, NativeWindow::characterCallback);
 
 		double mouseX, mouseY;
 		glfwGetCursorPos(NativeWindow::window, &mouseX, &mouseY);

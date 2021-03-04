@@ -9,12 +9,23 @@ namespace River {
 
 	class KeyboardController;
 
+	/**
+	 * @brief	Interface for handling inputs from the keyboard,
+	 *			including raw key and character events.
+	*/
 	class Keyboard {
 		friend KeyboardController;
 	public:
 		
+		/**
+		 * @brief	Listeners that are notified when a key is pushed
+		 *			(not held/pressed) down
+		*/
 		static inline ListenerMap<KeyEvent&> keyDownListeners;
 
+		/**
+		 * @brief	Listeners that are notified when a key is released
+		*/
 		static inline ListenerMap<KeyEvent&> keyUpListeners;
 
 		static inline ListenerMap<CharacterEvent&> characterInputListeners;
