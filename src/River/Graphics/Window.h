@@ -14,30 +14,63 @@ namespace River {
 
 	class Game;
 
-	// TODO: Inform user that the primary monitor is used
-
+	/**
+	 * @brief	Represents the window used to display the single window that
+	 *			the game is displayed within.
+	 * 
+	 *			Initialization:
+	 *			The Window is opened automatically when the game is started,
+	 *			but properties (resolution, title etc.) may be initialized before
+	 *			and these properties will be applied when it opens.
+	 *			
+	 *			Viewport vs. resolution:
+	 *			The viewport is the actual pixel size of the OpenGL context, and
+	 *			may differ from the resolution. As such, the viewport should
+	 *			always be used mouse calculations, and world to window coordinate
+	 *			conversion
+	 * 
+	 *			Monitor:
+	 *			The Window always uses the device's primary monitor
+	*/
 	class Window {
 	public:
 		friend Game;
 		
 		class NativeWindow; friend NativeWindow;	
-		
+
 		static bool isOpen();
 
+		/**
+		 * @brief	Sets the title of the Window (displayed in the Window border)
+		*/
 		static void setTitle(std::string title);
 
 		static std::string getTitle();
 		
-		// Note:
-		//  - User should query the actual resolution with getResolution(..)
+		/**
+		 * @brief	Request the Window to change to the given size. The actual
+		 *			size may differ. In fullscreen mode the resolution is set
+         *			to the resolution most closely matching one of the resolutions
+		 *			retrieved by querying Screen::getSupportedResolutions().
+		 *			
+		 *			As such, its recommended to bind resolution dependant logic
+		 *			on the resolutionChangedListeners, instead of getResolution().
+		 * 
+		 * @throws	River::InvalidArgumentException	if either Resolution width or
+		 *			height is 0
+		*/
 		static void setResolution(const Resolution& size);
 
 		static const Resolution& getResolution();
 
-		// dont resize within this listener
+		/**
+		 * @brief	Fired when the Window resolution changes.
+		 * 
+		 * @warning	Do not change the resolution within this listener, as it
+		 *			may result in undefined behavior
+		*/
 		static inline ListenerMap<ResolutionEvent&> resolutionChangedListeners;
 
-		// removes first instant
 		static const Resolution& getViewportResolution();
 
 		static inline ListenerMap<ResolutionEvent&> viewportChangedListeners;
@@ -48,11 +81,13 @@ namespace River {
 
 		static bool isFullscreen();
 
-		// Centers on primary monitor
-		// Has no effect if fullscreen
+	
+		/**
+		 * @brief	Centers the Window on the primary monitor.
+		 *			Has no effect if Window is fullscreen
+		*/
 		static void center();
 
-		// TODO: Below functions should be moved to seperate "graphics context" class
 		static void setClearColor(Color color);
 
 		static void clear();
