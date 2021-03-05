@@ -3,6 +3,7 @@
 #include <functional>
 #include <map>
 
+#include "River/Error.h"
 
 namespace River {
 

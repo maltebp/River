@@ -7,6 +7,9 @@
 
 namespace River {
 
+	/**
+	 * @brief	Represents the primary screen/monitor of the executing device
+	*/
 	class Screen {
 	public:
 
