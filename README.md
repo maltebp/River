@@ -1,5 +1,5 @@
 # River
-A hobby-level, one-man 2D game framework written as a C++17 dynamic library.
+A hobby-level, one-man 2D game framework written as a C++17 library
 
 ## Features
 The framework is under constant development, but as of now the following features are included:
@@ -12,24 +12,21 @@ The framework is under constant development, but as of now the following feature
  - Rendering/logic layers
  - Cameras
  - Keyboard and mouse events
+ - Spatial Audio
 
 
 ### To come
 Some core features that are yet to be implemented
- - Sounds
  - Collision system
  - Particles
  - Lighting
- - Screen resolution management
-
- ___Currently working on___: Implementing a somewhat simple 3d audio system
-
 
 ## Technologies / libraries
 The project makes use of following external libraries / technologies:
 
  - GLFW
  - OpenGL
+ - OpenAL
  - FreeType
  - StbImage
  
