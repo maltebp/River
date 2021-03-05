@@ -1,6 +1,6 @@
 #pragma once
 
-#include "River/Event/Event.h"
+#include "River/Utility/Event.h"
 #include "River/Primitives/MouseButton.h"
 
 namespace River {
@@ -29,14 +29,16 @@ namespace River {
 	};
 
 	struct MouseButtonEvent : public Event {
-		
+	public:
 
-		MouseButtonEvent(const MouseButton button, const MouseButtonAction action)
-			: button(button), action(action)
+		MouseButtonEvent(const MouseButton button)
+			: button(button)
 		{}
-			
+
+
+	public:
+
 		const MouseButton button;
-		const MouseButtonAction action;
 
 	};
 

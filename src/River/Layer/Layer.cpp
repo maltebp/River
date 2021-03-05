@@ -3,7 +3,6 @@
 namespace River {
 
 
-
 	Layer::~Layer() {
 		// When a layer is deleted, it will call its destroy callback
 		// and recursively delete its children
@@ -78,84 +77,29 @@ namespace River {
 	}
 
 
-	void Layer::mouseMoveEvent(MouseMoveEvent& e) {
-		for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
-			if( e.isConsumed() ) break;
-			(*it)->mouseMoveEvent(e);
-		}
-		if( !e.isConsumed() ) onMouseMoveEvent(e);
-		if( !e.isConsumed() ) onMouseMoveEventAction(e);
+	/**
+	 * @brief	Sets an action function to be called immediately after the matching virtual function.
+	 */
+	void Layer::onCreate(std::function<void()> action) {
+		if( action == nullptr ) throw InvalidArgumentException("Action must not be nullptr");
+		onCreateAction = action;
 	}
-
-
-	void Layer::mouseScrollEvent(MouseScrollEvent& e) {
-		for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
-			if( e.isConsumed() ) break;
-			(*it)->mouseScrollEvent(e);
-		}
-		if( !e.isConsumed() ) onMouseScrollEvent(e);
-		if( !e.isConsumed() ) onMouseScrollEventAction(e);
-	}
-
-
-	void Layer::mouseButtonEvent(MouseButtonEvent& e) {
-		for( auto it = layers.rbegin(); it != layers.rend(); it++ ) {
-			if( e.isConsumed() ) break;
-			(*it)->mouseButtonEvent(e);
-		}
-		if( !e.isConsumed() ) onMouseButtonEvent(e);
-		if( !e.isConsumed() ) onMouseButtonEventAction(e);
-	}
-
 
 	/**
-		 * @brief	Sets an action function to be called immediately after the matching virtual function.
-		*/
-		void Layer::onCreate(std::function<void()> action) {
-			if( action == nullptr ) throw InvalidArgumentException("Action must not be nullptr");
-			onCreateAction = action;
-		}
+	 * @brief	Sets an action function to be called immediately after the matching virtual function.
+	 */
+	void Layer::onUpdate(std::function<void()> action) {
+		if( action == nullptr ) throw InvalidArgumentException("Action must not be nullptr");
+		onUpdateAction = action;
+	}
 
-		/**
-		 * @brief	Sets an action function to be called immediately after the matching virtual function.
-		*/
-		void Layer::onUpdate(std::function<void()> action) {
-			if( action == nullptr ) throw InvalidArgumentException("Action must not be nullptr");
-			onUpdateAction = action;
-		}
-
-		/**
-		 * @brief	Sets an action function to be called immediately after the matching virtual function.
-		*/
-		void Layer::onDestroy(std::function<void()> action) {
-			if( action == nullptr ) throw InvalidArgumentException("Action must not be nullptr");
-			onDestroyAction = action;
-		}
-
-
-		/**
-		 * @brief	Sets an action function to be called immediately after the matching virtual function.
-		*/
-		void Layer::onMouseMoveEvent(std::function<void(MouseMoveEvent&)> action) {
-			if( action == nullptr ) throw InvalidArgumentException("Action must not be nullptr");
-			onMouseMoveEventAction = action;
-		}
-
-		/**
-		 * @brief	Sets an action function to be called immediately after the matching virtual function.
-		*/
-		void Layer::onMouseScrollEvent(std::function<void(MouseScrollEvent&)> action) {
-			if( action == nullptr ) throw InvalidArgumentException("Action must not be nullptr");
-			onMouseScrollEventAction = action;
-		}
-
-		/**
-		 * @brief	Sets an action function to be called immediately after the matching virtual function.
-		*/
-		void Layer::onMouseButtonEvent(std::function<void(MouseButtonEvent&)> action) {
-			if( action == nullptr ) throw InvalidArgumentException("Action must not be nullptr");
-			onMouseButtonEventAction = action;
-		}
+	/**
+	 * @brief	Sets an action function to be called immediately after the matching virtual function.
+	 */
+	void Layer::onDestroy(std::function<void()> action) {
+		if( action == nullptr ) throw InvalidArgumentException("Action must not be nullptr");
+		onDestroyAction = action;
+	}
 
 }
 

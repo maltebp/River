@@ -3,9 +3,9 @@
 #include <functional>
 
 #include "River/Graphics/Camera/Camera.h"
-#include "River/Event/MouseEvent/MouseMoveEvent.h"
-#include "River/Event/MouseEvent/MouseScrollEvent.h"
-#include "River/Event/MouseEvent/MouseButtonEvent.h"
+#include "River/Mouse/MouseMoveEvent.h"
+#include "River/Mouse/MouseScrollEvent.h"
+#include "River/Mouse/MouseButtonEvent.h"
 
 
 namespace River {
@@ -89,42 +89,28 @@ namespace River {
 		 * @brief	Sets an action function to be called immediately after the matching virtual function.
 		*/
 		void onDestroy(std::function<void()> action);
-
-
-		/**
-		 * @brief	Sets an action function to be called immediately after the matching virtual function.
-		*/
-		void onMouseMoveEvent(std::function<void(MouseMoveEvent&)> action);
-
-		/**
-		 * @brief	Sets an action function to be called immediately after the matching virtual function.
-		*/
-		void onMouseScrollEvent(std::function<void(MouseScrollEvent&)> action);
-
-		/**
-		 * @brief	Sets an action function to be called immediately after the matching virtual function.
-		*/
-		void onMouseButtonEvent(std::function<void(MouseButtonEvent&)> action);
 		
 
 	protected:
+
 		Layer() {}
+
 		virtual ~Layer();
 
 		/**
 		 * @brief	Method called when the Layer has been effectively added to its parent (after the parent has been cleaned)
 		*/
 		virtual void onCreate(){}
-		virtual void onUpdate(){}
-		virtual void onDestroy(){}
 
-		virtual void onMouseMoveEvent(MouseMoveEvent&) {}
-		virtual void onMouseScrollEvent(MouseScrollEvent&) {}
-		virtual void onMouseButtonEvent(MouseButtonEvent&) {}
+		virtual void onUpdate(){}
+
+		virtual void onDestroy(){}
 
 
 	private:
+
 		Layer(Layer&) = delete;
+
 		Layer& operator=(Layer& other) = delete;
 
 		/**
@@ -133,29 +119,29 @@ namespace River {
 		void clean();
 
 		void update();
-		void destroy();
 
-		void mouseMoveEvent(MouseMoveEvent&);
-		void mouseScrollEvent(MouseScrollEvent&);
-		void mouseButtonEvent(MouseButtonEvent&);
+		void destroy();
 
 
 	private:
+
 		Layer* parent = nullptr;
 
 		std::vector<Layer*> layers;
+
 		std::vector<Layer*> layersToAdd;
+
 		std::vector<Layer*> layersToRemove;
 
 
 		// Actions - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 		std::function<void()> onCreateAction = [](){};
+
 		std::function<void()> onUpdateAction = [](){};
+
 		std::function<void()> onDestroyAction = [](){};
-		
-		std::function<void(MouseMoveEvent&)> onMouseMoveEventAction = [](auto e){};
-		std::function<void(MouseScrollEvent&)> onMouseScrollEventAction = [](auto e){};
-		std::function<void(MouseButtonEvent&)> onMouseButtonEventAction = [](auto e){};
+
 		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 		friend Game;

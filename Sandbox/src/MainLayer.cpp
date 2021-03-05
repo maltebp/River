@@ -16,10 +16,28 @@ bool listenerAdded = false;
 MainLayer::MainLayer(const std::string& arg)
 {
 
-	River::Keyboard::keyDownListeners.add(this, [this](auto e) { onKeyDownEvent(e); });
+	River::Keyboard::keyDownListeners.add(this, [this](auto e) {
+		onKeyDownEvent(e);
+	});
 
 	River::Keyboard::characterInputListeners.add(this, [this](auto e) {
 		std::cout << "Character: " << (char)e.getCharacter() << std::endl;
+	});
+
+	River::Mouse::buttonDownListeners.add(this, [this](auto e) {
+		std::cout << "Mouse button down: " << e.button.getName() << std::endl;
+	});
+
+	River::Mouse::buttonUpListeners.add(this, [this](auto e) {
+		std::cout << "Mouse button up: " << e.button.getName() << std::endl;
+	});
+
+	River::Mouse::moveListeners.add(this, [this](auto e) {
+		std::cout << "Mouse move: " << "(" << e.positionX << "," << e.positionY << ")" << std::endl;
+	});
+
+	River::Mouse::scrollListeners.add(this, [this](auto e) {
+		std::cout << "Mouse scroll: " << e.amount << std::endl;
 	});
 
 	River::Window::resolutionChangedListeners.add(this, [](River::ResolutionEvent& event) {
@@ -107,6 +125,10 @@ void MainLayer::onCreate() {
 
 
 void MainLayer::onUpdate() {
+
+	if( River::Mouse::isButtonPressed(River::MouseButtons::LEFT, true) ) {
+		std::cout << "Mouse left pressed!" << std::endl;
+	}
 
 	if( River::Keyboard::isKeyPressed(River::Key::W, true) ) {
 		audioDepth += 5;
@@ -258,17 +280,4 @@ void MainLayer::onKeyDownEvent(River::KeyEvent& e) {
 		audio->setVolume(0.5);
 		audio->play(GlobalAssets::Sounds::CLASSICAL_MUSIC);
 	}
-};
-
-
-void MainLayer::onMouseMoveEvent(River::MouseMoveEvent& e) {
-	//std::cout << "MouseMove: " << (double)e.positionX << " " << (double)e.positionY << std::endl;
-};
-
-void MainLayer::onMouseScrollEvent(River::MouseScrollEvent& e) {
-	//std::cout << "MouseScroll: " << (double)e.amount << std::endl;
-};
-
-void MainLayer::onMouseButtonEvent(River::MouseButtonEvent& e) {
-	//std::cout << "MouseButton: " << e.button << " " << (int)e.action << std::endl;
 };

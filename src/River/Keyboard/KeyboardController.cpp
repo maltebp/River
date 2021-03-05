@@ -33,8 +33,6 @@ namespace River {
 
 		keyEventState.up = true;
 		keyEventState.pressed = false;
-
-		std::cout << "Key pressed = false" << std::endl;
 	}
 
 

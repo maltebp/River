@@ -120,6 +120,8 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\Mouse\MouseController.h" />
+    <ClInclude Include="src\River\Mouse\Mouse.h" />
     <ClInclude Include="src\River\Keyboard\KeyboardController.h" />
     <ClInclude Include="src\River\Keyboard\CharacterEvent.h" />
     <ClInclude Include="src\River\Keyboard\Keyboard.h" />
@@ -134,11 +136,10 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Asset\AssetCollection.h" />
     <ClInclude Include="src\River\Asset\Asset.h" />
     <ClInclude Include="src\River\Graphics\Text\Text.h" />
+    <ClInclude Include="src\River\Mouse\MouseButtonEvent.h" />
+    <ClInclude Include="src\River\Mouse\MouseMoveEvent.h" />
+    <ClInclude Include="src\River\Mouse\MouseScrollEvent.h" />
     <ClInclude Include="src\River\Primitives\MouseButton.h" />
-    <ClInclude Include="src\River\Event\MouseEvent\MouseButtonEvent.h" />
-    <ClInclude Include="src\River\Event\MouseEvent\MouseScrollEvent.h" />
-    <ClInclude Include="src\River\Event\MouseEvent\MouseMoveEvent.h" />
-    <ClInclude Include="src\River\Event\MouseEvent\MouseEventController.h" />
     <ClInclude Include="src\River\Graphics\SpriteRenderingSystem.h" />
     <ClInclude Include="src\River\Graphics\SpriteAnimation\SpriteAnimationSystem.h" />
     <ClInclude Include="src\River\Graphics\SpriteAnimation\SpriteAnimation.h" />
@@ -152,7 +153,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Graphics\Texture\Texture.h" />
     <ClInclude Include="src\River\Graphics\Texture\Image.h" />
     <ClInclude Include="src\River\Keyboard\KeyEvent.h" />
-    <ClInclude Include="src\River\Event\Event.h" />
+    <ClInclude Include="src\River\Utility\Event.h" />
     <ClInclude Include="src\River\Graphics\Camera\Camera.h" />
     <ClInclude Include="src\River\Graphics\Texture\ImageBinder.h" />
     <ClInclude Include="src\River\Layer\Layer.h" />
@@ -173,6 +174,8 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Graphics\TextRenderingSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\River\Mouse\MouseController.cpp" />
+    <ClCompile Include="src\River\Mouse\Mouse.cpp" />
     <ClCompile Include="src\River\Keyboard\Keyboard.cpp" />
     <ClCompile Include="src\River\Keyboard\KeyboardController.cpp" />
     <ClCompile Include="src\River\Graphics\Screen.cpp" />
@@ -182,7 +185,6 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClCompile Include="src\River\Audio\AudioAsset.cpp" />
     <ClCompile Include="src\River\Asset\Asset.cpp" />
     <ClCompile Include="src\River\Asset\AssetCollection.cpp" />
-    <ClCompile Include="src\River\Event\MouseEvent\MouseEventController.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteRenderingSystem.cpp" />
     <ClCompile Include="src\River\Graphics\Text\Font.cpp" />
     <ClCompile Include="src\River\Graphics\Text\FontInstance.cpp" />

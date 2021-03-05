@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Key.h"
-#include "River/Event/Event.h"
+#include "River/Utility/Event.h"
 
 namespace River {
 

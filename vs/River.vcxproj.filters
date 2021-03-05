@@ -51,9 +51,6 @@
     <ClInclude Include="src\River\Graphics\Camera\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\River\Event\Event.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\River\Graphics\TextRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -82,18 +79,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\River\Graphics\Transform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\River\Event\MouseEvent\MouseEventController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\River\Event\MouseEvent\MouseMoveEvent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\River\Event\MouseEvent\MouseButtonEvent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\River\Event\MouseEvent\MouseScrollEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\River\Primitives\MouseButton.h">
@@ -168,6 +153,24 @@
     <ClInclude Include="src\River\Keyboard\KeyboardController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\River\Mouse\MouseButtonEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Mouse\MouseMoveEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Mouse\MouseScrollEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Mouse\Mouse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Utility\Event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\River\Mouse\MouseController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\River\Game.cpp">
@@ -212,9 +215,6 @@
     <ClCompile Include="src\River\Graphics\SpriteRenderingSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\River\Event\MouseEvent\MouseEventController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\River\Asset\AssetCollection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -255,6 +255,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\River\Keyboard\KeyboardController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\River\Mouse\Mouse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\River\Mouse\MouseController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

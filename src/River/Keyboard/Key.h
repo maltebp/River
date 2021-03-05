@@ -2,6 +2,8 @@
 
 namespace River {
 
+	// TODO: Move this to primitive folder
+
 	/**
 	 * @brief	Defines a particular keyboard key as an integer value.
 	 *

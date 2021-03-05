@@ -12,7 +12,7 @@
 #include "Audio/AL.h"
 #include "Audio/AudioPlayer.h"
 #include "Keyboard/KeyboardController.h"
-#include "Event/MouseEvent/MouseEventController.h"
+#include "River/Mouse/MouseController.h"
 
 
 namespace River {
@@ -54,31 +54,25 @@ namespace River {
 
 		printf("Starting game loop\n");
 		while( !Window::shouldClose() ) {
+
 			Window::clear();
 
 			rootLayer->clean();
 
-			Window::invokeEvents();
-			KeyboardController::invokeEvents();
-
-			// Fire Mouse Movement Events
-			if( MouseEventController::hasMovementOccured() ) {
-				auto e = MouseEventController::getMouseMoveEvent();
-				rootLayer->mouseMoveEvent(e);
-			}
-
-			// Fire Mouse Scroll Events
-			if( MouseEventController::hasScrollingOccured() ) {
-				auto e = MouseEventController::getMouseScrollEvent();
-				rootLayer->mouseScrollEvent(e);
-			}
-
-			// Fire Mouse Button Events
-			for( auto& buttonEvent : MouseEventController::getMouseButtonEvents() )
-				rootLayer->mouseButtonEvent(buttonEvent);
-
 			// TODO: Use correct time here
 			AudioPlayer::updatePlayers(0.0166666666666);
+
+			// Note on events:
+			// A button press from the mouse is not registered as pressed
+			// in the same event cycle as a Keyboard event. However, it
+			// will be available in the next cycle, and for now it shouldn't
+			// cause a problem
+
+			Window::invokeEvents();
+
+			KeyboardController::invokeEvents();
+
+			MouseController::invokeEvents();
 
 			rootLayer->update();
 		}

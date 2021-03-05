@@ -14,11 +14,6 @@ public:
 
 	void onKeyDownEvent(River::KeyEvent& e);
 
-	void onMouseMoveEvent(River::MouseMoveEvent& e) override;
-	void onMouseScrollEvent(River::MouseScrollEvent& e) override;
-	void onMouseButtonEvent(River::MouseButtonEvent& e) override;
-
-
 private:
 	void createSanta(double x, double y, unsigned int depth);
 	River::ECS::Entity* createText(const std::string& text, unsigned int size, double x, double y);

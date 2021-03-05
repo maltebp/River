@@ -4,7 +4,7 @@
 #include <vector>
 #include <functional>
 
-#include "River/Event/Event.h"
+#include "River/Utility/Event.h"
 #include "River/Graphics/ResolutionEvent.h"
 #include "River/Primitives/Resolution.h"
 #include "River/Primitives/Color.h"

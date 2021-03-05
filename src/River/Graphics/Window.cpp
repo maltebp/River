@@ -7,23 +7,11 @@
 
 #include "GL.h"
 #include "Screen.h"
+#include "River/Mouse/MouseController.h"
 #include "River/Keyboard/KeyboardController.h"
-#include "River/Event/MouseEvent/MouseEventController.h"
 
 
 namespace River {
-
-
-	/**
-	 * @brief	Converts a glfw mouse button action, to a River::MouseButtonAction
-	 */
-		MouseButtonAction glfwConvertMouseAction(int glfwCode) {
-			if( glfwCode == GLFW_PRESS ) return MouseButtonAction::DOWN;
-			if( glfwCode == GLFW_RELEASE ) return MouseButtonAction::UP;
-			// TODO: Log some  (shouldn't happen)
-			std::cout << "WARNING - Unknown mouse action code: " << glfwCode << std::endl;
-			return MouseButtonAction::UNKNOWN;
-		}
 
 	/**
 	 * @brief	Converts a glfw mouse button code to a River::MouseButton
@@ -58,31 +46,44 @@ namespace River {
 		
 		// Callback for GLFW window size change function
 		static void windowSizeCallback(GLFWwindow* window, int width, int height) {
-			Resolution newResolution((unsigned int)width, (unsigned int)height);
+			updateWindowSize(width, height);
+		}
 
-			if( newResolution.width < 0 || newResolution.height < 0 ) {
+		static void updateWindowSize(int width, int height) {
+
+			if( width < 0 || height < 0 ) {
 				// Just a safety precaution (not sure if it's ever possible)
 				throw new Exception("GLFW window size callback passed negative width or height");
-			}			
+			}
+
+			Resolution newResolution((unsigned int)width, (unsigned int)height);
 
 			// Window size is set to 0x0 when it gets minimized (both fullscreen and windowed mode)
-			if( newResolution.width == 0 || newResolution.height == 0  ) return;
+			if( newResolution.width == 0 || newResolution.height == 0 ) return;
 
 			if( newResolution == Window::resolution ) return;
 
 			Window::resolution = newResolution;
 
+			// Will cause event to be fired
 			resolutionChanged = true;
 		}
 
 
 		static void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
-			Resolution newViewport((unsigned int)width, (unsigned int)height);
+			updateViewport(width, height);
+		}
 
-			if( newViewport.width < 0 || newViewport.height < 0 ) {
+		static void updateViewport(int width, int height) {
+		
+			if( width < 0 || height < 0 ) {
 				// Just a safety precaution (not sure if it's ever possible)
 				throw new Exception("GLFW window size callback passed negative width or height");
 			}
+
+			Resolution newViewport((unsigned int)width, (unsigned int)height);
+
+			std::cout << "New viewport: " << width << "x" << height << std::endl;
 
 			// Window size is set to 0x0 when it gets minimized (both fullscreen and windowed mode)
 			if( newViewport.width == 0 || newViewport.height == 0 ) return;
@@ -93,6 +94,7 @@ namespace River {
 
 			glViewport(0, 0, (GLsizei)viewportResolution.width, (GLsizei)viewportResolution.height);
 
+			// Will cause event to be fired
 			viewportChanged = true;
 		}
 
@@ -133,22 +135,32 @@ namespace River {
 			mouseY *= -1;
 			mouseY += Window::viewportResolution.height / 2.0;
 
-			MouseEventController::registerMouseMovement(mouseX, mouseY);
+			MouseController::registerMouseMovement(mouseX, mouseY);
 		}
 
 
 		static void mouseScrollCallback(GLFWwindow* glfwWindow, double xOffset, double yOffset) {
-			MouseEventController::registerMouseScroll(yOffset);
+			MouseController::registerMouseScroll(yOffset);
 			// yOffset is the classic scroll direction, while xOffset is also used for controllers,
 			// which are not supported in this framework yet
 		}
 
 
-		static void mouseButtonCallback(GLFWwindow* glfwWindow, int button, int action, int mode) {
-			MouseEventController::registerMouseButtonAction(
-				glfwConvertMouseButton(button),
-				glfwConvertMouseAction(action)
-			);
+		static void mouseButtonCallback(GLFWwindow* glfwWindow, int button, int action, int modifierBits) {
+			// Modifier bits are unused (ALT, SHIFT etc...), as they are not important for games
+
+			if( action == GLFW_PRESS ) {
+				MouseController::registerButtonDown(glfwConvertMouseButton(button));
+				return;
+			}
+
+			if( action == GLFW_RELEASE ) {
+				MouseController::registerButtonUp(glfwConvertMouseButton(button));
+				return;
+			}
+
+			// TODO: Log warning
+			std::cout << "WARNING - Unknown mouse action code: " << action << std::endl;
 		}
 
 
@@ -208,7 +220,6 @@ namespace River {
 			center();
 		}
 
-
 		// Set window to current
 		glfwMakeContextCurrent(NativeWindow::window);
 
@@ -219,10 +230,10 @@ namespace River {
 
 		GL(
 			glEnable(GL_ALPHA_TEST);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS); // TODO: This is redundandt (GL_LESS is default)
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LESS); // TODO: This is redundandt (GL_LESS is default)
 		);
 
 		// This enable binary alpha blending
@@ -233,10 +244,6 @@ namespace River {
 		glfwSetKeyCallback(NativeWindow::window, NativeWindow::keyCallback);
 		glfwSetCharCallback(NativeWindow::window, NativeWindow::characterCallback);
 
-		double mouseX, mouseY;
-		glfwGetCursorPos(NativeWindow::window, &mouseX, &mouseY);
-		MouseEventController::initialize(mouseX, mouseY);
-
 		glfwSetCursorPosCallback(NativeWindow::window, NativeWindow::mousePosCallback);
 		glfwSetScrollCallback(NativeWindow::window, NativeWindow::mouseScrollCallback);
 		glfwSetMouseButtonCallback(NativeWindow::window, NativeWindow::mouseButtonCallback);
@@ -244,6 +251,20 @@ namespace River {
 		glfwSetWindowSizeCallback(NativeWindow::window, Window::NativeWindow::windowSizeCallback);
 		glfwSetFramebufferSizeCallback(NativeWindow::window, Window::NativeWindow::framebufferSizeCallback);
 
+		// Initialize window size
+		int windowWidth, windowHeight;
+		glfwGetWindowSize(NativeWindow::window, &windowWidth, &windowHeight);
+		NativeWindow::updateViewport(windowWidth, windowHeight);
+
+		// Initialize viewport
+		int framebufferWidth, framebufferHeight;
+		glfwGetFramebufferSize(NativeWindow::window, &framebufferWidth, &framebufferHeight);
+		NativeWindow::updateViewport(framebufferWidth, framebufferHeight);
+	
+		// Initialize mouse position
+		double mouseX, mouseY;
+		glfwGetCursorPos(NativeWindow::window, &mouseX, &mouseY);
+		MouseController::initialize(mouseX, mouseY);
 	}
 	
 

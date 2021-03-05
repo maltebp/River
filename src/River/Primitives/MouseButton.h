@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 
-#include <River/Error.h>
+#include "River/Error.h"
 
 
 namespace River {
@@ -12,9 +12,15 @@ namespace River {
 	struct MouseButton {
 	public:
 
+
+		MouseButton()
+			: code(0)
+		{}
+
+
 		/**
 		 * @brief Creates a new MouseButton, without defining a name for its code
-		 */
+		 */	
 		MouseButton(uint32_t code) :code(code) {}	
 
 
@@ -27,24 +33,30 @@ namespace River {
 			names.emplace(code, name);
 		}
 
+
 		const std::string& getName() const {
 			return names.find(code)->second;
 		}
 
+
 		const uint32_t code;
+
 
 		friend std::ostream& operator<<(std::ostream&, const MouseButton&);
 
 
 	private:
+
 		static inline std::unordered_map<uint32_t, std::string> names;		
+
 	};
 
-	
+
 	// Note: This remove the possibility of hashing this class. It could be implemented but it's to extensive
 	inline bool operator==(const MouseButton& btn1, const MouseButton& btn2) {
 		return btn1.code == btn2.code;
 	}
+
 
 	inline std::ostream& operator<<(std::ostream& strm, const MouseButton& btn) {
 		return strm << btn.getName();
