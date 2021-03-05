@@ -1,41 +1,69 @@
 #pragma once
 
+#include <algorithm>
+
+
 namespace River {
 
 	struct Color {
 
-		float r = 1.0;
-		float g = 1.0;
-		float b = 1.0;
-		float a = 1.0;
+		Color() { }
 
-	
-		Color() {}
-		Color(float r, float g, float b, float a) : r(r),  b(b), g(g), a(a) {}
-		Color(float r, float g, float b ) : r(r),  b(b), g(g) {}	
+		Color(float r, float g, float b, float a)
+			: r(r),  b(b), g(g), a(a)
+		{ }
+		
+		Color(float r, float g, float b )
+			: r(r),  b(b), g(g) 
+		{ }	
 
-
+		/**
+		 * @return	Whether alpha value is between 0 and 1 excluding both
+		*/
 		bool isPartiallyTransparent() const {
-			return a > 0.0 && a < 1.0;
+			return a > 0.0f && a < 1.0f;
 		}
 
-		// TODO: Create proper operator overloads
+		/**
+		 * @brief	Clamps all values to 0 and 1 
+		*/
+		void clamp() {
+			r = std::clamp(r, 0.0f, 1.0f);
+			g = std::clamp(g, 0.0f, 1.0f);
+			b = std::clamp(b, 0.0f, 1.0f);
+			a = std::clamp(a, 0.0f, 1.0f);
+		}
+
+
+	public:
+
+		float r = 1.0f;
+		
+		float g = 1.0f;
+		
+		float b = 1.0f;
+		
+		float a = 1.0f;
+
 	};
 	
 
+	/**
+	 * @brief	Const collection of pre-defined colors
+	*/
 	namespace Colors {
 
 		// Basic colors
-		const Color BLACK		(0.0, 0.0, 0.0);
-		const Color WHITE		(1.0, 1.0, 1.0);
-		const Color RED			(1.0, 0.0, 0.0);
-		const Color GREEN		(0.0, 1.0, 0.0);
-		const Color BLUE		(0.0, 0.0, 1.0);
-		const Color YELLOW		(1.0, 1.0, 0.0);
-		const Color MAGENTA		(1.0, 0.0, 1.0);
-		const Color CYAN		(0.0, 1.0, 1.0);
+		const Color BLACK		(0.0f, 0.0f, 0.0f);
+		const Color WHITE		(1.0f, 1.0f, 1.0f);
+		const Color RED			(1.0f, 0.0f, 0.0f);
+		const Color GREEN		(0.0f, 1.0f, 0.0f);
+		const Color BLUE		(0.0f, 0.0f, 1.0f);
+		const Color YELLOW		(1.0f, 1.0f, 0.0f);
+		const Color MAGENTA		(1.0f, 0.0f, 1.0f);
+		const Color CYAN		(0.0f, 1.0f, 1.0f);
 
 		// Special colors
-		const Color LAWN_GREEN	(0.486, 0.988, 0);
+		const Color LAWN_GREEN	(0.486f, 0.988f, 0.0f);
 	}
 }
