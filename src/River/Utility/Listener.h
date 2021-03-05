@@ -6,21 +6,28 @@
 
 namespace River {
 
-	// TODO: Comment this
 
 	template <typename ... Args>
 	using Listener = std::function<void(Args...)>;
 
+	
 	template <typename ... Args>
 	struct ListenerInvoker;
 
+
+	/**
+	 * @brief	Encapsulated container for listeners
+	 * @tparam ...Args Arguments to Listener
+	*/
 	template <typename ... Args>
 	struct ListenerMap {
 		friend ListenerInvoker<Args...>;
 	public:
 
 		void add(void* handle, Listener<Args...> listener) {
-			// TODO: Throw exception if void* is already registered
+			if( listeners.find(handle) != listeners.end() ) {
+				throw River::InvalidArgumentException("Handle already points to a Listener");
+			}
 			listeners[handle] = listener;
 		}
 
@@ -34,6 +41,11 @@ namespace River {
 
 	};
 
+
+	/**
+	 * @brief	Allows access to an encapsulated ListenerMap
+	 * @tparam ...Args Arguments to Listener
+	*/
 	template <typename ... Args>
 	struct ListenerInvoker {
 	public:

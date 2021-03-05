@@ -185,7 +185,6 @@ namespace River {
 	};
 
 
-
 	// =================================================================================================================
 
 
@@ -223,8 +222,6 @@ namespace River {
 		// Set window to current
 		glfwMakeContextCurrent(NativeWindow::window);
 
-		// TODO: Set this up a proper place (GL stuff)
-
 		// Get number of texture slots
 		GL(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextureSlots));
 
@@ -233,7 +230,7 @@ namespace River {
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			glEnable(GL_DEPTH_TEST);
-			glDepthFunc(GL_LESS); // TODO: This is redundandt (GL_LESS is default)
+			glDepthFunc(GL_LESS); // Note: This is redundandt (GL_LESS is default)
 		);
 
 		// This enable binary alpha blending
@@ -311,19 +308,8 @@ namespace River {
 			return;
 		}
 
-		// TODO: CLean up below
-
 		glfwSetWindowMonitor(NativeWindow::window, glfwGetPrimaryMonitor(), 0, 0, resolution.width, resolution.height, GLFW_DONT_CARE);
 
-		int width, height;
-		glfwGetWindowSize(NativeWindow::window, &width, &height);
-
-		int fWidth, fHeight;
-		glfwGetFramebufferSize(NativeWindow::window, &fWidth, &fHeight);
-		//glViewport(0, 0, fWidth, fHeight);
-
-		std::cout << "Fullscreen was set to " << width << "x" << height << std::endl;
-		std::cout << "Framebuffersize was set to " << fWidth << "x" << fHeight << std::endl;
 	}
 
 
@@ -372,23 +358,20 @@ namespace River {
 	void Window::center() {
 		if( fullscreen ) return;
 
-		// TODO: Utilize screen class
+
+		Resolution monitorResolution = Screen::getResolution();
 
 		// Retrieve primary monitor info to center window
 		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-		const GLFWvidmode* monitorVideoMode = glfwGetVideoMode(monitor);
 		int monitorX;
 		int monitorY;
 		glfwGetMonitorPos(monitor, &monitorX, &monitorY);
 
-		int windowX = monitorX + (monitorVideoMode->width - resolution.width) / 2;
-		int windowY = monitorY + (monitorVideoMode->height - resolution.height) / 2;
+		int windowX = monitorX + (monitorResolution.width - resolution.width) / 2;
+		int windowY = monitorY + (monitorResolution.height - resolution.height) / 2;
 
 		glfwSetWindowPos(NativeWindow::window, windowX, windowY);
 	}
-
-
-
 
 
 	void Window::close() {
@@ -400,10 +383,7 @@ namespace River {
 		return glfwWindowShouldClose(NativeWindow::window);
 	}
 
-	
-	
 
-	// TODO: This should not be here
 	unsigned int Window::getNumTextureSlots() {
 		if (numTextureSlots == 0)
 			throw River::Exception("Number of texture slots is 0");
@@ -434,7 +414,6 @@ namespace River {
 		}
 
 		glfwPollEvents();
-
 	}
 
 
