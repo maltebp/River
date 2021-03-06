@@ -32,9 +32,9 @@ namespace River {
 			throw Exception(msgStream.str());
 		}
 
-		std::cout << "GLEW initialized" << std::endl;
-		std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
-		std::cout << "Graphics card: " << glGetString(GL_RENDERER) << std::endl;
+		//std::cout << "GLEW initialized" << std::endl;
+		//std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
+		//std::cout << "Graphics card: " << glGetString(GL_RENDERER) << std::endl;
 
 		// Initialize audio system
 		AL::initialize();
@@ -42,11 +42,9 @@ namespace River {
 		Window::setClearColor(Colors::BLACK);
 
 		if( onStart != nullptr ) {
-			printf("Running on start callback\n");	
 			onStart();
 		}
 
-		printf("Starting game loop\n");
 		while( !Window::shouldClose() ) {
 
 			Window::clear();
@@ -71,7 +69,6 @@ namespace River {
 			rootLayer->update();
 		}
 
-		printf("Game loop stopped\n");
 	}
 
 

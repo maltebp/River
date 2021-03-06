@@ -85,8 +85,6 @@ namespace River {
 
 			Resolution newViewport((unsigned int)width, (unsigned int)height);
 
-			std::cout << "New viewport: " << width << "x" << height << std::endl;
-
 			// Window size is set to 0x0 when it gets minimized (both fullscreen and windowed mode)
 			if( newViewport.width == 0 || newViewport.height == 0 ) return;
 
