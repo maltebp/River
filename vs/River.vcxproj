@@ -76,9 +76,7 @@
       <AdditionalLibraryDirectories>$(ProjectDir)..\lib\OpenAL\libs\Win64\;$(ProjectDir)..\lib\;$(ProjectDir)..\lib\glew\lib\$(Configuration)\$(Platform)\;$(ProjectDir)..\lib\glfw\lib-vc2019\;$(ProjectDir)..\lib\freetype\lib\</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)..\src\*.h" "$(ProjectDir)..\build\include\" /S /Y /q
-xcopy "$(ProjectDir)..\src\*.hpp" "$(ProjectDir)..\build\include\" /S /Y /q
-xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Command>
+      <Command>python "$(ProjectDir)..\scripts\build_headers.py" "$(ProjectDir)..\headers" "$(ProjectDir)..\build\include"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>rd $(ProjectDir)..\build\include /s /q 2&gt;nul</Command>
