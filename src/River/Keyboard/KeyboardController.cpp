@@ -8,13 +8,13 @@ namespace River {
 
 
 	namespace {
-		std::vector<Key> keyUpEvents;
-		std::vector<Key> keyDownEvents;
+		std::vector<KeyboardKey> keyUpEvents;
+		std::vector<KeyboardKey> keyDownEvents;
 		std::unordered_set<char32_t> characterEvents;
 	}
 
 
-	void KeyboardController::registerKeyDown(Key key) {
+	void KeyboardController::registerKeyDown(KeyboardKey key) {
 
 		// Fetch they KeyEventState for the key
 		KeyEventState& keyEventState = keyEventStates[key];
@@ -26,7 +26,7 @@ namespace River {
 	}
 
 
-	void KeyboardController::registerKeyUp(Key key) {
+	void KeyboardController::registerKeyUp(KeyboardKey key) {
 
 		// Fetch they KeyEventState for the key
 		KeyEventState& keyEventState = keyEventStates[key];
@@ -51,7 +51,7 @@ namespace River {
 
 		// Create events from event states
 		for( auto& pair : keyEventStates ) {
-			Key key = pair.first;
+			KeyboardKey key = pair.first;
 			KeyEventState& keyEventState = pair.second;
 
 			if( keyEventState.down ) {

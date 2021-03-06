@@ -4,15 +4,13 @@
 
 namespace River {
 
-	// TODO: Move this to primitive folder
-
 	/**
 	 * @brief	Defines a particular keyboard key as an integer value.
 	 *
 	 * @details	Printing an object of this enum will print the key value. This can be used to lookup
 	 *			the key in this list, if you're in doubt which value a key has.
 	*/
-	enum class Key {
+	enum class KeyboardKey {
 		UNKNOWN = -1,
 		SPACE = 32,
 		APOSTROPHE = 39, /* ' */

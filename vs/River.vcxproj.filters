@@ -245,7 +245,7 @@
     <ClCompile Include="src\River\Primitives\Resolution.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\River\Keyboard\Key.h">
+    <ClCompile Include="src\River\Primitives\KeyboardKey.h">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\River\Keyboard\Keyboard.cpp">

@@ -130,23 +130,23 @@ void MainLayer::onUpdate() {
 		std::cout << "Mouse left pressed!" << std::endl;
 	}
 
-	if( River::Keyboard::isKeyPressed(River::Key::W, true) ) {
+	if( River::Keyboard::isKeyPressed(River::KeyboardKey::W, true) ) {
 		audioDepth += 5;
 		std::cout << "Audio depth: " << audioDepth << std::endl;
 	}
 
-	if( River::Keyboard::isKeyPressed(River::Key::E, true)) {
+	if( River::Keyboard::isKeyPressed(River::KeyboardKey::E, true)) {
 		audioDepth -= 5;
 		std::cout << "Audio depth: " << audioDepth << std::endl;
 	}
 
-	if( River::Keyboard::isKeyPressed(River::Key::A, true)) {
+	if( River::Keyboard::isKeyPressed(River::KeyboardKey::A, true)) {
 		camera->adjustRotation(5);
 		River::AudioListener::setRotation(camera->getRotation());
 		std::cout << "Rotation: " << camera->getRotation() << std::endl;
 	}
 
-	if( River::Keyboard::isKeyPressed(River::Key::S, true) ) {
+	if( River::Keyboard::isKeyPressed(River::KeyboardKey::S, true) ) {
 		camera->adjustRotation(-5);
 		River::AudioListener::setRotation(camera->getRotation());
 		std::cout << "Rotation: " << camera->getRotation() << std::endl;
@@ -170,26 +170,26 @@ void MainLayer::onUpdate() {
 void MainLayer::onKeyDownEvent(River::KeyEvent& e) {
 	std::cout << "KeyDown: " << (int) e.getKey() << std::endl;
 
-	River::Key key = e.getKey();
+	River::KeyboardKey key = e.getKey();
 
-	if (key == River::Key::RIGHT)
+	if (key == River::KeyboardKey::RIGHT)
 		camera->adjustX(10);
 
-	if (key == River::Key::LEFT)
+	if (key == River::KeyboardKey::LEFT)
 		camera->adjustX(-10);
 
-	if (key == River::Key::UP)
+	if (key == River::KeyboardKey::UP)
 		camera->adjustY(10);
 
-	if (key == River::Key::DOWN)
+	if (key == River::KeyboardKey::DOWN)
 		camera->adjustY(-10);
 
-	if( key == River::Key::ESCAPE) {
+	if( key == River::KeyboardKey::ESCAPE) {
 		River::Game::exit();
 		return;
 	}
 
-	if( key == River::Key::B ) {
+	if( key == River::KeyboardKey::B ) {
 		if( River::Window::isFullscreen() ) {
 			printf("Disabling fullscreen\n");
 			River::Window::disableFullscreen({ 400, 400 });
@@ -205,13 +205,13 @@ void MainLayer::onKeyDownEvent(River::KeyEvent& e) {
 	}	
 
 
-	if( key == River::Key::X ) {
+	if( key == River::KeyboardKey::X ) {
 		River::Window::setResolution({1920, 1080});
 		auto actualResolution = River::Window::getResolution();
 		std::cout << "Resolution was set to: " << actualResolution.width << "x" << actualResolution.height << std::endl;
 	}
 
-	if( key == River::Key::L ) {
+	if( key == River::KeyboardKey::L ) {
 		auto asset = GlobalAssets::Sounds::COINS;
 		if( asset->isLoaded() ) {
 			asset->unload();
@@ -224,7 +224,7 @@ void MainLayer::onKeyDownEvent(River::KeyEvent& e) {
 	}
 
 
-	if( key == River::Key::I  ) {
+	if( key == River::KeyboardKey::I  ) {
 		if( countdown.isPaused() ) {
 			countdown.unpause();
 			std::cout << "Unpaused countdown" << std::endl;
@@ -238,24 +238,24 @@ void MainLayer::onKeyDownEvent(River::KeyEvent& e) {
 		}
 	}
 
-	if( key == River::Key::O  ) {
+	if( key == River::KeyboardKey::O  ) {
 		countdown.stop();
 		std::cout << "Stopped countdown" << std::endl;
 	}
 
 
-	if( key == River::Key::P  ) {
+	if( key == River::KeyboardKey::P  ) {
 		countdown.play(GlobalAssets::Sounds::COUNTDOWN);
 		std::cout << "Started countdown" << std::endl;
 	}
 
-	if( key == River::Key::U  ) {
+	if( key == River::KeyboardKey::U  ) {
 		countdown.setTime(7);
 		std::cout << "Set countdown to 7 seconds" << std::endl;
 	}
 
 
-	if (key == River::Key::D ) {
+	if (key == River::KeyboardKey::D ) {
 		River::AudioPlayer* audio = new River::AudioPlayer();
 		audio->setSpatial(true);
 		audio->setRange(500);
@@ -268,13 +268,13 @@ void MainLayer::onKeyDownEvent(River::KeyEvent& e) {
 		audio->play(GlobalAssets::Sounds::COINS);
 	}
 
-	if (key == River::Key::F) {
+	if (key == River::KeyboardKey::F) {
 		River::AudioPlayer* audio = new River::AudioPlayer();
 		//audio->loop(true);
 		audio->play(GlobalAssets::Sounds::COUNTDOWN);
 	}
 
-	if (key == River::Key::G) {
+	if (key == River::KeyboardKey::G) {
 		River::AudioPlayer* audio = new River::AudioPlayer();
 		//audio->loop(true);
 		audio->setVolume(0.5);

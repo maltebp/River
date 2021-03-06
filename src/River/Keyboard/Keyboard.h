@@ -44,9 +44,9 @@ namespace River {
 		 * 
 		 * @param consume	Whether or not to consume the key press. If true,
 		 *					consecutive calls to this function with the same
-		 *					Key will return false.
+		 *					KeyboardKey will return false.
 		*/
-		static bool isKeyPressed(Key key, bool consume = false);
+		static bool isKeyPressed(KeyboardKey key, bool consume = false);
 
 
 	private:

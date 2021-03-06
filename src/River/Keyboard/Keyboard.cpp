@@ -8,7 +8,7 @@
 namespace River {
 
 
-	bool Keyboard::isKeyPressed(Key key, bool consume) {
+	bool Keyboard::isKeyPressed(KeyboardKey key, bool consume) {
 		auto iterator = KeyboardController::pressedEvents.find(key);
 		if( iterator == KeyboardController::pressedEvents.end() ) {
 			return false;

@@ -193,7 +193,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClCompile Include="src\River\Graphics\Text\FontInstance.cpp" />
     <ClCompile Include="src\River\Graphics\Texture\Texture.cpp" />
     <ClCompile Include="src\River\Graphics\Texture\Image.cpp" />
-    <ClCompile Include="src\River\Keyboard\Key.h" />
+    <ClCompile Include="src\River\Primitives\KeyboardKey.h" />
     <ClCompile Include="src\River\Graphics\Camera\Camera.cpp" />
     <ClCompile Include="src\River\Graphics\GL.cpp" />
     <ClCompile Include="src\River\Graphics\Texture\ImageBinder.cpp" />

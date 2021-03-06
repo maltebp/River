@@ -102,7 +102,7 @@ namespace River {
 
 
 		static void keyCallback(GLFWwindow* glfwWindow, int glfwKey, int scancode, int glfwAction, int mods) {
-			Key key = (Key)glfwKey;
+			KeyboardKey key = (KeyboardKey)glfwKey;
 
 			switch( glfwAction ) {
 			case GLFW_PRESS:

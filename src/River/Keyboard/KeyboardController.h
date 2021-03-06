@@ -1,7 +1,7 @@
 #pragma once
 
 #include "River/Game.h"
-#include "Key.h"
+#include "River/Primitives/KeyboardKey.h"
 
 
 namespace River {
@@ -20,9 +20,9 @@ namespace River {
 			bool pressed = false;
 		};
 
-		static void registerKeyUp(Key key);
+		static void registerKeyUp(KeyboardKey key);
 
-		static void registerKeyDown(Key key);
+		static void registerKeyDown(KeyboardKey key);
 
 		static void registerCharacterEvent(char32_t character);
 
@@ -31,10 +31,10 @@ namespace River {
 
 	private:
 
-		static inline std::unordered_map<Key, KeyEventState>  keyEventStates;
+		static inline std::unordered_map<KeyboardKey, KeyEventState>  keyEventStates;
 
 		// Keys that are pressed this event cycle
-		static inline std::unordered_set<Key> pressedEvents;
+		static inline std::unordered_set<KeyboardKey> pressedEvents;
 
 	};
 

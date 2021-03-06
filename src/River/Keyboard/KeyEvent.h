@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Key.h"
+#include "River/Primitives/KeyboardKey.h"
 #include "River/Utility/Event.h"
 
 namespace River {
@@ -8,12 +8,12 @@ namespace River {
 	class KeyEvent : public Event {
 	public:
 		
-		KeyEvent(const Key key) 
+		KeyEvent(const KeyboardKey key) 
 			:	key(key)
 		{}
 
 
-		Key getKey() {
+		KeyboardKey getKey() {
 			return key;
 		}
 
@@ -22,7 +22,7 @@ namespace River {
 		 * @brief	Consumes the event if its key matches the argument
 		 * @return	True if the key matches the argument and the event was not already consumed
 		*/
-		bool consumeKey(Key key) {
+		bool consumeKey(KeyboardKey key) {
 			if( !consumed && key == this->key ) {
 				consume();
 				return true;
@@ -33,7 +33,7 @@ namespace River {
 
 	private:
 		
-		const Key key = Key::A;
+		const KeyboardKey key = KeyboardKey::A;
 	
 	};
 
