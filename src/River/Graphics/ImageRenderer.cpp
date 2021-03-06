@@ -132,7 +132,7 @@ namespace River{
 		vertices[0].textureSlot = (GLfloat) textureSlot;
 		vertices[0].textureX = textureData.textureCoordinates.x1;
 		vertices[0].textureY = textureData.textureCoordinates.y1;
-		vertices[0].numTextureChannels = numTextureChannels;
+		vertices[0].numTextureChannels = (GLfloat)numTextureChannels;
 
 		position = transform * glm::vec3(halfWidth, halfHeight, 1);
 		vertices[1].x = position.x;
@@ -145,7 +145,7 @@ namespace River{
 		vertices[1].textureSlot = (GLfloat)textureSlot;
 		vertices[1].textureX = textureData.textureCoordinates.x2;
 		vertices[1].textureY = textureData.textureCoordinates.y1;
-		vertices[1].numTextureChannels = numTextureChannels;
+		vertices[1].numTextureChannels = (GLfloat)numTextureChannels;
 
 		position = transform * glm::vec3(-halfWidth, -halfHeight, 1);
 		vertices[2].x = position.x;
@@ -158,7 +158,7 @@ namespace River{
 		vertices[2].textureSlot = (GLfloat)textureSlot;
 		vertices[2].textureX = textureData.textureCoordinates.x1;
 		vertices[2].textureY = textureData.textureCoordinates.y2;
-		vertices[2].numTextureChannels = numTextureChannels;
+		vertices[2].numTextureChannels = (GLfloat)numTextureChannels;
 
 		position = transform * glm::vec3(halfWidth, -halfHeight, 1);
 		vertices[3].x = position.x;
@@ -171,7 +171,7 @@ namespace River{
 		vertices[3].textureSlot = (GLfloat) textureSlot;
 		vertices[3].textureX = textureData.textureCoordinates.x2;
 		vertices[3].textureY = textureData.textureCoordinates.y2;
-		vertices[3].numTextureChannels = numTextureChannels;
+		vertices[3].numTextureChannels = (GLfloat)numTextureChannels;
 
 		unsigned int* indices = vertexArray.nextIndices(6);
 		indices[0] = verticesOffset + 0;

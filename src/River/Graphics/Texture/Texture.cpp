@@ -82,20 +82,20 @@ namespace River {
 		// being less than or equal to first coordinate)
 
 		if( textureCoordinates.x2 <= textureCoordinates.x1 )
-			textureCoordinates.x2 = image->getWidth();
+			textureCoordinates.x2 = (float)image->getWidth();
 
 		if( textureCoordinates.y2 <= textureCoordinates.y1 )
-			textureCoordinates.y2 = image->getHeight();
+			textureCoordinates.y2 = (float)image->getHeight();
 
 
-		width = textureCoordinates.x2 - textureCoordinates.x1; 
-		height = textureCoordinates.y2 - textureCoordinates.y1; 
+		width = (unsigned int)(textureCoordinates.x2 - textureCoordinates.x1); 
+		height = (unsigned int)(textureCoordinates.y2 - textureCoordinates.y1); 
 
 		// Normalize the sampling coordinates
-		textureCoordinates.x1 = image->normalizeX(textureCoordinates.x1);
-		textureCoordinates.x2 = image->normalizeX(textureCoordinates.x2);
-		textureCoordinates.y1 = image->normalizeY(textureCoordinates.y1);
-		textureCoordinates.y2 = image->normalizeY(textureCoordinates.y2);
+		textureCoordinates.x1 = image->normalizeX((unsigned int)textureCoordinates.x1);
+		textureCoordinates.x2 = image->normalizeX((unsigned int)textureCoordinates.x2);
+		textureCoordinates.y1 = image->normalizeY((unsigned int)textureCoordinates.y1);
+		textureCoordinates.y2 = image->normalizeY((unsigned int)textureCoordinates.y2);
 	}
 
 
@@ -127,10 +127,10 @@ namespace River {
 	
 	Texture::Creator& Texture::Creator::setSamplingOffset(unsigned int x, unsigned int y) {
 		auto width = asset->textureCoordinates.x2 - asset->textureCoordinates.x1;
-		asset->textureCoordinates.x1 = x;
+		asset->textureCoordinates.x1 = (float)x;
 
 		auto height = asset->textureCoordinates.y2 - asset->textureCoordinates.y1;
-		asset->textureCoordinates.y1 = y;
+		asset->textureCoordinates.y1 = (float)y;
 
 		// Only if the width/height is larger than zero (means it shouldn't be full width)
 		// we move the second coordinate, so the width/height remains the same

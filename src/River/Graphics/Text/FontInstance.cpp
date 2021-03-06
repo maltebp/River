@@ -94,7 +94,9 @@ namespace River{
 
 
     FontInstance::TextSize FontInstance::calculateTextSize(const std::string &text) {
-        unsigned int minY = 0, maxY = 0, length = 0, glyphMinY, glyphMaxY;
+        int minY = 0;
+        int maxY = 0;
+        int length = 0;
 
         TextSize size;
         for( const char& c : text ) {
@@ -108,7 +110,7 @@ namespace River{
             if( glyph.yMin < minY ) minY = glyph.yMin;
         }
         if( minY < 0 ) minY *= -1;
-        return TextSize{ length, maxY + minY };
+        return TextSize{ (unsigned int)length, unsigned int(maxY + minY) };
 	}
 
     unsigned int FontInstance::getHeight() {

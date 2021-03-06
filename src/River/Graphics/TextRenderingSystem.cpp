@@ -57,9 +57,9 @@ namespace River {
 			FontInstance* fontInstance = text->font->getFontInstance(text->size);
 			FontInstance::TextSize textSize = fontInstance->calculateTextSize(text->text);
 
-			float x = transform->x;
-			float y = transform->y;
-			float z = transform->depth;
+			double x = transform->x;
+			double y = transform->y;
+			double z = transform->depth;
 
 			if( text->alignment.isHCenter() )
 				x -= textSize.width / 2.0;
@@ -68,7 +68,7 @@ namespace River {
 				x -= textSize.width;
 
 			if( text->alignment.isVCenter() )
-				y -= fontInstance->getHeight() / 4;
+				y -= fontInstance->getHeight() / 4.0;
 
 			if( text->alignment.isTop() )
 				y -= fontInstance->getHeight() / 1.5;
@@ -81,16 +81,16 @@ namespace River {
 				if( glyph.texture != nullptr ) {
 					// If texture is nullptr, then the glyph has no image (i.e. it's a space)
 
-					float glyphX = x + glyph.texture->getWidth() / 2.0;
+					double glyphX = x + glyph.texture->getWidth() / 2.0;
 					if( first ) first = false;
 					else glyphX += glyph.bearingX;
 
-					float glyphY = y + glyph.bearingY - glyph.texture->getHeight() / 2.0;
+					double glyphY = y + glyph.bearingY - glyph.texture->getHeight() / 2.0;
 
 					imageRenderer->drawSprite(
 						glyph.texture,
 						{
-							glyphX, glyphY, z,
+							(float)glyphX, (float)glyphY, (float)z,
 							(float)glyph.texture->getWidth(), (float)glyph.texture->getHeight(),
 							0,
 							text->color.a, { text->color.r, text->color.g, text->color.b, 1.0 }
