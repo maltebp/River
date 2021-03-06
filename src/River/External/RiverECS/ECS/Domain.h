@@ -131,8 +131,8 @@ namespace River::ECS {
 			// The given Component type may not have been registered in the system yet
 			// so this is basically to check that, and resize the Signature in
 			// case the Component is new.
-			auto typeId = ComponentTypeRegistry::getTypeId<C>();
-			if( signature.getSize() <= typeId )
+			ComponentTypeId typeId = ComponentTypeRegistry::getTypeId<C>();
+			if( (ComponentTypeId) signature.getSize() <= typeId )
 				signature.resize(typeId+1);
 
 			signature.set(ComponentTypeRegistry::getTypeId<C>());
