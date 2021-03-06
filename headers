@@ -1,0 +1,22 @@
+
+# Relative path from this file to
+# the root folder to copy headers from
+SOURCE:
+	src
+
+
+# Files/directories to copy from
+# the source directory (recursive)
+# regardless of them being in the 
+# exclude list or does not match
+# the file extension filter
+INCLUDE:
+	River/Vendor/glm/LICENSE
+
+
+# Files/directories not to copy
+# from the source directroy
+EXCLUDE:
+	River/Audio/AL.h
+	River/Mouse/MouseController.h
+	River/Keyboard/KeyboardController.h
