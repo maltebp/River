@@ -1,7 +1,8 @@
-#pragma once
+#include "River/pch.h"
 
 #include "Game.h"
 
+#include <unordered_set>
 #include <stdio.h>
 #include <iostream>
 #include <string>

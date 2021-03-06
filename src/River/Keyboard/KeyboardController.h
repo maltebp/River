@@ -1,7 +1,5 @@
 #pragma once
 
-#include <unordered_set>
-
 #include "River/Game.h"
 #include "Key.h"
 

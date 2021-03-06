@@ -1,3 +1,5 @@
+#include "River/pch.h"
+
 #include "AssetCollection.h"
 
 namespace River {

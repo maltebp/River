@@ -1,3 +1,5 @@
+#include "River/pch.h"
+
 #include "Resolution.h"
 
 namespace River {
