@@ -1,7 +1,7 @@
 #pragma once
 
 #include "SpriteAnimation.h"
-#include "River/Vendor/RiverECS/ECS.h"
+#include "River/External/RiverECS/ECS.h"
 #include "River/Graphics/Texture/Sprite.h"
 
 namespace River {

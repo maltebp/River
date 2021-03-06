@@ -4,8 +4,8 @@
 
 #include <iostream>
 
-#include <River/Vendor/glm/gtc/matrix_transform.hpp>
-#include <River/Vendor/glm/glm.hpp>
+#include <River/External/glm/gtc/matrix_transform.hpp>
+#include <River/External/glm/glm.hpp>
 
 #include "GL.h"
 #include "Shader/Shader.h"

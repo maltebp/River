@@ -2,7 +2,7 @@
 
 #include "River/Graphics/ImageRenderer.h"
 #include "River/Graphics/Window.h"
-#include "River/Vendor/RiverECS/ECS.h"
+#include "River/External/RiverECS/ECS.h"
 
 
 namespace River {

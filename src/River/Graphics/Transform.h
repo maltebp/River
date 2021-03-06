@@ -1,6 +1,6 @@
 #pragma once
 
-#include "River/Vendor/RiverECS/ECS.h"
+#include "River/External/RiverECS/ECS.h"
 
 namespace River::ECS {
 

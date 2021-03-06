@@ -3,7 +3,7 @@
 #include "AudioAsset.h"
 
 #define DR_WAV_IMPLEMENTATION
-#include "River/Vendor/dr_wav/dr_wav.h"
+#include "River/External/dr_wav/dr_wav.h"
 #include "AL.h"
 
 namespace River {

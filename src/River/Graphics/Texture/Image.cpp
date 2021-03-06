@@ -2,7 +2,7 @@
 
 #include "Image.h"
 
-#include <River/Vendor/stb_image/stb_image.h>
+#include <River/External/stb_image/stb_image.h>
 #include "../GL.h"
 #include "River/Error.h"
 

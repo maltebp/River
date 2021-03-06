@@ -18,7 +18,7 @@
 #include "River/Primitives/Alignment.h"
 #include "River/Primitives/Color.h"
 
-#include "River/Vendor/RiverECS/ECS.h"
+#include "River/External/RiverECS/ECS.h"
 
 #include "River/Graphics/SpriteAnimation/SpriteAnimation.h" 
 #include "River/Graphics/SpriteAnimation/SpriteAnimationSystem.h"

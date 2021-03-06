@@ -2,8 +2,8 @@
 
 // Graphics
 #define GLEW_STATIC
-#include <River/Vendor/GL/glew.h>
-#include <River/Vendor/GLFW/glfw3.h>
+#include <River/External/GL/glew.h>
+#include <River/External/GLFW/glfw3.h>
 
 
 // GL Error handling

@@ -2,13 +2,6 @@
 
 #include "Game.h"
 
-#include <unordered_set>
-#include <stdio.h>
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <algorithm>
-
 #include "Graphics/GL.h"
 #include "Audio/AL.h"
 #include "Audio/AudioPlayer.h"

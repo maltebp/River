@@ -1,7 +1,7 @@
 #pragma once
 
-#include "River/Vendor/OpenAL/al.h"
-#include "River/Vendor/OpenAL/alc.h"
+#include "River/External/OpenAL/al.h"
+#include "River/External/OpenAL/alc.h"
 
 #include <string>
 #include <stack>

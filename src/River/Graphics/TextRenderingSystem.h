@@ -3,7 +3,7 @@
 #include "Window.h"
 #include "Camera/Camera.h"
 #include "ImageRenderer.h"
-#include "River/Vendor/RiverECS/ECS.h"
+#include "River/External/RiverECS/ECS.h"
 
 
 namespace River {
