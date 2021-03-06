@@ -142,6 +142,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Mouse\MouseMoveEvent.h" />
     <ClInclude Include="src\River\Mouse\MouseScrollEvent.h" />
     <ClInclude Include="src\River\pch.h" />
+    <ClInclude Include="src\River\Primitives\KeyboardKey.h" />
     <ClInclude Include="src\River\Primitives\MouseButton.h" />
     <ClInclude Include="src\River\Graphics\SpriteRenderingSystem.h" />
     <ClInclude Include="src\River\Graphics\SpriteAnimation\SpriteAnimationSystem.h" />
@@ -162,8 +163,8 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Layer\Layer.h" />
     <ClInclude Include="src\River\Primitives\Resolution.h" />
     <ClInclude Include="src\River\Utility\Listener.h" />
-    <ClInclude Include="src\River\Vendor\dr_wav\dr_wav.h" />
-    <ClInclude Include="src\River\Vendor\stb_image\stb_image.h" />
+    <ClInclude Include="src\River\External\dr_wav\dr_wav.h" />
+    <ClInclude Include="src\River\External\stb_image\stb_image.h" />
     <ClInclude Include="src\River\Graphics\Shader\ShaderProgram.h" />
     <ClInclude Include="src\River\Graphics\GL.h" />
     <ClInclude Include="src\River\Graphics\Shader\Shader.h" />
@@ -193,7 +194,6 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClCompile Include="src\River\Graphics\Text\FontInstance.cpp" />
     <ClCompile Include="src\River\Graphics\Texture\Texture.cpp" />
     <ClCompile Include="src\River\Graphics\Texture\Image.cpp" />
-    <ClCompile Include="src\River\Primitives\KeyboardKey.h" />
     <ClCompile Include="src\River\Graphics\Camera\Camera.cpp" />
     <ClCompile Include="src\River\Graphics\GL.cpp" />
     <ClCompile Include="src\River\Graphics\Texture\ImageBinder.cpp" />
@@ -203,7 +203,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\River\Primitives\Resolution.cpp" />
-    <ClCompile Include="src\River\Vendor\stb_image\stb_image.cpp" />
+    <ClCompile Include="src\River\External\stb_image\stb_image.cpp" />
     <ClCompile Include="src\River\Graphics\Shader\ShaderProgram.cpp" />
     <ClCompile Include="src\River\Graphics\Shader\Shader.cpp" />
     <ClCompile Include="src\River\Graphics\Window.cpp" />

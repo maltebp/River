@@ -11,7 +11,7 @@ SOURCE:
 # exclude list or does not match
 # the file extension filter
 INCLUDE:
-	River/Vendor/glm/LICENSE
+	River/External/glm/LICENSE
 
 
 # Files/directories not to copy

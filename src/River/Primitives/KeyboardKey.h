@@ -1,5 +1,3 @@
-#include "River/pch.h"
-
 #pragma once
 
 namespace River {
