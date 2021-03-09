@@ -13,7 +13,7 @@ using River::Game;
 using River::Window;
 
 
-void main() {
+int main() {
 
 	Window::setTitle("Sandbox Game");
 	Window::setResolution({ 1280, 720 });

@@ -70,7 +70,7 @@ namespace River {
 		 *	@returns The number of frames (Textures) in the animation
 		 */
 		unsigned int getNumFrames() const {
-			return frames.size();
+			return (unsigned int)frames.size();
 		}
 
 
@@ -94,12 +94,15 @@ namespace River {
 		TextureAnimation() {}
 
 		TextureAnimation(const TextureAnimation&) = delete;
+
 		TextureAnimation& operator=(const TextureAnimation&) = delete;
+
 
 		void cleanDurationData() {
 			recalculateTotalDuration();
 						
 		}
+
 
 		// Utility function to calculate total duration
 		void recalculateTotalDuration() {
@@ -112,7 +115,7 @@ namespace River {
 		void recalculateTimeLookup() {
 			timeLookup.clear();
 
-			unsigned int numLookups = 2 * frames.size();
+			unsigned int numLookups = 2 * (unsigned int)frames.size();
 			timeLookupStep = totalDuration / numLookups;
 			float lookupTime = 0;
 			float frameEndTime = 0;

@@ -7,7 +7,7 @@
 
 #include "GL.h"
 #include "Shader/Shader.h"
-#include "River/Error.h"'
+#include "River/Error.h"
 
 
 namespace River{

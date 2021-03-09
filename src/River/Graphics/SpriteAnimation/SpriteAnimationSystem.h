@@ -17,7 +17,7 @@ namespace River {
 				if( animation->animation == nullptr ) return;
 				if( animation->paused ) return;
 
-				animation->time += timeStep * animation->speed;
+				animation->time += (float)(timeStep * animation->speed);
 				
 				animation->time = fmod(animation->time, animation->animation->getTotalDuration());
 
