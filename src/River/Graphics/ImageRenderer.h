@@ -73,7 +73,8 @@ namespace River {
 	private:
 		ImageVertexArray vertexArray;
 
-		ShaderProgram* shaderProgram;
+		ShaderProgram shaderProgram;
+
 		ImageBinder textureBinder;
 
 		bool blending = false;

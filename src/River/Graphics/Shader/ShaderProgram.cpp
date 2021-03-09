@@ -6,39 +6,35 @@
 
 namespace River{
 
-	ShaderProgram::ShaderProgram(){
+	ShaderProgram::ShaderProgram() {
+
+	}
+
+
+	ShaderProgram::~ShaderProgram() {
+		if( glIsProgram(id) ) {
+			GL(glDeleteProgram(id));
+		}
+	}
+
+
+	void ShaderProgram::build(const VertexShader& vertexShader, const FragmentShader& fragmentShader ){
+		if( ready ) {
+			throw new InvalidStateException("Shader has already been loaded");
+		}
+
+		if( !vertexShader.isReady() ){
+			throw new ShaderException("Vertex shader is not ready");
+		}
+
+		if( !fragmentShader.isReady() ){
+			throw new ShaderException("Fragment shader is not ready");
+		}
+
 		id = GL(glCreateProgram());
-	}
 
-	ShaderProgram::~ShaderProgram(){
-		GL(glDeleteProgram(id));
-	}
-
-
-	void ShaderProgram::setVertexShader(Shader* shader){
-		if( !shader->isReady() )
-			throw new ShaderException("Fragment shader has not been compiled");
-		vertexShader = shader;
-	}
-
-
-	void ShaderProgram::setFragmentShader(Shader* shader){
-		if( !shader->isReady() )
-			throw new ShaderException("Fragment shader has not been compiled");
-		fragmentShader = shader;
-	}
-
-	void ShaderProgram::build(){
-
-		// Check shaders
-		if( vertexShader == nullptr ){
-			throw new ShaderException("Shader program is missing vertex shader");
-		}
-		if( fragmentShader == nullptr ){
-			throw new ShaderException("Shader program is missing vertex shader");
-		}
-		GL(glAttachShader(id, vertexShader->getId()));
-		GL(glAttachShader(id, fragmentShader->getId()));
+		GL(glAttachShader(id, vertexShader.getId()));
+		GL(glAttachShader(id, fragmentShader.getId()));
 
 		// Link Program
 		GL(glLinkProgram(id));
@@ -46,8 +42,8 @@ namespace River{
 		GL(glGetProgramiv(id, GL_LINK_STATUS, &linkStatus));
 		if( linkStatus != GL_TRUE ){
 			std::string statusMessage = getInfoLog();
-			GL(glDetachShader(id, vertexShader->getId()));
-			GL(glDetachShader(id, fragmentShader->getId()));
+			GL(glDetachShader(id, vertexShader.getId()));
+			GL(glDetachShader(id, fragmentShader.getId()));
 			throw ShaderException("Program failed linking (" + statusMessage + ")");
 		}
 
@@ -57,8 +53,8 @@ namespace River{
 		GL(glGetProgramiv(id, GL_VALIDATE_STATUS, &validationStatus));
 		if( validationStatus != GL_TRUE ){
 			std::string statusMessage = getInfoLog();
-			GL(glDetachShader(id, vertexShader->getId()));
-			GL(glDetachShader(id, fragmentShader->getId()));
+			GL(glDetachShader(id, vertexShader.getId()));
+			GL(glDetachShader(id, fragmentShader.getId()));
 			throw ShaderException("Program failed linking (" + statusMessage + ")");
 		}
 
@@ -67,8 +63,9 @@ namespace River{
 
 
 	void ShaderProgram::use(){
-		if( !ready )
-			throw new ShaderException("Shader program is not ready to be used");
+		if( !ready ) {
+			throw new ShaderException("ShaderProgram has not been built");
+		}
 		GL(glUseProgram(id));
 	}
 
@@ -87,13 +84,11 @@ namespace River{
 	}
 
 
-	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// Uniforms
-
 	void ShaderProgram::setIntArray(const std::string &name, int* values, int count){
 		GLint location = getUniformLocation(name);
 		GL(glUniform1iv(location, count, values));
 	}
+
 
 	void ShaderProgram::setFloatMatrix(const std::string &name, int size, float *matrix){
 		auto location = getUniformLocation(name);
@@ -103,16 +98,23 @@ namespace River{
 		}
 	}
 
+
 	bool ShaderProgram::hasUniform(const std::string& name){
 		GLint location = GL(glGetUniformLocation(id, name.c_str()));
 		return location != -1;
 	}
+
 
 	GLint ShaderProgram::getUniformLocation(const std::string &name){
 		GLint location = GL(glGetUniformLocation(id, name.c_str()));
 		if( location == -1 )
 			throw new ShaderException("Uniform '" + name + "' doesn't exist in program");
 		return location;
+	}
+
+
+	bool ShaderProgram::isReady() {
+		return ready;
 	}
 
 }

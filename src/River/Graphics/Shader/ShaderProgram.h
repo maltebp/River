@@ -1,46 +1,24 @@
 #pragma once
 
-#include <string>
-#include <vector>
-
 #include "River/Graphics/GL.h"
-#include "Shader.h"
 #include "River/Error.h"
+#include "VertexShader.h"
+#include "FragmentShader.h"
+
 
 namespace River {
+
+
 	class ShaderProgram {
-
 	public:
-		
-	private:
-		unsigned int id = 0;
 
-		bool ready = false;
-
-		Shader* fragmentShader = nullptr;
-		Shader* vertexShader = nullptr;
-
-		std::string getInfoLog();
-
-		// Prevent copying
-		ShaderProgram(const ShaderProgram&);
-		ShaderProgram& operator=(const ShaderProgram&);
-
-	public:
 		ShaderProgram();
+
 		~ShaderProgram();
 
-		void setFragmentShader(Shader* shader);
-		void setVertexShader(Shader* shader);
-
-		
-		/*
-			@throws River::ShaderException
-		*/
-		void build();
+		void build(const VertexShader& vertexShader, const FragmentShader& fragmentShader);
 
 		void use();
-
 
 		// Uniforms -----------------------------------------------------------------
 		//void setUniformFloat(const std::string& name, float value);
@@ -53,12 +31,37 @@ namespace River {
 		void setFloatMatrix(const std::string &name, int size, float *values);
 
 		bool hasUniform(const std::string& name);
+
+		bool isReady();
+
+
 	private:
+
+		// Prevent copying
+		ShaderProgram(const ShaderProgram&) = delete;
+
+		ShaderProgram& operator=(const ShaderProgram&) = delete;
+
 		/**
 		 * @throws	River::ShaderException	 Thrown if the given uniform doesn't exist
 		*/
 		GLint getUniformLocation(const std::string &name);
+
+		std::string getInfoLog();
+
+
+	private:
+
+		bool ready = false;
+
+		unsigned int id = 0;
+
+		Shader* fragmentShader = nullptr;
+
+		Shader* vertexShader = nullptr;
+
 	};
+
 }
 
 

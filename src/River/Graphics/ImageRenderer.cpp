@@ -2,16 +2,16 @@
 
 #include "ImageRenderer.h"
 
-#include <iostream>
-
 #include <River/External/glm/gtc/matrix_transform.hpp>
 #include <River/External/glm/glm.hpp>
 
 #include "GL.h"
 #include "Shader/Shader.h"
-#include "River/Error.h"
+#include "River/Error.h"'
+
 
 namespace River{
+
 	static std::string vertexShaderSource = R"(
 		#version 330 core
 		layout (location = 0) in vec3 aPos;
@@ -70,13 +70,10 @@ namespace River{
 		:	textureBinder(Window::getNumTextureSlots())
 	{
 		// Shader program
-		Shader vertexShader(Shader::Type::VERTEX, vertexShaderSource);
-		Shader fragmentShader(Shader::Type::FRAGMENT, fragmentShaderSource);
+		VertexShader vertexShader(vertexShaderSource);
+		FragmentShader fragmentShader(fragmentShaderSource);
 
-		shaderProgram = new ShaderProgram();
-		shaderProgram->setVertexShader(&vertexShader);
-		shaderProgram->setFragmentShader(&fragmentShader);
-		shaderProgram->build();
+		shaderProgram.build(vertexShader, fragmentShader);
 
 		vertexArray.initialize();
 	}
@@ -202,9 +199,9 @@ namespace River{
 			GL(glDepthMask(GL_TRUE)); // Enable writing to depth buffer
 		}
 
-		shaderProgram->use();
-		textureBinder.bind(shaderProgram);
-		shaderProgram->setFloatMatrix("u_viewMatrix", 4, glm::value_ptr(camera->getCameraMatrix()));
+		shaderProgram.use();
+		textureBinder.bind(&shaderProgram);
+		shaderProgram.setFloatMatrix("u_viewMatrix", 4, glm::value_ptr(camera->getCameraMatrix()));
 		vertexArray.bind();
 		GL(glDrawElements(GL_TRIANGLES, vertexArray.getNumIndices(), GL_UNSIGNED_INT, 0));
 		vertexArray.unbind();

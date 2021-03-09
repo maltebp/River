@@ -122,6 +122,8 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\Graphics\Shader\FragmentShader.h" />
+    <ClInclude Include="src\River\Graphics\Shader\VertexShader.h" />
     <ClInclude Include="src\River\Mouse\MouseController.h" />
     <ClInclude Include="src\River\Mouse\Mouse.h" />
     <ClInclude Include="src\River\Keyboard\KeyboardController.h" />

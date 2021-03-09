@@ -1,38 +1,33 @@
 #pragma once
 
-#include <string>
-
 namespace River {
 
 	class Shader {
-
-	public:
-		enum class Type {
-			VERTEX,
-			FRAGMENT
-		};
-		
-	private:
-		unsigned int id = 0;
-		Type type;
-		std::string source;
-		bool ready = false;
-
 	public:
 
 		/**
-		 * @param type The OpenGL shader type (i.e. GL_VERTEX_SHADER or GL_FRAGMENT_SHADER)
-		 * @param source The source code for the shader
+		 * @param type		The OpenGL shader type (i.e. GL_VERTEX_SHADER or GL_FRAGMENT_SHADER)
+		 * @param source	The source code for the shader
+		 * 
 		 * @throws River::ShaderException Thrown if someone goes wrong when loading the shader (i.e. source code couldn't compile)
 		*/
-		Shader(Type type, const std::string &source);
-		~Shader();
+		Shader(unsigned int typeId, const std::string& source);
 
-		unsigned int getId();
+		// Pure virtual to ensure this class is abstract
+		virtual ~Shader() = 0;
 
-		bool isReady();
+		unsigned int getId() const;
 
-		Type getType();
+		bool isReady() const;
+		
+
+	private:
+		
+		unsigned int id = 0;
+		
+		std::string source;
+		
+		bool ready = false;
 
 	};
 
