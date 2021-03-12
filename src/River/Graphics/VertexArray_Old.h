@@ -36,6 +36,7 @@ namespace River {
 
 
 	protected:
+
 		virtual void setupAttributes() = 0;
 
 		void addAttributeFloat(unsigned int count) {
@@ -77,6 +78,7 @@ namespace River {
 			GL(glGenBuffers(1, &vertexBufferId));
 			GL(glGenBuffers(1, &indexBufferId));
 
+			// TODO: This is unecessarry
 			GLint currentVertexArray = 0;
 			GLint currentVertexBuffer = 0;
 			GL(glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &currentVertexArray));

@@ -39,7 +39,7 @@
     <ClInclude Include="src\River\Layer\Layer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\River\Graphics\VertexArray.h">
+    <ClInclude Include="src\River\Graphics\VertexArray_Old.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\River\Graphics\GL.h">
@@ -183,6 +183,9 @@
     <ClInclude Include="src\River\Graphics\Shader\VertexShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\River\Graphics\VertexBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\River\Game.cpp">
@@ -270,6 +273,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\River\pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\River\Graphics\VertexArray_Old.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\River\Graphics\VertexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

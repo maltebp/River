@@ -175,11 +175,13 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River.h" />
     <ClInclude Include="src\River\Error.h" />
     <ClInclude Include="src\River\Graphics\ImageRenderer.h" />
-    <ClInclude Include="src\River\Graphics\VertexArray.h" />
+    <ClInclude Include="src\River\Graphics\VertexArray_Old.h" />
     <ClInclude Include="src\River\Graphics\TextRenderer.h" />
     <ClInclude Include="src\River\Graphics\TextRenderingSystem.h" />
+    <ClInclude Include="src\River\Graphics\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\River\Graphics\VertexArray_Old.cpp" />
     <ClCompile Include="src\River\Mouse\MouseController.cpp" />
     <ClCompile Include="src\River\Mouse\Mouse.cpp" />
     <ClCompile Include="src\River\Keyboard\Keyboard.cpp" />
@@ -212,6 +214,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClCompile Include="src\River\Game.cpp" />
     <ClCompile Include="src\River\Graphics\ImageRenderer.cpp" />
     <ClCompile Include="src\River\Graphics\TextRenderingSystem.cpp" />
+    <ClCompile Include="src\River\Graphics\VertexBuffer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
