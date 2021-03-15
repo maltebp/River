@@ -9,6 +9,10 @@ namespace River {
 
 		Color() { }
 
+		Color(float c) 
+			: r(c), b(c), g(g)
+		{ }
+
 		Color(float r, float g, float b, float a)
 			: r(r),  b(b), g(g), a(a)
 		{ }
@@ -32,6 +36,24 @@ namespace River {
 			g = std::clamp(g, 0.0f, 1.0f);
 			b = std::clamp(b, 0.0f, 1.0f);
 			a = std::clamp(a, 0.0f, 1.0f);
+		}
+
+
+		bool operator ==(const Color& other) {
+			return	
+				r == other.r &&
+				g == other.g &&
+				b == other.b &&
+				a == other.a;
+		}
+
+
+		bool operator !=(const Color& other) {
+			return
+				r != other.r ||
+				g != other.g ||
+				b != other.b ||
+				a != other.a;
 		}
 
 
