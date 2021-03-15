@@ -6,8 +6,9 @@
 #include "Texture/ImageBinder.h"
 #include "Window.h"
 #include "Shader/ShaderProgram.h"
-#include "VertexArray.h"
+#include "SimpleVertexArray.h"
 #include "River/Primitives/Color.h"
+#include "River/Utility/MixedArray.h"
 
 
 namespace River {
@@ -49,6 +50,8 @@ namespace River {
 		// TODO: Function -> draw texture with texture size
 
 	private:
+
+		// TODO: Remove this
 		// Vertex Array ------------------------------------------
 		struct ImageVertex {
 			GLfloat x, y, z;
@@ -58,20 +61,34 @@ namespace River {
 			GLfloat numTextureChannels; // Consider to move this to a uniform
 		};
 
-		class ImageVertexArray : public VertexArray<ImageVertex> {
-		protected:
-			void setupAttributes() override {
-				addAttributeFloat(3); // Position
-				addAttributeFloat(4); // Color
-				addAttributeFloat(1);  // Image slot
-				addAttributeFloat(2); // Tex position
-				addAttributeFloat(1); // Num channels
-			}
-		};
+		//class ImageVertexArray : public VertexArray<ImageVertex> {
+		//protected:
+		//	void setupAttributes() override {
+		//		addAttributeFloat(3); // Position
+		//		addAttributeFloat(4); // Color
+		//		addAttributeFloat(1);  // Image slot
+		//		addAttributeFloat(2); // Tex position
+		//		addAttributeFloat(1); // Num channels
+		//	}
+		//};
 
 
 	private:
-		ImageVertexArray vertexArray;
+
+		MixedArray vertexData;
+
+		std::vector<GLuint> indexData;
+
+		VertexBuffer vertexBuffer;
+
+		IndexBuffer indexBuffer;
+
+		size_t vertexSize;
+
+		// Number of texture in current draw call
+		unsigned int numTextures = 0;
+
+		SimpleVertexArray vertexArray;
 
 		ShaderProgram shaderProgram;
 

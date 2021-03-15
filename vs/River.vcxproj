@@ -122,8 +122,14 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\Utility\MixedArray.h" />
+    <ClInclude Include="src\River\Graphics\Buffer.h" />
+    <ClInclude Include="src\River\Graphics\IndexBuffer.h" />
+    <ClInclude Include="src\River\Graphics\SimpleVertexArray.h" />
     <ClInclude Include="src\River\Graphics\Shader\FragmentShader.h" />
     <ClInclude Include="src\River\Graphics\Shader\VertexShader.h" />
+    <ClInclude Include="src\River\Graphics\VertexAttribute.h" />
+    <ClInclude Include="src\River\Graphics\VertexIndexType.h" />
     <ClInclude Include="src\River\Mouse\MouseController.h" />
     <ClInclude Include="src\River\Mouse\Mouse.h" />
     <ClInclude Include="src\River\Keyboard\KeyboardController.h" />
@@ -179,9 +185,12 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Graphics\TextRenderer.h" />
     <ClInclude Include="src\River\Graphics\TextRenderingSystem.h" />
     <ClInclude Include="src\River\Graphics\VertexBuffer.h" />
+    <ClInclude Include="src\River\Graphics\VertexArray.h" />
+    <ClInclude Include="src\River\Utility\String.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\River\Graphics\VertexArray_Old.cpp" />
+    <ClCompile Include="src\River\Graphics\Buffer.cpp" />
+    <ClCompile Include="src\River\Graphics\SimpleVertexArray.cpp" />
     <ClCompile Include="src\River\Mouse\MouseController.cpp" />
     <ClCompile Include="src\River\Mouse\Mouse.cpp" />
     <ClCompile Include="src\River\Keyboard\Keyboard.cpp" />
@@ -214,7 +223,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClCompile Include="src\River\Game.cpp" />
     <ClCompile Include="src\River\Graphics\ImageRenderer.cpp" />
     <ClCompile Include="src\River\Graphics\TextRenderingSystem.cpp" />
-    <ClCompile Include="src\River\Graphics\VertexBuffer.cpp" />
+    <ClCompile Include="src\River\Graphics\VertexArray.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -38,3 +38,5 @@
 #include "River/Audio/AudioListener.h"
 #include "River/Audio/AudioPlayer.h"
 #include "River/Audio/AudioAsset.h"
+
+#include "River/Utility/String.h"

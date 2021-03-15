@@ -19,6 +19,14 @@ namespace River {
 
 	};
 
+	/**
+	 * @brief Signals that something unexpected went wrong internally
+	*/
+	class InternalException : public Exception {
+		InternalException(const std::string& message) : Exception("InternalException", message) {}
+
+	};
+
 
 	class NullException : public Exception {
 	public:

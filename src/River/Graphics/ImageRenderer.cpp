@@ -16,16 +16,16 @@ namespace River{
 		#version 330 core
 		layout (location = 0) in vec3 aPos;
 		layout (location = 1) in vec4 a_Color;
-		layout (location = 2) in float a_TexSlot;
+		layout (location = 2) in int a_TexSlot;
 		layout (location = 3) in vec2 a_TexCoord;
-		layout (location = 4) in float a_NumTextureChannels;
+		layout (location = 4) in int a_NumTextureChannels;
 
 		uniform mat4 u_viewMatrix;
 
 		out vec4 o_Color;
-		out float o_TexSlot;
+		flat out int o_TexSlot;
 		out vec2 o_TexCoord;
-		out float o_NumTextureChannels;
+		flat out int o_NumTextureChannels;
 
 		void main()
 		{
@@ -43,8 +43,8 @@ namespace River{
   
 		in vec4 o_Color;
 		in vec2 o_TexCoord;	
-		in float o_TexSlot;
-		in float o_NumTextureChannels;
+		flat in int o_TexSlot;
+		flat in int o_NumTextureChannels;
 
 		uniform sampler2D u_Textures[32];
 
@@ -53,10 +53,10 @@ namespace River{
 			if( o_TexSlot < 0 ) {
 				textureColor = vec4(1.0);
 			} else {
-				textureColor = texture(u_Textures[int(o_TexSlot)], o_TexCoord);
+				textureColor = texture(u_Textures[o_TexSlot], o_TexCoord);
 			}
 
-			if( int(o_NumTextureChannels) == 1 ){
+			if( o_NumTextureChannels == 1 ){
 				FragColor = o_Color;
 				FragColor.a *= textureColor.r;
 			}else{
@@ -75,7 +75,15 @@ namespace River{
 
 		shaderProgram.build(vertexShader, fragmentShader);
 
-		vertexArray.initialize();
+		vertexSize = vertexArray.setAttributes( &vertexBuffer,
+			VertexAttributes::FLOAT3,	// Position
+			VertexAttributes::FLOAT4,	// Color
+			VertexAttributes::BYTE, 	// Texture slot
+			VertexAttributes::FLOAT2,	// Texture coordinates
+			VertexAttributes::BYTE		// Texture channels
+		);
+
+		vertexArray.setIndexBuffer(&indexBuffer, VertexIndexTypes::UINT);
 	}
 
 	
@@ -106,8 +114,8 @@ namespace River{
 			numTextureChannels = textureData.texture->getNumChannels();
 		}
 		
-		unsigned int verticesOffset = vertexArray.getNumVertices();
-		ImageVertex* vertices = vertexArray.nextVertices(4);
+		// Reserve memory for 4 vertices
+		vertexData.reserveExtra(vertexSize * 4);
 
 		// Variables for translation and rotation
 		float halfWidth = transformData.width / 2.0f;
@@ -121,64 +129,66 @@ namespace River{
 		// TODO: Fix correct color tinting
 
 		position = transform * glm::vec3(-halfWidth, halfHeight, 1);
-		vertices[0].x = position.x;
-		vertices[0].y = position.y;
-		vertices[0].z = transformData.z;
-		vertices[0].r = transformData.color.r;
-		vertices[0].g = transformData.color.g;
-		vertices[0].b = transformData.color.b;
-		vertices[0].a = transformData.color.a * transformData.opacity;
-		vertices[0].textureSlot = (GLfloat) textureSlot;
-		vertices[0].textureX = textureData.textureCoordinates.x1;
-		vertices[0].textureY = textureData.textureCoordinates.y1;
-		vertices[0].numTextureChannels = (GLfloat)numTextureChannels;
+		vertexData.add((GLfloat)position.x);
+		vertexData.add((GLfloat)position.y);
+		vertexData.add((GLfloat)transformData.z);
+		vertexData.add((GLfloat)transformData.color.r);
+		vertexData.add((GLfloat)transformData.color.g);
+		vertexData.add((GLfloat)transformData.color.b);
+		vertexData.add((GLfloat)transformData.color.a * transformData.opacity);
+		vertexData.add((GLbyte)textureSlot);
+		vertexData.add((GLfloat)textureData.textureCoordinates.x1);
+		vertexData.add((GLfloat)textureData.textureCoordinates.y1);
+		vertexData.add((GLbyte)numTextureChannels);
 
 		position = transform * glm::vec3(halfWidth, halfHeight, 1);
-		vertices[1].x = position.x;
-		vertices[1].y = position.y;
-		vertices[1].z = transformData.z;
-		vertices[1].r = transformData.color.r;
-		vertices[1].g = transformData.color.g;
-		vertices[1].b = transformData.color.b;
-		vertices[1].a = transformData.color.a * transformData.opacity;
-		vertices[1].textureSlot = (GLfloat)textureSlot;
-		vertices[1].textureX = textureData.textureCoordinates.x2;
-		vertices[1].textureY = textureData.textureCoordinates.y1;
-		vertices[1].numTextureChannels = (GLfloat)numTextureChannels;
+		vertexData.add((GLfloat)position.x);
+		vertexData.add((GLfloat)position.y);
+		vertexData.add((GLfloat)transformData.z);
+		vertexData.add((GLfloat)transformData.color.r);
+		vertexData.add((GLfloat)transformData.color.g);
+		vertexData.add((GLfloat)transformData.color.b);
+		vertexData.add((GLfloat)transformData.color.a * transformData.opacity);
+		vertexData.add((GLbyte)textureSlot);
+		vertexData.add((GLfloat)textureData.textureCoordinates.x2);
+		vertexData.add((GLfloat)textureData.textureCoordinates.y1);
+		vertexData.add((GLbyte)numTextureChannels);
 
 		position = transform * glm::vec3(-halfWidth, -halfHeight, 1);
-		vertices[2].x = position.x;
-		vertices[2].y = position.y;
-		vertices[2].z = transformData.z;
-		vertices[2].r = transformData.color.r;
-		vertices[2].g = transformData.color.g;
-		vertices[2].b = transformData.color.b;
-		vertices[2].a = transformData.color.a * transformData.opacity;
-		vertices[2].textureSlot = (GLfloat)textureSlot;
-		vertices[2].textureX = textureData.textureCoordinates.x1;
-		vertices[2].textureY = textureData.textureCoordinates.y2;
-		vertices[2].numTextureChannels = (GLfloat)numTextureChannels;
+		vertexData.add((GLfloat)position.x);
+		vertexData.add((GLfloat)position.y);
+		vertexData.add((GLfloat)transformData.z);
+		vertexData.add((GLfloat)transformData.color.r);
+		vertexData.add((GLfloat)transformData.color.g);
+		vertexData.add((GLfloat)transformData.color.b);
+		vertexData.add((GLfloat)transformData.color.a * transformData.opacity);
+		vertexData.add((GLbyte)textureSlot);
+		vertexData.add((GLfloat)textureData.textureCoordinates.x1);
+		vertexData.add((GLfloat)textureData.textureCoordinates.y2);
+		vertexData.add((GLbyte)numTextureChannels);
 
 		position = transform * glm::vec3(halfWidth, -halfHeight, 1);
-		vertices[3].x = position.x;
-		vertices[3].y = position.y;
-		vertices[3].z = transformData.z;
-		vertices[3].r = transformData.color.r;
-		vertices[3].g = transformData.color.g;
-		vertices[3].b = transformData.color.b;
-		vertices[3].a = transformData.color.a * transformData.opacity;
-		vertices[3].textureSlot = (GLfloat) textureSlot;
-		vertices[3].textureX = textureData.textureCoordinates.x2;
-		vertices[3].textureY = textureData.textureCoordinates.y2;
-		vertices[3].numTextureChannels = (GLfloat)numTextureChannels;
+		vertexData.add((GLfloat)position.x);
+		vertexData.add((GLfloat)position.y);
+		vertexData.add((GLfloat)transformData.z);
+		vertexData.add((GLfloat)transformData.color.r);
+		vertexData.add((GLfloat)transformData.color.g);
+		vertexData.add((GLfloat)transformData.color.b);
+		vertexData.add((GLfloat)transformData.color.a * transformData.opacity);
+		vertexData.add((GLbyte)textureSlot);
+		vertexData.add((GLfloat)textureData.textureCoordinates.x2);
+		vertexData.add((GLfloat)textureData.textureCoordinates.y2);
+		vertexData.add((GLbyte)numTextureChannels);
 
-		unsigned int* indices = vertexArray.nextIndices(6);
-		indices[0] = verticesOffset + 0;
-		indices[1] = verticesOffset + 1;
-		indices[2] = verticesOffset + 2;
-		indices[3] = verticesOffset + 1;
-		indices[4] = verticesOffset + 2;
-		indices[5] = verticesOffset + 3;
+		GLuint verticesOffset = numTextures * 4;
+		indexData.push_back(verticesOffset + 0);
+		indexData.push_back(verticesOffset + 1);
+		indexData.push_back(verticesOffset + 2);
+		indexData.push_back(verticesOffset + 1);
+		indexData.push_back(verticesOffset + 2);
+		indexData.push_back(verticesOffset + 3);
+
+		numTextures++;
 	}
 
 
@@ -202,12 +212,17 @@ namespace River{
 		shaderProgram.use();
 		textureBinder.bind(&shaderProgram);
 		shaderProgram.setFloatMatrix("u_viewMatrix", 4, glm::value_ptr(camera->getCameraMatrix()));
-		vertexArray.bind();
-		GL(glDrawElements(GL_TRIANGLES, vertexArray.getNumIndices(), GL_UNSIGNED_INT, 0));
-		vertexArray.unbind();
-		vertexArray.clear();
 
+		vertexBuffer.setData(vertexData.getVector());
+		indexBuffer.setData(indexData);
+
+		vertexArray.drawTriangles(numTextures * 2);
+
+		vertexData.clear();
+		indexData.clear();
 		textureBinder.clear();
+
+		numTextures = 0;
 	}
 
 
