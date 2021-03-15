@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GL.h"
+#include "BufferUsageHint.h"
 
 namespace River {
 
@@ -17,7 +18,7 @@ namespace River {
 		 * @param initialSize	If none zero, the given size will be allocated on creation,
 		 *						and occupied with all zeros
 		*/
-		Buffer(GLenum target, GLenum queryTarget, size_t initialSize = 0);
+		Buffer(GLenum target, GLenum queryTarget, size_t initialSize = 0, BufferUsageHint usageHint = BufferUsageHint::DYNAMIC);
 
 		~Buffer();
 
@@ -134,6 +135,8 @@ namespace River {
 		GLenum target;
 
 		GLenum queryTarget;
+
+		BufferUsageHint usageHint;
 
 	};
 

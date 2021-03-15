@@ -122,6 +122,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\Graphics\BufferUsageHint.h" />
     <ClInclude Include="src\River\Utility\MixedArray.h" />
     <ClInclude Include="src\River\Graphics\Buffer.h" />
     <ClInclude Include="src\River\Graphics\IndexBuffer.h" />

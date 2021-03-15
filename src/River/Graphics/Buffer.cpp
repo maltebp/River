@@ -20,11 +20,12 @@
 namespace River {
 
 
-	Buffer::Buffer(GLenum target, GLenum queryTarget, size_t initialSize) {
+	Buffer::Buffer(GLenum target, GLenum queryTarget, size_t initialSize, BufferUsageHint usageHint ) {
 		GL(glGenBuffers(1, &id));
 
 		this->target = target;
 		this->queryTarget = queryTarget;
+		this->usageHint = usageHint;
 		size = initialSize;
 
 		if( initialSize == 0 ) return;
@@ -43,13 +44,13 @@ namespace River {
 
 
 	void Buffer::setData(void* data, size_t bytes, bool fit) {	
-		this->size = size;
 
 		if( bytes > size || (bytes < size && fit) ) {
 			// Reallocate and copy
 			TEMP_BIND(
-				GL(glBufferData(target, bytes, data, GL_DYNAMIC_DRAW));
+				GL(glBufferData(target, bytes, data, static_cast<GLenum>(this->usageHint)));
 			)
+			this->size = bytes;
 		}
 		else {
 			// No reallocation
@@ -76,14 +77,14 @@ namespace River {
 		if( newSize == 0 && this->size > 0) {
 			// Free the memory
 			TEMP_BIND(
-				GL(glBufferData(target, 0, nullptr, GL_DYNAMIC_DRAW));
+				GL(glBufferData(target, 0, nullptr, static_cast<GLenum>(this->usageHint)));
 			)
 		}
 		else {
 			// Reallocate memory and set to all zeros
 			void* data = calloc(newSize, 1);
 			TEMP_BIND(
-				GL(glBufferData(target, newSize, data, GL_DYNAMIC_DRAW));
+				GL(glBufferData(target, newSize, data, static_cast<GLenum>(this->usageHint)));
 			)
 			free(data);
 		}

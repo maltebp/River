@@ -12,8 +12,8 @@ namespace River {
 	class VertexBuffer : public Buffer {
 	public:
 
-		VertexBuffer(size_t initialSize = 0)
-			:	Buffer(GL_ARRAY_BUFFER, GL_ARRAY_BUFFER_BINDING, initialSize)
+		VertexBuffer(size_t initialSize = 0, BufferUsageHint usageHint = BufferUsageHint::DYNAMIC)
+			:	Buffer(GL_ARRAY_BUFFER, GL_ARRAY_BUFFER_BINDING, initialSize, usageHint)
 		{}
 
 	};

@@ -13,8 +13,8 @@ namespace River {
 	class IndexBuffer : public Buffer {
 	public:
 
-		IndexBuffer(size_t initialSize = 0)
-			: Buffer(GL_ELEMENT_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER_BINDING, initialSize) 		{
+		IndexBuffer(size_t initialSize = 0, BufferUsageHint usageHint = BufferUsageHint::DYNAMIC)
+			: Buffer(GL_ELEMENT_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER_BINDING, initialSize, usageHint) 		{
 		}
 
 	};
