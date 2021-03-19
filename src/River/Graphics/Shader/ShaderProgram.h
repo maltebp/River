@@ -22,17 +22,17 @@ namespace River {
 
 		// Uniforms -----------------------------------------------------------------
 		//void setUniformFloat(const std::string& name, float value);
-		void setIntArray(const std::string& name, int* values, int numValues);
+		void setIntArray(const std::string& name, const GLint* values, int numValues);
 
 		/**
 		 * @brief Matrix is column-major order (see GLM documentation)
 		 * @param	The number of columns and rows in the matrix
 		*/
-		void setFloatMatrix(const std::string &name, int size, float *values);
+		void setFloatMatrix(const std::string &name, unsigned int size, const GLfloat* values);
 
-		bool hasUniform(const std::string& name);
+		bool hasUniform(const std::string& name) const;
 
-		bool isReady();
+		bool isReady() const;
 
 
 	private:

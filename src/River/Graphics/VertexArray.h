@@ -78,6 +78,13 @@ namespace River {
 		*/
 		GLuint getId() const;
 
+	
+	private:
+		
+		VertexArray(const VertexArray&) = delete;
+
+		// This could be implemented at some point
+		VertexArray(VertexArray&&) = delete;
 
 
 	private:

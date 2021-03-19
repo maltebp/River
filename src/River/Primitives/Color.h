@@ -10,7 +10,7 @@ namespace River {
 		Color() { }
 
 		Color(float c) 
-			: r(c), b(c), g(g)
+			: r(c), b(c), g(c)
 		{ }
 
 		Color(float r, float g, float b, float a)
@@ -39,7 +39,7 @@ namespace River {
 		}
 
 
-		bool operator ==(const Color& other) {
+		bool operator ==(const Color& other) const {
 			return	
 				r == other.r &&
 				g == other.g &&
@@ -48,7 +48,7 @@ namespace River {
 		}
 
 
-		bool operator !=(const Color& other) {
+		bool operator !=(const Color& other) const {
 			return
 				r != other.r ||
 				g != other.g ||

@@ -84,28 +84,40 @@ namespace River{
 	}
 
 
-	void ShaderProgram::setIntArray(const std::string &name, int* values, int count){
+	void ShaderProgram::setIntArray(const std::string &name, const GLint* values, int count){
 		GLint location = getUniformLocation(name);
 		GL(glUniform1iv(location, count, values));
 	}
 
 
-	void ShaderProgram::setFloatMatrix(const std::string &name, int size, float *matrix){
+	void ShaderProgram::setFloatMatrix(const std::string &name, unsigned int size, const GLfloat *matrix){
+		if( size <= 1 ) {
+			throw new InvalidArgumentException("Matrix size must be larger than 1");
+		}
+		if( size > 4 ) {
+			throw new InvalidArgumentException("Matrix size must be less than 5");
+		}
 		auto location = getUniformLocation(name);
 		switch( size ){
+		case 2:
+			GL(glUniformMatrix2fv(location, 1, GL_FALSE, matrix));
+			break;
+		case 3:
+			GL(glUniformMatrix3fv(location, 1, GL_FALSE, matrix));
+			break;
 		case 4:
 			GL(glUniformMatrix4fv(location, 1, GL_FALSE, matrix));
 		}
 	}
 
 
-	bool ShaderProgram::hasUniform(const std::string& name){
+	bool ShaderProgram::hasUniform(const std::string& name) const {
 		GLint location = GL(glGetUniformLocation(id, name.c_str()));
 		return location != -1;
 	}
 
 
-	GLint ShaderProgram::getUniformLocation(const std::string &name){
+	GLint ShaderProgram::getUniformLocation(const std::string &name) {
 		GLint location = GL(glGetUniformLocation(id, name.c_str()));
 		if( location == -1 )
 			throw new ShaderException("Uniform '" + name + "' doesn't exist in program");
@@ -113,7 +125,7 @@ namespace River{
 	}
 
 
-	bool ShaderProgram::isReady() {
+	bool ShaderProgram::isReady() const {
 		return ready;
 	}
 
