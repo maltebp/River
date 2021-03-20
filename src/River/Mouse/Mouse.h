@@ -13,13 +13,13 @@ namespace River {
 		friend MouseController;
 	public:
 
-		static inline ListenerMap<MouseMoveEvent> moveListeners;
+		static inline ListenerMap<MouseMoveEvent&> moveListeners;
 
-		static inline ListenerMap<MouseScrollEvent> scrollListeners;
+		static inline ListenerMap<MouseScrollEvent&> scrollListeners;
 
-		static inline ListenerMap<MouseButtonEvent> buttonDownListeners;
+		static inline ListenerMap<MouseButtonEvent&> buttonDownListeners;
 
-		static inline ListenerMap<MouseButtonEvent> buttonUpListeners;
+		static inline ListenerMap<MouseButtonEvent&> buttonUpListeners;
 
 		static bool isButtonPressed(MouseButton button, bool consume = false);
 
