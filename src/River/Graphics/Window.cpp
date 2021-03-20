@@ -127,13 +127,13 @@ namespace River {
 
 
 		static void mousePosCallback(GLFWwindow* glfwWindow, double mouseX, double mouseY) {
-
-			mouseX *= Window::viewportResolution.width / (double)Window::resolution.width;
-			mouseY *= Window::viewportResolution.height / (double)Window::resolution.height;
-
 			mouseX -= Window::viewportResolution.width / 2.0;
+			mouseY -= Window::viewportResolution.height / 2.0;
 			mouseY *= -1;
-			mouseY += Window::viewportResolution.height / 2.0;
+
+			// Scale to viewport coordinates
+			mouseX *= (double)Window::resolution.width / Window::viewportResolution.width;
+			mouseY *= (double)Window::resolution.height / Window::viewportResolution.height;
 
 			MouseController::registerMouseMovement(mouseX, mouseY);
 		}
