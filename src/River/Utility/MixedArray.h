@@ -7,7 +7,8 @@ namespace River {
 
 	/**
 	 * @brief	Array intended to be used for storing OpenGL buffer data
-	 *			before uploading it to the GPU.
+	 *			before uploading it to the GPU, where the type of the data
+	 *			is not the same.
 	*/
 	class MixedArray {
 	public:
@@ -70,7 +71,7 @@ namespace River {
 			size_t bytes = sizeof(t);
 
 			size_t currentOffset = data.size();
-
+				
 			data.resize(data.size() + bytes);
 
 			T* rawData = reinterpret_cast<T*>(data.data() + currentOffset);

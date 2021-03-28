@@ -48,6 +48,7 @@ namespace River {
 	
 		buffer->bind();
 
+		// Assign the attribute
 		switch( type.getType() ) {
 		case GL_BYTE: case GL_UNSIGNED_BYTE: case GL_SHORT: case GL_UNSIGNED_SHORT: case GL_INT: case GL_UNSIGNED_INT: {
 			GL(glVertexAttribIPointer(index, type.getCount(), type.getType(), (GLsizei)(type.getTypeSize() * type.getCount() + spacing), (void*)bufferOffset));
@@ -99,7 +100,6 @@ namespace River {
 			throw new InvalidStateException("Vertex Array has no attributes set");
 		}
 		GL(glBindVertexArray(id));
-		
 	}
 
 
@@ -122,7 +122,7 @@ namespace River {
 			GL(glDrawElements(GL_TRIANGLES, count*3, indexType.getType(), (void*)byteOffset));
 		}
 		else {
-			GL(glDrawArrays(GL_TRIANGLES, offset, count * 3));
+			GL(glDrawArrays(GL_TRIANGLES, (GLint)offset, count * 3));
 		}
 
 	}
@@ -136,7 +136,7 @@ namespace River {
 			GL(glDrawElements(GL_LINES, count * 2, indexType.getType(), (void*)byteOffset));
 		}
 		else {
-			GL(glDrawArrays(GL_LINES, offset, count * 3));
+			GL(glDrawArrays(GL_LINES, offset, count * 2));
 		}
 
 	}

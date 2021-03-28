@@ -58,8 +58,8 @@ namespace River {
 		 *			glDrawElements is used if an index buffer has been set, other
 	     *			wise glDrawArrays is used
 		 * 
-		* @param count		Number of triangles to draw. Each line uses 2 vertices/indices
-		 * @param offset	Offset into the vertices/indices if an index buffer is attached
+		* @param count		Number of triangles to draw. Each triangle uses 3 vertices
+		 * @param offset	Offset into the vertices (or indices if an index buffer is attached)
 		*/
 		void drawTriangles(unsigned int count, unsigned int offset = 0);
 
