@@ -30,20 +30,19 @@ namespace River{
 	}
 
 
-	void ImageBinder::bind(ShaderProgram* shaderProgram){
+	void ImageBinder::bind(ShaderProgram* shaderProgram, const std::string& uniformName){
 		if( numTextures == 0 ) return;
 
-		if( !shaderProgram->hasUniform(uniformSamplerName) ){
-			// TODO: Create proper logging here (and remove iostream)
-			std::cout << "WARNING: ShaderProgram does not have the uniform '" << uniformSamplerName << "' when binding textures!" << std::endl;
-			return;
+		if( !shaderProgram->hasUniform(uniformName) ){
+			throw River::InvalidArgumentException("Shader program does not have the uniform '" + uniformName + "' when binding textures");
 		}
 
 		std::vector<int> textureSamples(numTextures);
 		for( unsigned int i = 0; i < numTextures; i++ ){
 			textureSamples[i] = (int) i;
 		}
-		shaderProgram->setIntArray(uniformSamplerName, textureSamples.data(), numTextures);
+
+		shaderProgram->setIntArray(uniformName, textureSamples.data(), numTextures);
 
 		for( unsigned int j = 0; j < numTextures; j++ ){
 			textures[j]->bind(j);

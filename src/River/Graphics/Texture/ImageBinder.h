@@ -30,7 +30,7 @@ namespace River {
 		/**
 		 * @brief	Binds the texture to a given ShaderProgram. The program must be bound beforehand
 		*/
-		void bind(ShaderProgram* shaderProgram);
+		void bind(ShaderProgram* shaderProgram, const std::string& uniformName);
 
 		void clear();
 
@@ -46,8 +46,6 @@ namespace River {
 		unsigned int numTextures = 0; // White is first texture
 
 		unsigned int numSlots = 0;
-
-		std::string uniformSamplerName = "u_Textures";
 
 	};
 
