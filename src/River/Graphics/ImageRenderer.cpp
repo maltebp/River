@@ -108,9 +108,14 @@ namespace River{
 		int textureSlot = -1; // -1 is no texture (just color)
 		unsigned int numTextureChannels = 0;
 		if( textureData.texture != nullptr ) {
-			if( textureBinder.isFull() )
-				flush();
+			
 			textureSlot = textureBinder.addImage(textureData.texture);
+
+			if( textureSlot < 0 ) {
+				flush();
+				textureSlot = textureBinder.addImage(textureData.texture);
+			}
+
 			numTextureChannels = textureData.texture->getNumChannels();
 		}
 		
@@ -197,7 +202,7 @@ namespace River{
 		// Enable alpha testing, and discarding any fragment, which has an alpha of 0
 		GL(glEnable(GL_ALPHA_TEST));
 		GL(glAlphaFunc(GL_GREATER, 0));
-		GL(glEnable(GL_DEPTH_TEST));
+			GL(glEnable(GL_DEPTH_TEST));
 		
 		if( blending ) {
 			// We expect things to be drawn in order when blending

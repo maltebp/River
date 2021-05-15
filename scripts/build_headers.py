@@ -4,7 +4,7 @@ from typing import List
 import shutil
 from pathlib import Path
 
-extensions: List[str] = [
+extensions : List[str] = [
     ".h",
     ".hpp",
     ".inl"

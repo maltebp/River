@@ -97,6 +97,7 @@ namespace River {
 		bool blending = false;
 
 		Camera* camera = nullptr;
+
 	};
 
 

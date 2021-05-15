@@ -19,8 +19,8 @@ namespace River {
 		 *			to the indices of the attributes (first attribute is index 0).
 		 * 
 		 * @param buffer	The buffer the array should use. 
-		 * @param firstType	First attribute type (required). Must not be VertexAttribute::NONE.
-		 * @param types		Additional attribute types. Must not be VertexAttribute::NONE.
+		 * @param firstType	Type of the first attribute (required). Must not be VertexAttribute::NONE.
+		 * @param types		Type of additional attributes Must not be VertexAttribute::NONE.
 		 * @return	Number of bytes of each vertex (sum of attribute sizes)
 		*/
 		template <typename ... Attributes>

@@ -17,22 +17,16 @@ namespace River{
 		free(textures);
 	}
 
-	unsigned int ImageBinder::addImage(Image* image){
-		for( unsigned int i = 0; i < numTextures; i++ )
-			if( textures[i] == image )
-				return i;
+	int ImageBinder::addImage(Image* image){
+		for( unsigned int i = 0; i < numTextures; i++ ) {
+			if( textures[i] == image ) return (int)i;
+		}
 
-		if( numTextures == numSlots )
-			throw new NoTextureSlotException();
+		if( numTextures == numSlots ) return -1;
 
 		textures[numTextures] = image;
 		numTextures++;
 		return numTextures - 1;
-	}
-
-
-	bool ImageBinder::isFull(){
-		return numTextures == numSlots;
 	}
 
 
