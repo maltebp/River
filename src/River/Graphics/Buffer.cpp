@@ -43,6 +43,39 @@ namespace River {
 	}
 
 
+	// TODO: Convert setting of data into 1 function
+	/*	Parameters:
+		 - Offset
+	 	 - Data
+	 	 - Bytes
+		 - Fit
+		
+		"Algorithm":
+
+			Start, within size		-> Sub data
+		    +++++++++
+			--------------
+
+			Start, within size		-> Sub data
+			++++++++++++++
+			--------------
+
+			Start, outside size		-> Data
+			+++++++++++++++++++
+			--------------
+
+			Offset, within size		-> Sub data
+				++++++++
+			--------------
+
+			THIS ONE IS THE PROBLEM!
+			Offset, outside size	-> Copy sub data, 
+			        +++++++++
+			--------------
+
+	*/
+
+
 	void Buffer::setData(void* data, size_t bytes, bool fit) {	
 
 		if( bytes > size || (bytes < size && fit) ) {

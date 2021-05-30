@@ -89,7 +89,6 @@ namespace River {
 		*/
 		void reset(size_t size);
 
-
 		/**
 		 * @brief	Binds this buffer to its given target
 		*/

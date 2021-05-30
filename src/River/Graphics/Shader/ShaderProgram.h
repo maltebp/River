@@ -56,10 +56,6 @@ namespace River {
 
 		unsigned int id = 0;
 
-		Shader* fragmentShader = nullptr;
-
-		Shader* vertexShader = nullptr;
-
 	};
 
 }
