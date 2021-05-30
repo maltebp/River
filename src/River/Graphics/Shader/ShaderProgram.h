@@ -21,7 +21,11 @@ namespace River {
 		void use();
 
 		// Uniforms -----------------------------------------------------------------
-		//void setUniformFloat(const std::string& name, float value);
+		
+		void setFloat(const std::string& name, GLfloat value);
+
+		void setInt(const std::string& name, GLint value);
+
 		void setIntArray(const std::string& name, const GLint* values, int numValues);
 
 		/**

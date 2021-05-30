@@ -84,6 +84,18 @@ namespace River{
 	}
 
 
+	void ShaderProgram::setFloat(const std::string& name, GLfloat value) {
+		GLint location = getUniformLocation(name);
+		GL(glUniform1f(location, value));
+	}
+
+
+	void ShaderProgram::setInt(const std::string& name, GLint value) {
+		GLint location = getUniformLocation(name);
+		GL(glUniform1i(location, value));
+	}
+
+
 	void ShaderProgram::setIntArray(const std::string &name, const GLint* values, int count){
 		GLint location = getUniformLocation(name);
 		GL(glUniform1iv(location, count, values));
