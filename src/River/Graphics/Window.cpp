@@ -200,7 +200,9 @@ namespace River {
 			// Error is triggered from callback
 			return;
 		}
-	
+
+		glfwWindowHint(GLFW_SAMPLES, 4);
+
 		NativeWindow::window = glfwCreateWindow(
 				resolution.width,
 				resolution.height,

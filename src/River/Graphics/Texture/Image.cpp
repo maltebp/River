@@ -2,14 +2,35 @@
 
 #include "Image.h"
 
-#include <River/External/stb_image/stb_image.h>
-#include "../GL.h"
+#include "River/External/stb_image/stb_image.h"
 #include "River/Error.h"
+
 
 namespace River {
 
 
-	Image::Image(){}
+	namespace {
+
+		GLint getGLWrapMode(Image::WrapMode mode) {
+			switch(mode) {
+				case Image::WrapMode::NONE:
+					return GL_CLAMP_TO_BORDER;
+				case Image::WrapMode::REPEAT:
+					return GL_REPEAT;
+				case Image::WrapMode::CLAMP:
+					return GL_CLAMP_TO_EDGE;
+			}
+			throw NotImplementedException("Wrap mode has not been implemented yet");
+		}
+
+	}
+
+
+	Image::Image() { }
+
+
+	Image::~Image() { }
+
 
 	void Image::destroy() {
 		if( isLoaded() )
@@ -28,10 +49,6 @@ namespace River {
 		
 		delete this;
 	}
-
-
-	Image::~Image() {}
-	
 
 
 	void Image::onLoad() {
@@ -66,20 +83,22 @@ namespace River {
 
 
 		// Image filtering/wrap options
-		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP));
-		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP));
+		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, getGLWrapMode(wrapModeHorizontal)));
+		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, getGLWrapMode(wrapModeVertical)));
 
-		// I assume this setting is bound to the texture and not the slot (texture unit)
 		GLenum glMinFilter;
 		GLenum glMagFilter;
-		if( scaleMode == ScaleMode::LINEAR ) {
+		
+		if( scaleDownMode == ScaleMode::LINEAR ){
 			glMinFilter = GL_LINEAR_MIPMAP_LINEAR;
-			//glMinFilter = GL_LINEAR;
+		}
+		if( scaleDownMode == ScaleMode::NEAREST ){
+			glMinFilter = GL_LINEAR_MIPMAP_NEAREST;
+		}
+		if( scaleUpMode == ScaleMode::LINEAR ) {
 			glMagFilter = GL_LINEAR;
 		}
-		if( scaleMode == ScaleMode::NEAREST ) {
-			glMinFilter = GL_LINEAR_MIPMAP_NEAREST;
-			//glMinFilter = GL_NEAREST ;
+		if( scaleUpMode == ScaleMode::NEAREST ) {
 			glMagFilter = GL_NEAREST;
 		}
 
@@ -140,17 +159,20 @@ namespace River {
 		);
 	}	
 
+
 	unsigned int Image::getNumChannels() {
 		if( !isLoaded() )
 			throw new AssetNotLoaded("Image must be loaded to check the number of channels of it");
 		return channels;
 	}
 
+
 	unsigned int Image::getWidth() {
 		if( !isLoaded() )
 			throw new AssetNotLoaded("Image must be loaded to check the width of it");
 		return width;
 	}
+
 
 	unsigned int Image::getHeight() {
 		if( !isLoaded() )
@@ -175,9 +197,11 @@ namespace River {
 		return whiteTexture;
 	}
 
+
 	float Image::normalizeX(unsigned int coordinate) {
 		return (float) coordinate / (float) width;
 	}
+
 
 	float Image::normalizeY(unsigned int coordinate) {
 		return (float) coordinate / (float) height;
@@ -218,13 +242,37 @@ namespace River {
 		}
 	}
 
+
 	Image::Creator& Image::Creator::setPartiallyTransparent(bool toggle) {
 		asset->partiallyTransparent = toggle;
 		return *this;
 	}
 
+
 	Image::Creator& Image::Creator::setScaleMode(ScaleMode mode) {
-		asset->scaleMode = mode;
+		asset->scaleDownMode = mode;
+		asset->scaleUpMode = mode;
+		return *this;
+	}
+
+
+	Image::Creator& Image::Creator::setScaleMode(ScaleMode scaleDownMode, ScaleMode scaleUpMode) {
+		asset->scaleDownMode = scaleDownMode;
+		asset->scaleUpMode = scaleUpMode;
+		return *this;
+	}
+
+
+	Image::Creator& Image::Creator::setWrapMode(WrapMode mode) {
+		asset->wrapModeHorizontal = mode;
+		asset->wrapModeVertical = mode;
+		return *this;
+	}
+
+
+	Image::Creator& Image::Creator::setWrapMode(WrapMode horizontalMode, WrapMode verticalMode) {
+		asset->wrapModeHorizontal = horizontalMode;
+		asset->wrapModeVertical = verticalMode;
 		return *this;
 	}
 

@@ -21,7 +21,7 @@ int main() {
 	Game::start([]() {
 		GlobalAssets::COLLECTION->load();
 		River::SpriteRenderingSystem::initialize();
-		River::TextRenderingSystem::initialize();
+		River::TextRenderingSystem::initialize();	
 		Game::pushLayer<MainLayer>("This is a layer starting argument!");
 	});
 
