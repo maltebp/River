@@ -42,7 +42,7 @@ namespace River {
 		*/
 		//void rotate(int times);
 
-		const Image::SampleCoordinates& getTextureCoordinates() const;
+		Image::SampleCoordinates getTextureCoordinates(bool flippedHorizontally = false, bool flippedVertically = false) const;
 
 		/**
 		 * @brief	Whether or not this Texture's texture is only used by this Texture. If so, the texture will be deleted

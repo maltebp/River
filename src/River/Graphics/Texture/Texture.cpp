@@ -54,9 +54,21 @@ namespace River {
 		return dedicatedImage;
 	}
 
-	const Image::SampleCoordinates& Texture::getTextureCoordinates() const {
+	Image::SampleCoordinates Texture::getTextureCoordinates(bool flippedHorizontally, bool flippedVertically) const {
+		
+		Image::SampleCoordinates coordinates = textureCoordinates;
+
+		if( flippedHorizontally ) {
+			coordinates.x1 = textureCoordinates.x2;
+			coordinates.x2 = textureCoordinates.x1;
+		}
+
+		if( flippedVertically ) {
+			coordinates.y1 = textureCoordinates.y2;
+			coordinates.y2 = textureCoordinates.y1;
+		}
+
 		return textureCoordinates;
-		//return flippedCoordinates;
 	}
 
 
