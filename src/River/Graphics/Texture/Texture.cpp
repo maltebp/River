@@ -68,7 +68,7 @@ namespace River {
 			coordinates.y2 = textureCoordinates.y1;
 		}
 
-		return textureCoordinates;
+		return coordinates;
 	}
 
 
