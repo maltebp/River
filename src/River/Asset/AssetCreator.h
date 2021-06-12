@@ -24,6 +24,13 @@ namespace River {
 		
 		static_assert(std::is_convertible<A*, Asset*>::value, "Class must inherit publicly from River::Asset");
 
+		~AssetCreator() { 
+			if( !finished ) {
+				// TODO: Use logging system when in place
+				std::cout << "WARNING!  AssetCreator was destroyed without finishing" << std::endl;
+			}
+		}
+
 		/**
 		 * @brief	Add this Asset to an AssetCollection. If the asset is already added to the collection,
 		 *			it will do nothing
@@ -43,8 +50,14 @@ namespace River {
 		 * @throws	River::InvalidStateException	If the Asset has already been finished (this method has been called before)
 		*/
 		A* finish() {
-			if( finished )
+			
+			if( finished ) {
 				throw new InvalidStateException("AssetCreator has already finished");
+			}
+
+			if( asset == nullptr ) {
+				throw new InvalidStateException("Created asset is nullptr");
+			}
 
 			for( auto collection : collections ) {
 				collection->add(asset);
@@ -57,22 +70,26 @@ namespace River {
 			return asset;
 		}
 
-		
 
 	protected:
 
+		AssetCreator() { }
 
 		/**
 		 * @brief	Method which is called right before the Asset returned, when finish is called
 		*/
 		virtual void onFinish() {}
 
-		
+	protected:
+
 		A* asset;
 
 	private:
+
 		std::vector<AssetCollection*> collections;
+
 		bool finished = false;
+
 	};
 
 }

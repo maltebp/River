@@ -5,6 +5,8 @@
 
 namespace GlobalAssets {
 
+	using namespace River;
+
 
 	inline River::AssetCollection* COLLECTION = new River::AssetCollection();
 
@@ -39,47 +41,33 @@ namespace GlobalAssets {
 			.addToCollection(COLLECTION)
 			.finish();
 
-		inline River::Texture* SANTA_JUMP_1 = River::Texture::create(River::Image::create("assets/santa/Jump (1).png").setScaleMode(River::Image::ScaleMode::LINEAR).finish(), true)
+		inline Texture* SANTA = Texture::create(Image::create("assets/santa/Idle (1).png").setPartiallyTransparent(true).finish(), true).finish();
+
+	}
+
+
+	namespace SpriteAnimation {
+ 
+		inline River::TextureAnimation* SANTA_JUMP = River::TextureAnimation::create({
+				{ Image::create("assets/santa/Jump (1).png").setPartiallyTransparent(true) },
+				{ Image::create("assets/santa/Jump (2).png").setPartiallyTransparent(true) },
+				{ Image::create("assets/santa/Jump (3).png").setPartiallyTransparent(true) },
+				{ Image::create("assets/santa/Jump (4).png").setPartiallyTransparent(true) },
+				{ Image::create("assets/santa/Jump (5).png").setPartiallyTransparent(true) },
+				{ Image::create("assets/santa/Jump (6).png").setPartiallyTransparent(true) },
+				{ Image::create("assets/santa/Jump (7).png").setPartiallyTransparent(true) },
+				{ Image::create("assets/santa/Jump (8).png").setPartiallyTransparent(true) }
+			})
 			.addToCollection(COLLECTION)
-			.setPartiallyTransparent()
+			.setDuration(0.5)
 			.finish();
 
-		inline River::Texture* SANTA_JUMP_2 = River::Texture::create(River::Image::create("assets/santa/Jump (2).png").finish(), true)
-			.addToCollection(COLLECTION)
-			.setPartiallyTransparent()
-			.finish();
-
-		inline River::Texture* SANTA_JUMP_3 = River::Texture::create(River::Image::create("assets/santa/Jump (3).png").finish(), true)
-			.addToCollection(COLLECTION)
-			.setPartiallyTransparent()
-			.finish();
-
-		inline River::Texture* SANTA_JUMP_4 = River::Texture::create(River::Image::create("assets/santa/Jump (4).png").finish(), true)
-			.addToCollection(COLLECTION)
-			.setPartiallyTransparent()
-			.finish();
-
-		inline River::Texture* SANTA_JUMP_5 = River::Texture::create(River::Image::create("assets/santa/Jump (5).png").finish(), true)
-			.addToCollection(COLLECTION)
-			.setPartiallyTransparent()
-			.finish();
-
-		inline River::Texture* SANTA_JUMP_6 = River::Texture::create(River::Image::create("assets/santa/Jump (6).png").finish(), true)
-			.addToCollection(COLLECTION)
-			.setPartiallyTransparent()
-			.finish();
-
-		inline River::Texture* SANTA_JUMP_7 = River::Texture::create(River::Image::create("assets/santa/Jump (7).png").finish(), true)
-			.addToCollection(COLLECTION)
-			.setPartiallyTransparent()
-			.finish();
-
-		inline River::Texture* SANTA_JUMP_8 = River::Texture::create(River::Image::create("assets/santa/Jump (8).png").finish(), true)
-			.addToCollection(COLLECTION)
-			.setPartiallyTransparent()
-			.finish();
-
-
+		inline River::TextureAnimationCollection* SANTA_ANIMATIONS = River::TextureAnimationCollection::create(
+			{
+				{ "jump", SpriteAnimation::SANTA_JUMP }
+			}
+		)
+		.addToCollection(COLLECTION);
 
 	}
 
@@ -96,37 +84,6 @@ namespace GlobalAssets {
 		inline River::AudioAsset* CLASSICAL_MUSIC = River::AudioAsset::create("assets/music.wav")
 			//.addToCollection(COLLECTION)
 			.finish();
-	}
-
-
-	namespace SpriteAnimation {
- 
-		inline River::TextureAnimation* SANTA_JUMP = River::TextureAnimation::create(
-				Textures::SANTA_JUMP_1,
-				Textures::SANTA_JUMP_2,
-				Textures::SANTA_JUMP_3,
-				Textures::SANTA_JUMP_4,
-				Textures::SANTA_JUMP_5,
-				Textures::SANTA_JUMP_6,
-				Textures::SANTA_JUMP_7,
-				Textures::SANTA_JUMP_8,
-				Textures::SANTA_JUMP_7,
-				Textures::SANTA_JUMP_6,
-				Textures::SANTA_JUMP_5,
-				Textures::SANTA_JUMP_4,
-				Textures::SANTA_JUMP_3,
-				Textures::SANTA_JUMP_2
-			)
-			.addToCollection(COLLECTION)
-			.setDuration(1.0)
-			.finish();
-
-		inline River::TextureAnimationCollection* SANTA_ANIMATIONS = River::TextureAnimationCollection::create(
-			{
-				{ "jump", SpriteAnimation::SANTA_JUMP }
-			}
-		);
-
 	}
 
 

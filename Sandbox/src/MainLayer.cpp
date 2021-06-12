@@ -62,7 +62,7 @@ void MainLayer::createSanta( double x, double y, unsigned int depth) {
 	transform->depth = (double) depth;
 
 	auto sprite = entity->addComponent<River::ECS::Sprite>();
-	sprite->texture = GlobalAssets::Textures::SANTA_JUMP_1;
+	sprite->texture = GlobalAssets::Textures::CAR;
 	sprite->opacity = 0.5;
 
 	auto animation = entity->addComponent<River::ECS::SpriteAnimation>();

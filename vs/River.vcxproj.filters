@@ -317,5 +317,8 @@
     <ClCompile Include="src\River\Graphics\SpriteAnimation\TextureAnimationCollection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\River\Graphics\SpriteAnimation\TextureAnimation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

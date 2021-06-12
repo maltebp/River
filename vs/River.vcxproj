@@ -193,6 +193,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
   <ItemGroup>
     <ClCompile Include="src\River\Graphics\Buffer.cpp" />
     <ClCompile Include="src\River\Graphics\SimpleVertexArray.cpp" />
+    <ClCompile Include="src\River\Graphics\SpriteAnimation\TextureAnimation.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteAnimation\TextureAnimationCollection.cpp" />
     <ClCompile Include="src\River\Mouse\MouseController.cpp" />
     <ClCompile Include="src\River\Mouse\Mouse.cpp" />
