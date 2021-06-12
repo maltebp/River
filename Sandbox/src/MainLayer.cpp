@@ -66,7 +66,7 @@ void MainLayer::createSanta( double x, double y, unsigned int depth) {
 	sprite->opacity = 0.5;
 
 	auto animation = entity->addComponent<River::ECS::SpriteAnimation>();
-	animation->animation = GlobalAssets::SpriteAnimation::SANTA_JUMP;
+	animation->animation = GlobalAssets::SpriteAnimation::SANTA_ANIMATIONS->getAnimation("jump");
 
 }
 

@@ -123,6 +123,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\River\Graphics\BufferUsageHint.h" />
+    <ClInclude Include="src\River\Graphics\SpriteAnimation\TextureAnimationCollection.h" />
     <ClInclude Include="src\River\Utility\MixedArray.h" />
     <ClInclude Include="src\River\Graphics\Buffer.h" />
     <ClInclude Include="src\River\Graphics\IndexBuffer.h" />
@@ -192,6 +193,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
   <ItemGroup>
     <ClCompile Include="src\River\Graphics\Buffer.cpp" />
     <ClCompile Include="src\River\Graphics\SimpleVertexArray.cpp" />
+    <ClCompile Include="src\River\Graphics\SpriteAnimation\TextureAnimationCollection.cpp" />
     <ClCompile Include="src\River\Mouse\MouseController.cpp" />
     <ClCompile Include="src\River\Mouse\Mouse.cpp" />
     <ClCompile Include="src\River\Keyboard\Keyboard.cpp" />
