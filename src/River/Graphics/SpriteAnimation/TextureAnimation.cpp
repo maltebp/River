@@ -94,7 +94,7 @@ namespace River {
 
 
     FrameParameter::FrameParameter(Image::Creator& imageCreator) 
-        :   texture(Texture::create(imageCreator.finish(), true).finish()),
+        :   texture(Texture::create(imageCreator)),
             dedicatedTexture(true)
     { }
 

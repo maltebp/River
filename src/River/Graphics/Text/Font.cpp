@@ -98,6 +98,8 @@ namespace River {
 	}
 
 
-
+	Font::Creator::operator Font*() {
+		return finish();
+	}
 
 }

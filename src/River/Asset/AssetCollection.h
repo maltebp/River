@@ -42,8 +42,11 @@ namespace River {
 		bool isLoaded();
 
 	private:
+
 		bool loaded = false;
+
 		std::vector<Asset*> assets;
+		
 	};
 }
 

@@ -276,5 +276,10 @@ namespace River {
 		return *this;
 	}
 
+	
+	Image::Creator::operator Image* () {
+		return finish();
+	}
+
 
 }

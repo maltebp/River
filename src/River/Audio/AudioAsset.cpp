@@ -20,7 +20,7 @@ namespace River {
 		// Open file (does not load data)
 		drwav file;
 		{
-			bool success = drwav_init_file(&file, filePath.c_str(), NULL);
+ 			bool success = drwav_init_file(&file, filePath.c_str(), NULL);
 			if (!success)
 				// doing some more manual loading of the wav file could
 				// provide us with a more accurate error message, but that
@@ -113,5 +113,10 @@ namespace River {
 
 	void AudioAsset::Creator::setPriority(unsigned int priority) {
 		asset->priority = priority;
+	}
+
+
+	AudioAsset::Creator::operator AudioAsset*() {
+		return finish();
 	}
 }

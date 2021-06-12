@@ -47,7 +47,9 @@ namespace River {
 
 
 	protected:
+
 		unsigned int loadCount = 0;
+		
 	};
 
 }

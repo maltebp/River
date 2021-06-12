@@ -164,6 +164,8 @@ namespace River {
 			 */
 			Creator& setWrapMode(WrapMode horizontalMode, WrapMode verticalMode);
 
+			operator Image*();
+
 		protected:
 
 			void onFinish() override;	

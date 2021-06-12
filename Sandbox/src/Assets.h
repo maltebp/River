@@ -8,22 +8,20 @@ namespace GlobalAssets {
 	using namespace River;
 
 
-	inline River::AssetCollection* COLLECTION = new River::AssetCollection();
+	inline AssetCollection* COLLECTION = new AssetCollection();
 
 
 	namespace Fonts {
-		inline River::Font* ARIAL = River::Font::create("assets/arial.ttf")
+		inline Font* ARIAL = Font::create("assets/arial.ttf")
 			.addToCollection(COLLECTION)
-			.enableSizeAutoLoading()
-			.finish();
+			.enableSizeAutoLoading();
 	}
 
 
 	namespace Images {
 
-		inline River::Image* CAR = River::Image::create("assets/car.png")
-			.setScaleMode(River::Image::ScaleMode::NEAREST)
-			.finish();
+		inline Image* CAR = Image::create("assets/car.png")
+			.setScaleMode(Image::ScaleMode::NEAREST);
 
 		
 	}
@@ -32,23 +30,26 @@ namespace GlobalAssets {
 
 	namespace Textures {
 
-		inline River::Texture* CAR = River::Texture::create(Images::CAR, true)
-			.addToCollection(COLLECTION)
-			.setPartiallyTransparent()
-			.finish();
+		inline Texture* CAR = Texture::create(Images::CAR)
+			.addToCollection(COLLECTION);
 
-		inline River::Texture* PIXEL = River::Texture::create(River::Image::create("assets/pixel.png").setScaleMode(River::Image::ScaleMode::NEAREST).finish(), true)
-			.addToCollection(COLLECTION)
-			.finish();
+		inline Texture* PIXEL = Texture::create(
+				Image::create("assets/pixel.png")
+				.setScaleMode(Image::ScaleMode::NEAREST)
+			)
+			.addToCollection(COLLECTION);
 
-		inline Texture* SANTA = Texture::create(Image::create("assets/santa/Idle (1).png").setPartiallyTransparent(true).finish(), true).finish();
+		inline Texture* SANTA = Texture::create(
+				Image::create("assets/santa/Idle (1).png")
+				.setPartiallyTransparent(true
+			));
 
 	}
 
 
 	namespace SpriteAnimation {
  
-		inline River::TextureAnimation* SANTA_JUMP = River::TextureAnimation::create({
+		inline TextureAnimation* SANTA_JUMP = TextureAnimation::create({
 				{ Image::create("assets/santa/Jump (1).png").setPartiallyTransparent(true) },
 				{ Image::create("assets/santa/Jump (2).png").setPartiallyTransparent(true) },
 				{ Image::create("assets/santa/Jump (3).png").setPartiallyTransparent(true) },
@@ -59,10 +60,9 @@ namespace GlobalAssets {
 				{ Image::create("assets/santa/Jump (8).png").setPartiallyTransparent(true) }
 			})
 			.addToCollection(COLLECTION)
-			.setDuration(0.5)
-			.finish();
+			.setDuration(0.5);
 
-		inline River::TextureAnimationCollection* SANTA_ANIMATIONS = River::TextureAnimationCollection::create(
+		inline TextureAnimationCollection* SANTA_ANIMATIONS = TextureAnimationCollection::create(
 			{
 				{ "jump", SpriteAnimation::SANTA_JUMP }
 			}
@@ -73,17 +73,14 @@ namespace GlobalAssets {
 
 
 	namespace Sounds {
-		inline River::AudioAsset* COUNTDOWN = River::AudioAsset::create("assets/countdown.wav")
-			.addToCollection(COLLECTION)
-			.finish();
+		inline AudioAsset* COUNTDOWN = AudioAsset::create("assets/countdown.wav")
+			.addToCollection(COLLECTION);
 
-		inline River::AudioAsset* COINS = River::AudioAsset::create("assets/test.wav")
-			.addToCollection(COLLECTION)
-			.finish();
+		inline AudioAsset* COINS = AudioAsset::create("assets/test.wav")
+			.addToCollection(COLLECTION);
 
-		inline River::AudioAsset* CLASSICAL_MUSIC = River::AudioAsset::create("assets/music.wav")
-			//.addToCollection(COLLECTION)
-			.finish();
+		inline AudioAsset* CLASSICAL_MUSIC = AudioAsset::create("assets/music.wav")
+			.addToCollection(COLLECTION);
 	}
 
 

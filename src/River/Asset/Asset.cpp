@@ -21,7 +21,6 @@ namespace River {
 
 
 	bool Asset::isLoaded() {
-
 		return loadCount > 0;
 	}
 

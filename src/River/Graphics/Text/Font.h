@@ -56,10 +56,12 @@ namespace River {
 			*/
 			Creator& preloadSize(unsigned int fontSize);
 
-		private:
-			Creator(const std::string& fontPath);
+			operator Font*();
 
 		private:
+
+			Creator(const std::string& fontPath);
+
 		};
 
 	

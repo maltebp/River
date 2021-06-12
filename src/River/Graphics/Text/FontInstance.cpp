@@ -70,14 +70,12 @@ namespace River{
 
         Texture* tex = nullptr;
         if( texture.rows != 0 && texture.width != 0 ) {
-            // If the texture row/width is 0 then there is not image
+            // If the texture row/width is 0 then there is no image
             // for the glyph (i.e. when it's ASCII 32, space)
-            auto img = Image::create(texture.buffer, texture.width, texture.rows, 1, 1)
-                .setPartiallyTransparent(true)
-                .finish();
-
-            tex = Texture::create(img, true)
-                .finish();
+            tex = Texture::create(
+                    Image::create(texture.buffer, texture.width, texture.rows, 1, 1)
+                    .setPartiallyTransparent(true)
+                );
             tex->load();
         }
 

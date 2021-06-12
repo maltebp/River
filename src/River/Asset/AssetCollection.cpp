@@ -6,8 +6,9 @@ namespace River {
 
 	void AssetCollection::add(Asset* asset) {
 		auto iterator = std::find(assets.begin(), assets.end(), asset);
-		if( iterator == assets.end() )
+		if( iterator == assets.end() ){
 			assets.push_back(asset);
+		}
 	}
 
 	void AssetCollection::load() {

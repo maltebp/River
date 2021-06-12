@@ -50,7 +50,7 @@ namespace River {
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Creator
 	public: 
-		class Creator : public AssetCreator<AudioAsset::Creator, AudioAsset>{
+ 		class Creator : public AssetCreator<AudioAsset::Creator, AudioAsset>{
 			friend class AudioAsset;
 		private:
 			Creator(const std::string& filePath);
@@ -63,6 +63,8 @@ namespace River {
 			 *			to play all audio instances.
 			 */
 			void setPriority(unsigned int);
+
+			operator AudioAsset*();
 
 		};
 

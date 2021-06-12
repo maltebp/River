@@ -5,7 +5,6 @@
 namespace River {
 
 
-
 	Texture::Texture() {}
 
 
@@ -124,11 +123,18 @@ namespace River {
 	// Creator functions
 
 
-	Texture::Creator::Creator(Image* source, bool dedicatedImage) {
+	Texture::Creator::Creator(Image::Creator& imageCreator)
+		: Creator(imageCreator.finish())
+	{
+		asset->dedicatedImage = true;
+	}
+
+
+	Texture::Creator::Creator(Image* source) {
 		asset = new Texture();
 		asset->image = source;
 		asset->partiallyTransparent = source->isPartiallyTransparent();
-		asset->dedicatedImage = dedicatedImage;
+		asset->dedicatedImage = false;
 
 		// Sample x2/y2 of 0 means "from offset x/y to full width/height".
 		// However these coordinates can only be set once the image has been loaded.
@@ -168,6 +174,11 @@ namespace River {
 		asset->partiallyTransparent = true;
 
 		return *this;
+	}
+
+	
+	Texture::Creator::operator Texture*() {
+		return finish();
 	}
 
 }

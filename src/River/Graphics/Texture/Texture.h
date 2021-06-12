@@ -16,7 +16,6 @@ namespace River {
 	class Texture : public Asset {
 	public:
 
-
 		/**
 		 * @brief The non-normalized Texture width
 		*/
@@ -79,7 +78,6 @@ namespace River {
 		bool dedicatedImage = false;
 
 		Image::SampleCoordinates textureCoordinates;
-		Image::SampleCoordinates flippedCoordinates;
 
 		// Whether or not this texture contains partially transparent areas
 		bool partiallyTransparent;
@@ -95,10 +93,13 @@ namespace River {
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Creator
 	public:
+
 		class Creator : public AssetCreator<Creator, Texture> {
 			friend class Texture;
 
-			Creator(Image* image, bool dedicatedImage);
+			Creator(Image::Creator& image);
+
+			Creator(Image* image);
 
 		public:
 
@@ -117,16 +118,32 @@ namespace River {
 			 *			will get partially transparent pixels drawn.
 			*/
 			Creator& setPartiallyTransparent();
+
+			operator Texture*();
+
 		};
 
 
 		/**
-		 * @brief	Creates a Texture from a shared Image. The image will be loaded/unloaded together with the Texture.
-		 * @param source	The source image this Texture should be sampled from
+		 * @brief	Creates a Texture from a dedicated. The image will be loaded/unloaded together with the Texture.
+		 * @param source	The dedicated source image this Texture should be sampled from
 		 * @param dedicatedSource	Whether or not this Texture should take ownership of the source. If true, then the Image will be destroyed
 		 *							together with the Texture, and the pointer should be passed only to this method.
 		*/
-		static Creator create(Image* source, bool dedicatedSource) { return Creator(source, dedicatedSource); }
+		static Creator create(Image::Creator& source) { 
+			return Creator(source);
+		}
+
+
+		/**
+		 * @brief	Creates a Texture from a non-dedicated (shared) Image. The image will be loaded/unloaded together with the Texture.
+		 * @param source	The non/dedicated source image this Texture should be sampled from
+		 * @param dedicatedSource	Whether or not this Texture should take ownership of the source. If true, then the Image will be destroyed
+		 *							together with the Texture, and the pointer should be passed only to this method.
+		*/
+		static Creator create(Image* source) { 
+			return Creator(source);
+		}
 
 
 		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
