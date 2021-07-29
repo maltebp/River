@@ -8,13 +8,17 @@
 
 // GL Error handling
 namespace River {
-	namespace GLError {
+
+	namespace GL {
+
 		void glCheckError();
+
 	}
+
 }
 
 #if defined(_DEBUG) && !defined(GL)
-	#define GL(x) x; River::GLError::glCheckError()
+	#define GL(x) x; River::GL::glCheckError()
 #else
-	#define GL(x) x;
+	#define GL(x) x
 #endif

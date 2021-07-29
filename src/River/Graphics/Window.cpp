@@ -7,6 +7,8 @@
 #include <iomanip>
 #include <iostream>
 
+#include "River/External/glm/glm.hpp"
+
 #include "GL.h"
 #include "Screen.h"
 #include "River/Mouse/MouseController.h"
@@ -352,11 +354,6 @@ namespace River {
 	}
 
 
-	void Window::setClearColor(Color color) {
-		glClearColor(color.r, color.g, color.b, color.a);
-	}
-
-
 	void Window::center() {
 		if( fullscreen ) return;
 
@@ -429,6 +426,7 @@ namespace River {
 		// Measure speed
 		double currentTime = glfwGetTime();
 		frameCount++;
+
 		// If a second has passed.
 		double timePassed = currentTime - previousFpsTime;
 		if( timePassed >= 1.0 ) {
@@ -439,13 +437,24 @@ namespace River {
 		}
 
 		glfwSwapBuffers(NativeWindow::window);
+		
 		GL(glDepthMask(GL_TRUE)); // We must be able to write to the depth buffer in order to clear the bit
-		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+
+		GL(glClearColor(clearColorValue.r, clearColorValue.g, clearColorValue.b, clearColorValue.a));
+		GL(glClearDepth(clearDepthValue));
+
+		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT ));
 	}
 
 
-	void Window::clearDepth() {
-		GL(glClear(GL_DEPTH_BUFFER_BIT));
+	void Window::setClearColorValue(Color color) {
+		clearColorValue = color;
 	}
+
+	
+	void Window::setClearDepthValue(double depth) {
+		clearDepthValue = glm::clamp(depth, 0.0 , 1.0);
+	}
+
 
 }

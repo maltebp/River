@@ -100,11 +100,13 @@ namespace River {
 		/**
 		 * @brief	Method called when the Layer has been effectively added to its parent (after the parent has been cleaned)
 		*/
-		virtual void onCreate(){}
+		virtual void onCreate() { }
 
-		virtual void onUpdate(){}
+		virtual void onUpdate() { }
 
-		virtual void onDestroy(){}
+		virtual void onRenderGUI() { }
+
+		virtual void onDestroy() { }
 
 
 	private:

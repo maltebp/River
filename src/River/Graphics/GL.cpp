@@ -9,29 +9,36 @@
 #include "River/Error.h"
 
 namespace River {
-	namespace GLError {
-		// Just a small helper function to convert int to hex
-		static std::string errorToHex(GLenum i) {
-			std::stringstream stream;
-			stream << "0x" << std::setfill('0') << std::setw(4) << std::hex << i;
-			return stream.str();
-		}
+	namespace GL {
 
+		namespace {
 
-		static std::string errorToString(GLenum errorCode) {
-			switch(errorCode){
-			case 0x0500: return "Invalid enum";
-			case 0x0501: return "Invalid value";
-			case 0x0502: return "Invalid operation";
-			case 0x0503: return "Stack overflow";
-			case 0x0504: return "Stack underflow";
-			case 0x0505: return "Out of memory";
-			case 0x0506: return "Invalid framebuffer operation";
-			case 0x0507: return "Context lost";
-			case 0x0508: return "Table too large"; // Should be a deprecated error
+			// Just a small helper function to convert int to hex
+			std::string errorToHex(GLenum i) {
+				std::stringstream stream;
+				stream << "0x" << std::setfill('0') << std::setw(4) << std::hex << i;
+				return stream.str();
 			}
-			return "Unknown error";
+
+
+			std::string errorToString(GLenum errorCode) {
+				switch(errorCode){
+				case 0x0500: return "Invalid enum";
+				case 0x0501: return "Invalid value";
+				case 0x0502: return "Invalid operation";
+				case 0x0503: return "Stack overflow";
+				case 0x0504: return "Stack underflow";
+				case 0x0505: return "Out of memory";
+				case 0x0506: return "Invalid framebuffer operation";
+				case 0x0507: return "Context lost";
+				case 0x0508: return "Table too large"; // Should be a deprecated error
+				}
+				return "Unknown error";
+			}
+
 		}
+
+		
 
 
 		void glCheckError() {

@@ -34,12 +34,10 @@ namespace River {
 
 		//std::cout << "GLEW initialized" << std::endl;
 		//std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
-		//std::cout << "Graphics card: " << glGetString(GL_RENDERER) << std::endl;
+		//std::cout << "Graphics card: " << glGetString(GL_RENDERER) << std::endl;2
 
 		// Initialize audio system
 		AL::initialize();
-
-		Window::setClearColor(Colors::BLACK);
 
 		if( onStart != nullptr ) {
 			onStart();

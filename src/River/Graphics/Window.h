@@ -88,9 +88,11 @@ namespace River {
 		*/
 		static void center();
 
-		static void setClearColor(Color color);
-
 		static void clear();
+
+		static void setClearColorValue(Color color );
+
+		static void setClearDepthValue(double value);
 
 		static void clearDepth();
 
@@ -137,8 +139,10 @@ namespace River {
 
 		static inline unsigned int frameCount = 0;
 
-		static inline Color clearColor;
+		static inline Color clearColorValue = Colors::BLACK;
 
+		static inline double clearDepthValue = 1.0;
+ 
 	};
 }
 
