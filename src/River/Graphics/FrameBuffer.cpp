@@ -263,9 +263,22 @@ namespace River {
         }
     }
 
+    
     State FrameBuffer::getState() {
         return state;
     }
+
+
+    GLuint FrameBuffer::getColorBufferImage(unsigned int index) {
+        if( index >= colorBuffers.size() ) return 0;
+        return colorBuffers[index];
+    }
+
+
+    GLuint FrameBuffer::getDepthBufferImage() {
+        return depthBuffer;
+    }
+
 
     FrameBuffer* FrameBuffer::getCurrent() {
         if( bindingStack.size() == 0 ) return nullptr;

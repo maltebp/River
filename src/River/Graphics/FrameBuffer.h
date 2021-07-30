@@ -12,9 +12,26 @@ namespace River {
     public:
 
         enum class State {
+
+            /**
+             * @brief   FrameBuffer has not been built yet
+             */
             NEW,
+
+            /**
+             * @brief   FrameBuffer is built, but is not bound
+             */
             UNBOUND,
+
+            /**
+             * @brief	FrameBuffer is built and bound, but is not the current/active FrameBuffer
+             *          (the one being rendered to)
+             */
             BOUND,
+
+            /**
+             * @brief	FrameBuffer is built and bound, and is the one being rendered to currently
+             */
             CURRENT
         };
 
