@@ -29,6 +29,8 @@ private:
 
 	River::Camera* camera;
 
+	River::FrameBuffer frameBuffer;
+
 	float x = 0;
 	float rotation = 0;
 

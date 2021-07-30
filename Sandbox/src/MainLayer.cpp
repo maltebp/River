@@ -16,6 +16,12 @@ bool listenerAdded = false;
 MainLayer::MainLayer(const std::string& arg)
 {
 
+	// Create test framebuffer
+	frameBuffer.addColorBuffer({600, 400});
+	frameBuffer.addDepthBuffer({600, 400});
+	frameBuffer.build();
+	// frameBuffer.use();
+
 	River::Keyboard::keyDownListeners.add(this, [this](auto e) {
 		onKeyDownEvent(e);
 	});
