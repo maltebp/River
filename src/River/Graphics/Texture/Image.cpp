@@ -12,6 +12,7 @@ namespace River {
 	using ScaleMode = Image::ScaleMode;
 	using MipmapMode = Image::MipmapMode;
 	using WrapMode = Image::WrapMode;
+	using Creator = Image::Creator;
 
 
 	Image::Image() { }
@@ -200,7 +201,7 @@ namespace River {
 	}
 
 
-	GLenum Image::toGLScaleMode(Image::ScaleMode scaleMode, MipmapMode mipmapMode) {
+	GLenum Image::toGLScaleMode(ScaleMode scaleMode, MipmapMode mipmapMode) {
 		
 		switch(mipmapMode) {
 			case MipmapMode::NONE:
@@ -229,20 +230,20 @@ namespace River {
 	}
 
 
-	GLenum Image::toGLWrapMode(Image::WrapMode mode) {
+	GLenum Image::toGLWrapMode(WrapMode mode) {
 		switch(mode) {
-			case Image::WrapMode::NONE:
+			case WrapMode::NONE:
 				return GL_CLAMP_TO_BORDER;
-			case Image::WrapMode::REPEAT:
+			case WrapMode::REPEAT:
 				return GL_REPEAT;
-			case Image::WrapMode::CLAMP:
+			case WrapMode::CLAMP:
 				return GL_CLAMP_TO_EDGE;
 		}
 		throw NotImplementedException("Wrap mode has not been implemented yet");
 	}
 
 
-	Image::Creator::Creator(const std::string& filePath) {
+	Creator::Creator(const std::string& filePath) {
 		asset = new Image();
 		asset->filePath = filePath;
 		asset->fromFile = true;
@@ -252,7 +253,7 @@ namespace River {
 	/**
 	 * @brief	Constructs an Image from a data source. The image will copy the data on creation, and unloading this image will have no effect on memory.
 	*/
-	Image::Creator::Creator(unsigned char* data, unsigned int width, unsigned int height, unsigned int channels, unsigned int rowAlignment) {
+	Creator::Creator(unsigned char* data, unsigned int width, unsigned int height, unsigned int channels, unsigned int rowAlignment) {
 		asset = new Image();
 		asset->fromFile = false;
 		asset->width = width;
@@ -263,7 +264,7 @@ namespace River {
 	}
 
 
-	void Image::Creator::onFinish() {
+	void Creator::onFinish() {
 		if( !asset->fromFile ) {
 			// The image should always be "loaded" when not from file
 			// so we construct it here
@@ -272,47 +273,47 @@ namespace River {
 	}
 
 
-	Image::Creator& Image::Creator::setPartiallyTransparent(bool toggle) {
+	Creator& Creator::setPartiallyTransparent(bool toggle) {
 		asset->partiallyTransparent = toggle;
 		return *this;
 	}
 
 
-	Image::Creator& Image::Creator::setScaleMode(ScaleMode mode) {
+	Creator& Creator::setScaleMode(ScaleMode mode) {
 		asset->scaleDownMode = mode;
 		asset->scaleUpMode = mode;
 		return *this;
 	}
 
 
-	Image::Creator& Image::Creator::setScaleMode(ScaleMode scaleDownMode, ScaleMode scaleUpMode) {
+	Creator& Creator::setScaleMode(ScaleMode scaleDownMode, ScaleMode scaleUpMode) {
 		asset->scaleDownMode = scaleDownMode;
 		asset->scaleUpMode = scaleUpMode;
 		return *this;
 	}
 
 
-	Image::Creator& Image::Creator::setWrapMode(WrapMode mode) {
+	Creator& Creator::setWrapMode(WrapMode mode) {
 		asset->wrapModeHorizontal = mode;
 		asset->wrapModeVertical = mode;
 		return *this;
 	}
 
 
-	Image::Creator& Image::Creator::setWrapMode(WrapMode horizontalMode, WrapMode verticalMode) {
+	Creator& Creator::setWrapMode(WrapMode horizontalMode, WrapMode verticalMode) {
 		asset->wrapModeHorizontal = horizontalMode;
 		asset->wrapModeVertical = verticalMode;
 		return *this;
 	}
 
 
-	Image::Creator& Image::Creator::setMipmapMode(MipmapMode mode) {
+	Creator& Creator::setMipmapMode(MipmapMode mode) {
 		asset->mipmapMode = mode;
 		return *this;
 	}
 
 	
-	Image::Creator::operator Image* () {
+	Creator::operator Image* () {
 		return finish();
 	}
 
