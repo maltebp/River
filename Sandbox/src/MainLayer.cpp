@@ -12,7 +12,6 @@ static double audioDepth = 0;
 bool listenerAdded = false;
 
 
-
 MainLayer::MainLayer(const std::string& arg)
 {
 
@@ -20,7 +19,7 @@ MainLayer::MainLayer(const std::string& arg)
 	frameBuffer.addColorBuffer({600, 400});
 	frameBuffer.addDepthBuffer({600, 400});
 	frameBuffer.build();
-	// frameBuffer.use();
+	frameBuffer.bind();
 
 	River::Keyboard::keyDownListeners.add(this, [this](auto e) {
 		onKeyDownEvent(e);

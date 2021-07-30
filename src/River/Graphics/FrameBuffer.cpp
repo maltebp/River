@@ -5,7 +5,8 @@
 
 namespace River {
 
-    
+
+    using State = FrameBuffer::State;    
     using ScaleMode = Image::ScaleMode;
     using WrapMode = Image::WrapMode;
 
@@ -15,6 +16,10 @@ namespace River {
 
 
     FrameBuffer::~FrameBuffer() {
+        if( state == State::BOUND || state == State::CURRENT ) {
+            unbind();
+        }
+
         GL(glDeleteFramebuffers(1, &id));
         GL(glDeleteTextures(1, &depthBuffer));
         GL(glDeleteTextures(colorBuffers.size(), colorBuffers.data()));
@@ -38,7 +43,7 @@ namespace River {
         WrapMode wrapModeHorizontal, WrapMode wrapModeVertical
     ) {
 
-        if( built ) {
+        if( state != State::NEW ) {
             throw new InvalidStateException("FrameBuffer has already been built");
         }
 
@@ -111,7 +116,7 @@ namespace River {
         WrapMode wrapModeVertical
     ) {
         
-        if( built ) {
+        if( state != State::NEW ) {
             throw new InvalidStateException("FrameBuffer has already been built");
         }
 
@@ -152,6 +157,10 @@ namespace River {
 
 
     void FrameBuffer::build() {       
+
+        if( state != State::NEW ) {
+            throw new InvalidStateException("FrameBuffer has already been built");
+        }
 
         if( colorBuffers.size() == 0 && depthBuffer == 0 ) {
             throw new InvalidStateException("FrameBuffer must have at least one buffer");
@@ -209,21 +218,56 @@ namespace River {
                 
         GL(glBindFramebuffer(GL_FRAMEBUFFER, currentBuffer));
 
-        built = true;
+        state = State::UNBOUND;        
     }
 
 
-    void FrameBuffer::use() {
-       if( !built ) {
-           throw new InvalidStateException("FrameBuffer has not been built");
-       }
+    void FrameBuffer::bind() {
 
+        if( state == State::NEW ) {
+            throw new InvalidStateException("FrameBuffer has not been built");
+        }
+
+        auto it = std::find(frameBufferStack.begin(), frameBufferStack.end(), this);
+        if( it != frameBufferStack.end() ) {
+            frameBufferStack.erase(it);
+        }
+
+        if( frameBufferStack.size() > 0 ) {
+            frameBufferStack.back()->state = State::BOUND;
+        }
+
+        state = State::CURRENT;
+        frameBufferStack.push_back(this);
+        
         GL(glBindFramebuffer(GL_FRAMEBUFFER, id));
     }
 
 
-    void FrameBuffer::useDefault() {
-        GL(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+    void FrameBuffer::unbind() {
+
+        auto it = std::find(frameBufferStack.begin(), frameBufferStack.end(), this);
+        if( it == frameBufferStack.end() ) {
+            throw new InvalidStateException("FrameBuffer is not bound");
+        }
+
+        frameBufferStack.pop_back();
+        state = State::UNBOUND;
+
+        if( frameBufferStack.size() == 0 ) {
+            GL(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+        }else{
+            FrameBuffer* top = frameBufferStack.back();
+            GL(glBindFramebuffer(GL_FRAMEBUFFER, top->id));
+            top->state = State::CURRENT;
+        }
+    }
+
+    State getState();
+
+    FrameBuffer* FrameBuffer::getCurrent() {
+        if( frameBufferStack.size() == 0 ) return nullptr;
+        return frameBufferStack.back();
     }
 
 }

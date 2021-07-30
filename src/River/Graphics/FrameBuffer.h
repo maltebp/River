@@ -11,6 +11,15 @@ namespace River {
     class FrameBuffer {
     public:
 
+        enum class State {
+            NEW,
+            UNBOUND,
+            BOUND,
+            CURRENT
+        };
+
+    public:
+
         FrameBuffer();
 
         ~FrameBuffer();
@@ -68,12 +77,24 @@ namespace River {
         void build();
 
         /**
-         * @brief   Binds this FrameBuffer for usage (using glBindFrameBuffer). This does not
-         *          clear any of the buffer of the buffer, so this should be done manually.
+         * @brief   Pushes this FrameBuffer to the top of the stack, causing it to be bound for
+         *          usage, and thus unbinding current FrameBuffer (or default). This does not clear
+         *          any of the buffers, so this should be done manually.
          * 
-         * @throws  River::InvalidStateException    If the FrameBuffer has not been built
+         * @throws  River::InvalidStateException    If the FrameBuffer is already in the stack
          */
-        void use();
+        void bind();
+
+        /**
+         * @brief	Pops this FrameBuffer from the stack, causing the next one on the stack to
+         *          be bound for usage if it exists, or otherwise enable the default.
+         * 
+         * @throws River::InvalidStateException     If this FrameBuffer has not been built, or if
+         *                                          this FrameBuffer is not on the top of the stack
+         */
+        void unbind();
+
+        State getState();
 
         /**
          * @brief   Fetches the Image containing the data of the color buffer with the given index
@@ -94,23 +115,23 @@ namespace River {
          */
         GLuint getDepthBufferImage();
 
-        /**
-         * @brief	Unbinds the current FrameBuffer, and this uses the default Framebuffer.
-         *          Has no effect if no non-default FrameBuffer is attached.
-         */
-        static void useDefault();
-
         FrameBuffer& operator=(const FrameBuffer&) = delete;
+
+        static FrameBuffer* getCurrent();
 
     private:
 
         GLuint id;
 
+        State state = State::NEW;
+
         std::vector<GLuint> colorBuffers;
 
         GLuint depthBuffer = 0;
 
-        bool built = false;
+        static inline std::unordered_map<GLuint, FrameBuffer*> frameBufferMap;
+
+        static inline std::vector<FrameBuffer*> frameBufferStack;
 
     };
 
