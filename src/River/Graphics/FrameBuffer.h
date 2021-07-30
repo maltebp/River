@@ -129,9 +129,7 @@ namespace River {
 
         GLuint depthBuffer = 0;
 
-        static inline std::unordered_map<GLuint, FrameBuffer*> frameBufferMap;
-
-        static inline std::vector<FrameBuffer*> frameBufferStack;
+        static inline std::vector<FrameBuffer*> bindingStack;
 
     };
 

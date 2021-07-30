@@ -228,17 +228,17 @@ namespace River {
             throw new InvalidStateException("FrameBuffer has not been built");
         }
 
-        auto it = std::find(frameBufferStack.begin(), frameBufferStack.end(), this);
-        if( it != frameBufferStack.end() ) {
-            frameBufferStack.erase(it);
+        auto it = std::find(bindingStack.begin(), bindingStack.end(), this);
+        if( it != bindingStack.end() ) {
+            bindingStack.erase(it);
         }
 
-        if( frameBufferStack.size() > 0 ) {
-            frameBufferStack.back()->state = State::BOUND;
+        if( bindingStack.size() > 0 ) {
+            bindingStack.back()->state = State::BOUND;
         }
 
         state = State::CURRENT;
-        frameBufferStack.push_back(this);
+        bindingStack.push_back(this);
         
         GL(glBindFramebuffer(GL_FRAMEBUFFER, id));
     }
@@ -246,28 +246,30 @@ namespace River {
 
     void FrameBuffer::unbind() {
 
-        auto it = std::find(frameBufferStack.begin(), frameBufferStack.end(), this);
-        if( it == frameBufferStack.end() ) {
+        auto it = std::find(bindingStack.begin(), bindingStack.end(), this);
+        if( it == bindingStack.end() ) {
             throw new InvalidStateException("FrameBuffer is not bound");
         }
 
-        frameBufferStack.pop_back();
+        bindingStack.pop_back();
         state = State::UNBOUND;
 
-        if( frameBufferStack.size() == 0 ) {
+        if( bindingStack.size() == 0 ) {
             GL(glBindFramebuffer(GL_FRAMEBUFFER, 0));
         }else{
-            FrameBuffer* top = frameBufferStack.back();
+            FrameBuffer* top = bindingStack.back();
             GL(glBindFramebuffer(GL_FRAMEBUFFER, top->id));
             top->state = State::CURRENT;
         }
     }
 
-    State getState();
+    State FrameBuffer::getState() {
+        return state;
+    }
 
     FrameBuffer* FrameBuffer::getCurrent() {
-        if( frameBufferStack.size() == 0 ) return nullptr;
-        return frameBufferStack.back();
+        if( bindingStack.size() == 0 ) return nullptr;
+        return bindingStack.back();
     }
 
 }
