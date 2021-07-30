@@ -26,6 +26,13 @@ namespace River {
 			NEAREST
 		};
 
+
+		enum class MipmapMode {
+			NONE,
+			LINEAR,
+			NEAREST
+		};
+
 		
 		/**
 		 * @brief	How the image should be sampled, when sampling
@@ -75,6 +82,12 @@ namespace River {
 		float normalizeY(unsigned int coordinate);
 
 		bool isPartiallyTransparent() const;
+
+		static GLenum toGLScaleMode(ScaleMode scaleMode, MipmapMode mipmapMode = MipmapMode::NONE);
+
+		static GLenum toGLWrapMode(WrapMode wrapMode);
+
+		static GLenum toGLFormat(int channels);
 
 	protected:
 
@@ -129,6 +142,8 @@ namespace River {
 		WrapMode wrapModeHorizontal = WrapMode::NONE;
 		WrapMode wrapModeVertical 	= WrapMode::NONE;
 
+		MipmapMode mipmapMode = MipmapMode::LINEAR;
+
 	public:
 
 		class Creator : public AssetCreator<Creator, Image> {
@@ -163,6 +178,13 @@ namespace River {
 			 * 			The default for both vertical and horizontal is NONE.
 			 */
 			Creator& setWrapMode(WrapMode horizontalMode, WrapMode verticalMode);
+
+			/**
+			 * @brief	Sets the mode for mipmaps when scaling down the texture.
+			 * 			Default is LINEAR. Setting it to NONE will disables mipmaps
+			 * 			for this Image
+			 */
+			Creator& setMipmapMode(MipmapMode mode);
 
 			operator Image*();
 
