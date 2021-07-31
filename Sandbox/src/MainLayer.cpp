@@ -16,10 +16,9 @@ MainLayer::MainLayer(const std::string& arg)
 {
 
 	// Create test framebuffer
-	frameBuffer.addColorBuffer({600, 400});
-	frameBuffer.addDepthBuffer({600, 400});
+	frameBuffer.addColorBuffer({1280, 720});
+	frameBuffer.addDepthBuffer({1280, 720});
 	frameBuffer.build();
-	frameBuffer.bind();
 
 	River::Keyboard::keyDownListeners.add(this, [this](auto e) {
 		onKeyDownEvent(e);
@@ -54,6 +53,8 @@ MainLayer::MainLayer(const std::string& arg)
 		printf("Viewport listener: %ix%i\n", resolution.width, resolution.height);
 	});
 	std::cout << "Start arg: " << arg;
+
+	GlobalAssets::Textures::CAR->load();
 }
 
 
@@ -165,9 +166,27 @@ void MainLayer::onUpdate() {
 
 	GlobalAssets::Fonts::ARIAL->load();
 
+	frameBuffer.bind();
+
+	GL(glDepthMask(GL_TRUE));
+	GL(glEnable(GL_ALPHA_TEST));
+	//GL(glAlphaFunc(GL_GREATER, 0));
+	GL(glClearColor(1.0, 0.7, 0.7, 1.0));
+	GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+	GL(glDisable(GL_DEPTH_TEST));
+
 	River::SpriteAnimationSystem::update(&domain, 0.016);
 	River::SpriteRenderingSystem::render(&domain, camera);
 	River::TextRenderingSystem::render(&domain, camera);
+
+
+	//// textureRenderer.render(GlobalAssets::Images::CAR->getId());
+
+	frameBuffer.unbind();
+
+	//textureRenderer.render(GlobalAssets::Images::CAR->getId());
+
+	textureRenderer.render(frameBuffer.getColorBufferImage());
 
 	domain.clean();
 }

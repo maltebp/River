@@ -353,7 +353,7 @@ namespace River {
 
 
 	void Window::setClearColor(Color color) {
-		glClearColor(color.r, color.g, color.b, color.a);
+		clearColor = color;
 	}
 
 
@@ -440,6 +440,7 @@ namespace River {
 
 		glfwSwapBuffers(NativeWindow::window);
 		GL(glDepthMask(GL_TRUE)); // We must be able to write to the depth buffer in order to clear the bit
+		GL(glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a));
 		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 	}
 

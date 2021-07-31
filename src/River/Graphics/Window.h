@@ -137,7 +137,7 @@ namespace River {
 
 		static inline unsigned int frameCount = 0;
 
-		static inline Color clearColor;
+		static inline Color clearColor = Colors::BLACK;
 
 	};
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <River.h>
+#include <River/Graphics/GLTextureRenderer.h>
 
 #include <string>
 
@@ -21,6 +22,8 @@ private:
 
 private:
 	River::ImageRenderer* imageRenderer = nullptr;
+
+	River::GLTextureRenderer textureRenderer;
 
 	River::ECS::Entity* fpsText = nullptr;
 

@@ -9,7 +9,7 @@ namespace River {
 
     
     class FrameBuffer {
-    public:
+    public: 
 
         enum class State {
 
@@ -33,7 +33,9 @@ namespace River {
              * @brief	FrameBuffer is built and bound, and is the one being rendered to currently
              */
             CURRENT
+
         };
+
 
     public:
 
@@ -121,7 +123,7 @@ namespace River {
          * @return  GL ID on the depth texture buffer, or 0 if the color buffer with the given index
          *          does not exist
          */
-        GLuint getColorBufferImage(unsigned int index);
+        GLuint getColorBufferImage(unsigned int index = 0);
 
         /**
          * @brief   Fetches the Image containing the data of the depth buffer with the given index

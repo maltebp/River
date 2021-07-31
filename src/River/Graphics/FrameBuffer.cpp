@@ -88,7 +88,7 @@ namespace River {
             GL_TEXTURE_2D,
             0, 
             internalFormat,
-            resolution.width, resolution.width, 
+            resolution.width, resolution.height, 
             0, 
             GL_RGB, // This has no effect when we are not passing any data 
             GL_UNSIGNED_BYTE, // This has no effect, when not passing any data 
@@ -145,7 +145,7 @@ namespace River {
             GL_TEXTURE_2D,
             0, 
             GL_DEPTH_COMPONENT32,
-            resolution.width, resolution.width, 
+            resolution.width, resolution.height, 
             0, 
             GL_DEPTH_COMPONENT, // This has no effect when we are not passing any data 
             GL_UNSIGNED_INT, // This has no effect, when not passing any data 
@@ -241,6 +241,9 @@ namespace River {
         bindingStack.push_back(this);
         
         GL(glBindFramebuffer(GL_FRAMEBUFFER, id));
+
+        GLint currentBuffer;
+        GL(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentBuffer));
     }
 
 
