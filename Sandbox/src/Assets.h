@@ -37,7 +37,7 @@ namespace GlobalAssets {
 			.addToCollection(COLLECTION);
 
 		inline Texture* PIXEL = Texture::create(
-				Image::create("assets/pixel2.png")
+				Image::create("assets/pixel.png")
 				.setScaleMode(Image::ScaleMode::NEAREST)
 			)
 			.addToCollection(COLLECTION);

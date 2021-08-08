@@ -21,7 +21,7 @@ namespace River {
             {
                 o_TextureCoordinates = a_TextureCoordinates;
                 o_Position = a_Position;
-                gl_Position = vec4(a_Position.x, a_Position.y, 0.5, 1.0);
+                gl_Position = vec4(a_Position.x, a_Position.y, 0.0, 1.0);
             }
         )";
 
