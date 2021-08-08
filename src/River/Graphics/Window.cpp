@@ -11,6 +11,7 @@
 #include "Screen.h"
 #include "River/Mouse/MouseController.h"
 #include "River/Keyboard/KeyboardController.h"
+#include "River/Graphics/FrameBuffer.h"
 
 
 namespace River {
@@ -92,7 +93,9 @@ namespace River {
 
 			Window::viewportResolution = newViewport;
 
-			glViewport(0, 0, (GLsizei)viewportResolution.width, (GLsizei)viewportResolution.height);
+			if( FrameBuffer::getCurrent() == nullptr) {
+				useRenderArea();
+			}
 
 			// Will cause event to be fired
 			viewportChanged = true;
@@ -297,6 +300,15 @@ namespace River {
 	}
 
 
+	void Window::setRenderArea(dvec2 position, Resolution size) {
+		renderAreaPosition = position;
+		renderAreaSize = size;
+		if( FrameBuffer::getCurrent() == nullptr) {
+			useRenderArea();
+		}
+	}
+
+
 	void Window::enableFullscreen(const Resolution& resolution) {
 		if( resolution.width == 0 || resolution.height == 0 ) {
 			throw new InvalidArgumentException("Window width and height must be larger than 0");
@@ -447,6 +459,19 @@ namespace River {
 
 	void Window::clearDepth() {
 		GL(glClear(GL_DEPTH_BUFFER_BIT));
+	}
+
+
+	void Window::useRenderArea() {
+        if( renderAreaSize != Resolution(0,0) ) {
+            GL(glViewport(
+                (int)renderAreaPosition.x, (int)renderAreaPosition.y,
+                 (GLsizei)renderAreaSize.width, (GLsizei)renderAreaSize.height
+            ));
+        }
+        else {
+            GL(glViewport(0,0, (GLsizei)viewportResolution.width, (GLsizei)viewportResolution.height));
+        }
 	}
 
 }

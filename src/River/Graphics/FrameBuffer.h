@@ -1,11 +1,14 @@
 #pragma once
 
 #include "River/Graphics/GL.h"
+#include "River/External/glm/glm.hpp"
 #include "River/Primitives/Resolution.h"
 #include "River/Graphics/Texture/Image.h"
 
 
 namespace River {
+
+    using namespace glm;
 
     
     class FrameBuffer {
@@ -96,6 +99,13 @@ namespace River {
         void build();
 
         /**
+         * @brief	Sets the area in the Framebuffer in which to render. If the size is {0,0} it
+         *          will render to the full size of the first color buffer or the depth buffer if
+         *          no color buffer is present.
+         */
+        void setRenderArea(dvec2 position, Resolution size);
+
+        /**
          * @brief   Pushes this FrameBuffer to the top of the stack, causing it to be bound for
          *          usage, and thus unbinding current FrameBuffer (or default). This does not clear
          *          any of the buffers, so this should be done manually.
@@ -140,13 +150,25 @@ namespace River {
 
     private:
 
+        void useRenderArea();
+
+    private:
+
         GLuint id;
+        
+        Resolution resolution;
 
         State state = State::NEW;
 
         std::vector<GLuint> colorBuffers;
 
         GLuint depthBuffer = 0;
+
+        dvec2 renderAreaPosition = {0, 0};
+
+        Resolution renderAreaSize = {0, 0};
+
+        Resolution defaultRenderAreaSize;
 
         static inline std::vector<FrameBuffer*> bindingStack;
 

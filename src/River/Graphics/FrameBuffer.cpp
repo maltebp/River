@@ -2,6 +2,8 @@
 
 #include "FrameBuffer.h"
 
+#include "Window.h"
+
 
 namespace River {
 
@@ -22,7 +24,7 @@ namespace River {
 
         GL(glDeleteFramebuffers(1, &id));
         GL(glDeleteTextures(1, &depthBuffer));
-        GL(glDeleteTextures(colorBuffers.size(), colorBuffers.data()));
+        GL(glDeleteTextures((GLsizei)colorBuffers.size(), colorBuffers.data()));
     }
 
 
@@ -96,6 +98,12 @@ namespace River {
         ));
 
 		GL(glBindTexture(GL_TEXTURE_2D, currentTexture));
+
+        if( colorBuffers.size() == 1 ) {
+            defaultRenderAreaSize = resolution;
+        }
+
+        return (unsigned int)colorBuffers.size() - 1;
     }
 
 
@@ -153,6 +161,10 @@ namespace River {
         ));
 
 		GL(glBindTexture(GL_TEXTURE_2D, currentTexture));
+
+        if( colorBuffers.size() == 0 ) {
+            defaultRenderAreaSize = resolution;
+        }
     }
 
 
@@ -222,6 +234,16 @@ namespace River {
     }
 
 
+    void FrameBuffer::setRenderArea(dvec2 position, Resolution size) {
+        renderAreaPosition = position;
+        renderAreaSize = size;
+
+        if( state == State::CURRENT ) {
+            useRenderArea();
+        }
+    }
+
+
     void FrameBuffer::bind() {
 
         if( state == State::NEW ) {
@@ -244,6 +266,8 @@ namespace River {
 
         GLint currentBuffer;
         GL(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentBuffer));
+
+        useRenderArea();
     }
 
 
@@ -258,11 +282,13 @@ namespace River {
         state = State::UNBOUND;
 
         if( bindingStack.size() == 0 ) {
+            Window::useRenderArea();
             GL(glBindFramebuffer(GL_FRAMEBUFFER, 0));
         }else{
             FrameBuffer* top = bindingStack.back();
             GL(glBindFramebuffer(GL_FRAMEBUFFER, top->id));
             top->state = State::CURRENT;
+            top->useRenderArea();
         }
     }
 
@@ -286,6 +312,19 @@ namespace River {
     FrameBuffer* FrameBuffer::getCurrent() {
         if( bindingStack.size() == 0 ) return nullptr;
         return bindingStack.back();
+    }
+
+
+    void FrameBuffer::useRenderArea() {
+        if( renderAreaSize != Resolution(0,0) ) {
+            GL(glViewport(
+                (int)renderAreaPosition.x, (int)renderAreaPosition.y,
+                 (GLsizei)renderAreaSize.width, (GLsizei)renderAreaSize.height
+            ));
+        }
+        else {
+            GL(glViewport(0,0, (GLsizei)defaultRenderAreaSize.width, (GLsizei)defaultRenderAreaSize.height));
+        }
     }
 
 }

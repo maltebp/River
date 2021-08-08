@@ -124,7 +124,7 @@ void MainLayer::onCreate() {
 	createText("Hello world", 50, 0, 200);
 
 	// Background
-	{
+	{ 
 		auto entity = domain.createEntity();
 		auto transform = entity->addComponent<River::ECS::Transform>();
 		transform->width = 10000;
@@ -180,6 +180,8 @@ void MainLayer::onUpdate() {
 
 	frameBuffer->bind();
 
+	frameBuffer->setRenderArea({0,0},{200, 200});
+
 	GL(glDepthMask(GL_TRUE));
 	GL(glDisable(GL_DEPTH_TEST));
 	GL(glDisable(GL_ALPHA_TEST));
@@ -194,6 +196,8 @@ void MainLayer::onUpdate() {
 
 	GL(glDisable(GL_BLEND));
 	textureRenderer.render(frameBuffer->getColorBufferImage());
+
+	River::Window::setRenderArea({400, 400}, {400, 400});
 
 	domain.clean();
 }

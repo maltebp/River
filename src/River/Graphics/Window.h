@@ -4,6 +4,7 @@
 #include <vector>
 #include <functional>
 
+#include "River/External/glm/glm.hpp"
 #include "River/Utility/Event.h"
 #include "River/Graphics/ResolutionEvent.h"
 #include "River/Primitives/Resolution.h"
@@ -12,7 +13,12 @@
 
 namespace River {
 
+	using namespace glm;
+
+
 	class Game;
+
+	class FrameBuffer;
 
 	/**
 	 * @brief	Represents the window used to display the single window that
@@ -33,8 +39,9 @@ namespace River {
 	 *			The Window always uses the device's primary monitor
 	*/
 	class Window {
-	public:
 		friend Game;
+		friend FrameBuffer;
+	public:
 		
 		class NativeWindow; friend NativeWindow;	
 
@@ -88,6 +95,13 @@ namespace River {
 		*/
 		static void center();
 
+		/**
+         * @brief	Sets the area within the viewport in which to render. If the size is {0,0} it
+         *          will render to the full size of the first color buffer or the depth buffer if
+         *          no color buffer is present.
+         */
+		static void setRenderArea(dvec2 position, Resolution size);
+
 		static void setClearColor(Color color);
 
 		static void clear();
@@ -97,7 +111,6 @@ namespace River {
 		static double getFps();
 
 		static unsigned int getNumTextureSlots();
-
 		
 	private:
 
@@ -111,6 +124,7 @@ namespace River {
 
 		static bool shouldClose();
 
+		static void useRenderArea();
 
 	private:
 
@@ -127,6 +141,10 @@ namespace River {
 		static inline ListenerInvoker resolutionChangedInvoker = (resolutionChangedListeners);
 
 		static inline ListenerInvoker viewportChangedInvoker = (viewportChangedListeners);
+
+		static inline dvec2 renderAreaPosition = {0,0};
+
+		static inline Resolution renderAreaSize = {0,0};
 
 		/* The number of texture slots (or units) accessible from the fragment shader */
 		static inline int numTextureSlots;
