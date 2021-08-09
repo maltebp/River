@@ -202,7 +202,7 @@ namespace River{
 		// Enable alpha testing, and discarding any fragment, which has an alpha of 0
 		GL(glEnable(GL_ALPHA_TEST));
 		GL(glAlphaFunc(GL_GREATER, 0));
-			GL(glEnable(GL_DEPTH_TEST));
+		GL(glEnable(GL_DEPTH_TEST));
 		
 		if( blending ) {
 			// We expect things to be drawn in order when blending

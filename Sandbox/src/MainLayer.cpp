@@ -12,9 +12,18 @@ static double audioDepth = 0;
 bool listenerAdded = false;
 
 
-
 MainLayer::MainLayer(const std::string& arg)
 {
+
+	
+
+	// Create test framebuffer
+	frameBuffer = new River::FrameBuffer();
+	frameBuffer->addColorBuffer({1280, 720});
+	frameBuffer->addDepthBuffer({1280, 720});
+	frameBuffer->build();
+
+	River::Window::setClearColor(River::Colors::BLUE);
 
 	River::Keyboard::keyDownListeners.add(this, [this](auto e) {
 		onKeyDownEvent(e);
@@ -44,11 +53,21 @@ MainLayer::MainLayer(const std::string& arg)
 		auto resolution = event.getResolution();
 		printf("Resolution listener: %ix%i\n", resolution.width, resolution.height);
 		});
-	River::Window::viewportChangedListeners.add(this, [](River::ResolutionEvent& event) {
+	River::Window::viewportChangedListeners.add(this, [this](River::ResolutionEvent& event) {
 		auto resolution = event.getResolution();
+
+		delete frameBuffer;
+
+		frameBuffer = new River::FrameBuffer();
+		frameBuffer->addColorBuffer(resolution);
+		frameBuffer->addDepthBuffer(resolution);
+		frameBuffer->build();
+		
 		printf("Viewport listener: %ix%i\n", resolution.width, resolution.height);
 	});
 	std::cout << "Start arg: " << arg;
+
+	GlobalAssets::Textures::CAR->load();
 }
 
 
@@ -152,7 +171,6 @@ void MainLayer::onUpdate() {
 		std::cout << "Rotation: " << camera->getRotation() << std::endl;
 	}
 
-
 	River::AudioListener::setPosition(camera->getX(), camera->getY());
 	//River::AudioListener::setDepth(400);
 
@@ -160,9 +178,22 @@ void MainLayer::onUpdate() {
 
 	GlobalAssets::Fonts::ARIAL->load();
 
+	frameBuffer->bind();
+
+	GL(glDepthMask(GL_TRUE));
+	GL(glDisable(GL_DEPTH_TEST));
+	GL(glDisable(GL_ALPHA_TEST));
+	GL(glClearColor(0.0, 1.0, 0.0, 1.0));
+	GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+
 	River::SpriteAnimationSystem::update(&domain, 0.016);
 	River::SpriteRenderingSystem::render(&domain, camera);
 	River::TextRenderingSystem::render(&domain, camera);
+
+	frameBuffer->unbind();
+
+	GL(glDisable(GL_BLEND));
+	textureRenderer.render(frameBuffer->getColorBufferImage());
 
 	domain.clean();
 }

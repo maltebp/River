@@ -95,6 +95,8 @@ namespace River {
 		*/
 		static void center();
 
+<<<<<<< HEAD
+=======
 		/**
          * @brief	Sets the area within the viewport in which to render. If the size is {0,0} it
          *          will render to the full size of the first color buffer or the depth buffer if
@@ -104,6 +106,7 @@ namespace River {
 
 		static void setClearColor(Color color);
 
+>>>>>>> master
 		static void clear();
 
 		static void setClearColorValue(Color color );
@@ -159,7 +162,11 @@ namespace River {
 
 		static inline unsigned int frameCount = 0;
 
+<<<<<<< HEAD
+		static inline Color clearColorValue = Colors::BLACK;
+=======
 		static inline Color clearColor = Colors::BLACK;
+>>>>>>> master
 
 		static inline double clearDepthValue = 1.0;
  

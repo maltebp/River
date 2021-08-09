@@ -366,11 +366,14 @@ namespace River {
 	}
 
 
+<<<<<<< HEAD
+=======
 	void Window::setClearColor(Color color) {
 		clearColor = color;
 	}
 
 
+>>>>>>> master
 	void Window::center() {
 		if( fullscreen ) return;
 
@@ -456,11 +459,16 @@ namespace River {
 		glfwSwapBuffers(NativeWindow::window);
 		
 		GL(glDepthMask(GL_TRUE)); // We must be able to write to the depth buffer in order to clear the bit
+<<<<<<< HEAD
 
-		GL(glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a));
+		GL(glClearColor(clearColorValue.r, clearColorValue.g, clearColorValue.b, clearColorValue.a));
 		GL(glClearDepth(clearDepthValue));
 
 		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT ));
+=======
+		GL(glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a));
+		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+>>>>>>> master
 	}
 
 
@@ -474,6 +482,8 @@ namespace River {
 	}
 
 
+<<<<<<< HEAD
+=======
 	void Window::useRenderArea() {
         if( renderAreaSize != Resolution(0,0) ) {
             GL(glViewport(
@@ -486,4 +496,5 @@ namespace River {
         }
 	}
 
+>>>>>>> master
 }

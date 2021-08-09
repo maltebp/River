@@ -9,21 +9,10 @@
 namespace River {
 
 
-	namespace {
-
-		GLint getGLWrapMode(Image::WrapMode mode) {
-			switch(mode) {
-				case Image::WrapMode::NONE:
-					return GL_CLAMP_TO_BORDER;
-				case Image::WrapMode::REPEAT:
-					return GL_REPEAT;
-				case Image::WrapMode::CLAMP:
-					return GL_CLAMP_TO_EDGE;
-			}
-			throw NotImplementedException("Wrap mode has not been implemented yet");
-		}
-
-	}
+	using ScaleMode = Image::ScaleMode;
+	using MipmapMode = Image::MipmapMode;
+	using WrapMode = Image::WrapMode;
+	using Creator = Image::Creator;
 
 
 	Image::Image() { }
@@ -59,6 +48,8 @@ namespace River {
 		// TODO: Determine the correct alignment from the image file
 		rowAlignment = 4;
 
+		// TODO: Check if colors are 1 byte large (and throw error if they are not)
+
 		// Load texture file
 		//stbi_set_flip_vertically_on_load(true);
 		unsigned char* pixels = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
@@ -76,60 +67,56 @@ namespace River {
 
 	void Image::createGLTexture(void *data) {
 
-		GL(glPixelStorei(GL_UNPACK_ALIGNMENT, rowAlignment));
+		GLint currentTexture;
+		GL(glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTexture));
 
 		GL(glGenTextures(1, &id));
 		GL(glBindTexture(GL_TEXTURE_2D, id));
 
-
 		// Image filtering/wrap options
-		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, getGLWrapMode(wrapModeHorizontal)));
-		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, getGLWrapMode(wrapModeVertical)));
+		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, toGLWrapMode(wrapModeHorizontal)));
+		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, toGLWrapMode(wrapModeVertical)));
 
-		GLenum glMinFilter;
-		GLenum glMagFilter;
-		
-		if( scaleDownMode == ScaleMode::LINEAR ){
-			glMinFilter = GL_LINEAR_MIPMAP_LINEAR;
-		}
-		if( scaleDownMode == ScaleMode::NEAREST ){
-			glMinFilter = GL_LINEAR_MIPMAP_NEAREST;
-		}
-		if( scaleUpMode == ScaleMode::LINEAR ) {
-			glMagFilter = GL_LINEAR;
-		}
-		if( scaleUpMode == ScaleMode::NEAREST ) {
-			glMagFilter = GL_NEAREST;
-		}
+		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, toGLScaleMode(scaleDownMode, mipmapMode)));
+		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, toGLScaleMode(scaleUpMode)));
 
-		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glMinFilter));
-		GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glMagFilter));
-
+		// Note on format: We only allow for 1 byte colors, thus simplifying the options a little bit.
+		// This is both the case for the loaded data, and the intenral texture format.
 
 		GLenum format;
 		GLint internalFormat;
+        switch(channels) {
+            // Note: We only allow 1 byte colors
+            case 1:
+				format = GL_RED;
+				internalFormat = GL_R8;
+				break;
+			case 2:
+				format = GL_RG;
+				internalFormat = GL_RG8;
+				break;
+			case 3:
+				format = GL_RGB;
+				internalFormat = GL_RGB8;
+				break;
+			case 4:
+				format = GL_RGBA;
+				internalFormat = GL_RGBA8;
+				break;
+            default:
+                throw new River::InvalidArgumentException("Image does not support more than 4 channels");
+        }
 
-		if( channels != 1 && channels != 3 && channels != 4 )
-			throw new River::AssetException("Texture does not have 3 or 4 channels, but " + channels);
-		if( channels == 1 ) {
-			format = GL_RED;
-			internalFormat = GL_RED;
-		}
-		if( channels == 3 ) {
-			format = GL_RGB;
-			internalFormat = GL_RGB8;
-		}
-		if( channels == 4 ) {
-			format = GL_RGBA;
-			internalFormat = GL_RGBA8;
-		}
+		GL(glPixelStorei(GL_UNPACK_ALIGNMENT, rowAlignment));
 
 		// Set data
 		GL(glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data));
 
-		GL(glGenerateMipmap(GL_TEXTURE_2D));
+		if( mipmapMode != MipmapMode::NONE ) {
+			GL(glGenerateMipmap(GL_TEXTURE_2D));
+		}
 
-		GL(glBindTexture(GL_TEXTURE_2D, 0));
+		GL(glBindTexture(GL_TEXTURE_2D, currentTexture));
 	}
 
 
@@ -140,8 +127,9 @@ namespace River {
 		// data, as it has been created in the code somewhere. So we do nothing.
 		if( !fromFile ) return;
 
-		if( glIsTexture(id) == GL_TRUE )
-			GL(glDeleteTextures(1, &id));
+		if( glIsTexture(id) != GL_TRUE ) return;
+
+		GL(glDeleteTextures(1, &id));
 		// Automatically unbinds the texture as well
 		// and data is associated with the gl texture, so this should free all
 		// memory associated with the image
@@ -213,7 +201,49 @@ namespace River {
 	}
 
 
-	Image::Creator::Creator(const std::string& filePath) {
+	GLenum Image::toGLScaleMode(ScaleMode scaleMode, MipmapMode mipmapMode) {
+		
+		switch(mipmapMode) {
+			case MipmapMode::NONE:
+				switch(scaleMode) {
+					case ScaleMode::LINEAR: return GL_LINEAR;
+					case ScaleMode::NEAREST: return GL_NEAREST;
+				}
+				break;
+
+			case MipmapMode::LINEAR:
+				switch(scaleMode) {
+					case ScaleMode::LINEAR: return GL_LINEAR_MIPMAP_LINEAR;
+					case ScaleMode::NEAREST: return GL_NEAREST_MIPMAP_LINEAR;
+				}
+				break;
+
+			case MipmapMode::NEAREST:
+				switch(scaleMode) {
+					case ScaleMode::LINEAR: return GL_LINEAR_MIPMAP_NEAREST;
+					case ScaleMode::NEAREST: return GL_NEAREST_MIPMAP_NEAREST;
+				}
+				break;
+		}
+
+		throw NotImplementedException("Combination of ScaleMode and MipmapMode is not supported");
+	}
+
+
+	GLenum Image::toGLWrapMode(WrapMode mode) {
+		switch(mode) {
+			case WrapMode::NONE:
+				return GL_CLAMP_TO_BORDER;
+			case WrapMode::REPEAT:
+				return GL_REPEAT;
+			case WrapMode::CLAMP:
+				return GL_CLAMP_TO_EDGE;
+		}
+		throw NotImplementedException("Wrap mode has not been implemented yet");
+	}
+
+
+	Creator::Creator(const std::string& filePath) {
 		asset = new Image();
 		asset->filePath = filePath;
 		asset->fromFile = true;
@@ -223,7 +253,7 @@ namespace River {
 	/**
 	 * @brief	Constructs an Image from a data source. The image will copy the data on creation, and unloading this image will have no effect on memory.
 	*/
-	Image::Creator::Creator(unsigned char* data, unsigned int width, unsigned int height, unsigned int channels, unsigned int rowAlignment) {
+	Creator::Creator(unsigned char* data, unsigned int width, unsigned int height, unsigned int channels, unsigned int rowAlignment) {
 		asset = new Image();
 		asset->fromFile = false;
 		asset->width = width;
@@ -234,7 +264,7 @@ namespace River {
 	}
 
 
-	void Image::Creator::onFinish() {
+	void Creator::onFinish() {
 		if( !asset->fromFile ) {
 			// The image should always be "loaded" when not from file
 			// so we construct it here
@@ -243,41 +273,47 @@ namespace River {
 	}
 
 
-	Image::Creator& Image::Creator::setPartiallyTransparent(bool toggle) {
+	Creator& Creator::setPartiallyTransparent(bool toggle) {
 		asset->partiallyTransparent = toggle;
 		return *this;
 	}
 
 
-	Image::Creator& Image::Creator::setScaleMode(ScaleMode mode) {
+	Creator& Creator::setScaleMode(ScaleMode mode) {
 		asset->scaleDownMode = mode;
 		asset->scaleUpMode = mode;
 		return *this;
 	}
 
 
-	Image::Creator& Image::Creator::setScaleMode(ScaleMode scaleDownMode, ScaleMode scaleUpMode) {
+	Creator& Creator::setScaleMode(ScaleMode scaleDownMode, ScaleMode scaleUpMode) {
 		asset->scaleDownMode = scaleDownMode;
 		asset->scaleUpMode = scaleUpMode;
 		return *this;
 	}
 
 
-	Image::Creator& Image::Creator::setWrapMode(WrapMode mode) {
+	Creator& Creator::setWrapMode(WrapMode mode) {
 		asset->wrapModeHorizontal = mode;
 		asset->wrapModeVertical = mode;
 		return *this;
 	}
 
 
-	Image::Creator& Image::Creator::setWrapMode(WrapMode horizontalMode, WrapMode verticalMode) {
+	Creator& Creator::setWrapMode(WrapMode horizontalMode, WrapMode verticalMode) {
 		asset->wrapModeHorizontal = horizontalMode;
 		asset->wrapModeVertical = verticalMode;
 		return *this;
 	}
 
+
+	Creator& Creator::setMipmapMode(MipmapMode mode) {
+		asset->mipmapMode = mode;
+		return *this;
+	}
+
 	
-	Image::Creator::operator Image* () {
+	Creator::operator Image* () {
 		return finish();
 	}
 

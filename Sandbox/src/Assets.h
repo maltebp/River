@@ -23,7 +23,10 @@ namespace GlobalAssets {
 		inline Image* CAR = Image::create("assets/car.png")
 			.setScaleMode(Image::ScaleMode::NEAREST);
 
-		
+		inline Image* LLAMA = Image::create("assets/llama.jpg")
+			.setScaleMode(Image::ScaleMode::NEAREST)
+			.addToCollection(COLLECTION);
+
 	}
 
 
@@ -42,7 +45,8 @@ namespace GlobalAssets {
 		inline Texture* SANTA = Texture::create(
 				Image::create("assets/santa/Idle (1).png")
 				.setPartiallyTransparent(true
-			));
+			)).addToCollection(COLLECTION);
+		;
 
 	}
 
