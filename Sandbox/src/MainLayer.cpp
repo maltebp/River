@@ -23,7 +23,7 @@ MainLayer::MainLayer(const std::string& arg)
 	frameBuffer->addDepthBuffer({1280, 720});
 	frameBuffer->build();
 
-	River::Window::setClearColor(River::Colors::BLUE);
+	River::Window::setClearColorValue(River::Colors::BLUE);
 
 	River::Keyboard::keyDownListeners.add(this, [this](auto e) {
 		onKeyDownEvent(e);

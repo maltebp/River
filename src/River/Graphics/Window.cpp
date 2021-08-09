@@ -366,11 +366,6 @@ namespace River {
 	}
 
 
-	void Window::setClearColor(Color color) {
-		clearColor = color;
-	}
-
-
 	void Window::center() {
 		if( fullscreen ) return;
 
@@ -457,7 +452,7 @@ namespace River {
 		
 		GL(glDepthMask(GL_TRUE)); // We must be able to write to the depth buffer in order to clear the bit
 
-		GL(glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a));
+		GL(glClearColor(clearColorValue.r, clearColorValue.g, clearColorValue.b, clearColorValue.a));
 		GL(glClearDepth(clearDepthValue));
 
 		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT ));

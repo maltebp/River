@@ -102,8 +102,6 @@ namespace River {
          */
 		static void setRenderArea(dvec2 position, Resolution size);
 
-		static void setClearColor(Color color);
-
 		static void clear();
 
 		static void setClearColorValue(Color color );
@@ -159,7 +157,7 @@ namespace River {
 
 		static inline unsigned int frameCount = 0;
 
-		static inline Color clearColor = Colors::BLACK;
+		static inline Color clearColorValue = Colors::BLACK;
 
 		static inline double clearDepthValue = 1.0;
  
