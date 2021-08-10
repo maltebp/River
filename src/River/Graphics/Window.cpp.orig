@@ -10,6 +10,12 @@
 #include "River/External/glm/glm.hpp"
 
 #include "GL.h"
+<<<<<<< Updated upstream
+#include "River/External/imgui/imgui.h"
+=======
+#include "River/external/"
+#include "River/Game.h"
+>>>>>>> Stashed changes
 #include "Screen.h"
 #include "River/Mouse/MouseController.h"
 #include "River/Keyboard/KeyboardController.h"
@@ -194,6 +200,7 @@ namespace River {
 
 
 	void Window::open() {
+
 		if( opened ) {
 			throw InvalidStateException("Window is already open");
 		}
@@ -221,6 +228,10 @@ namespace River {
 			// Error is triggered from callback
 			return;
 		}
+
+		IMGUI_CHECKVERSION();
+    	ImGui::CreateContext();
+    	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
 		if( !fullscreen ) {
 			center();
@@ -366,14 +377,6 @@ namespace River {
 	}
 
 
-<<<<<<< HEAD
-=======
-	void Window::setClearColor(Color color) {
-		clearColor = color;
-	}
-
-
->>>>>>> master
 	void Window::center() {
 		if( fullscreen ) return;
 
@@ -432,7 +435,6 @@ namespace River {
 			NativeWindow::viewportChanged = false;
 		}
 
-		glfwPollEvents();
 	}
 
 
@@ -441,7 +443,23 @@ namespace River {
 	}
 
 
-	void Window::clear() {
+	void Window::beginFrame() {
+
+
+
+		glfwPollEvents();
+
+		GL(glDepthMask(GL_TRUE)); // We must be able to write to the depth buffer in order to clear the bit
+
+		GL(glClearColor(clearColorValue.r, clearColorValue.g, clearColorValue.b, clearColorValue.a));
+		GL(glClearDepth(clearDepthValue));
+
+		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT ));
+		
+	}
+
+
+	void Window::endFrame() {
 
 		// Measure speed
 		double currentTime = glfwGetTime();
@@ -457,20 +475,8 @@ namespace River {
 		}
 
 		glfwSwapBuffers(NativeWindow::window);
-		
-		GL(glDepthMask(GL_TRUE)); // We must be able to write to the depth buffer in order to clear the bit
-<<<<<<< HEAD
-
-		GL(glClearColor(clearColorValue.r, clearColorValue.g, clearColorValue.b, clearColorValue.a));
-		GL(glClearDepth(clearDepthValue));
-
-		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT ));
-=======
-		GL(glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a));
-		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
->>>>>>> master
 	}
-
+	
 
 	void Window::setClearColorValue(Color color) {
 		clearColorValue = color;
@@ -482,8 +488,6 @@ namespace River {
 	}
 
 
-<<<<<<< HEAD
-=======
 	void Window::useRenderArea() {
         if( renderAreaSize != Resolution(0,0) ) {
             GL(glViewport(
@@ -496,5 +500,4 @@ namespace River {
         }
 	}
 
->>>>>>> master
 }

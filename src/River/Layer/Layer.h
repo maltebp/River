@@ -13,7 +13,6 @@ namespace River {
 	// Forward declaring game, so we can friend it
 	class Game;
 
-
 	/**
 	 * @brief	Represents a logical layer in the Game.
 	 *			Layers are structure in a hierarchy, where each layer, may have a number of children,

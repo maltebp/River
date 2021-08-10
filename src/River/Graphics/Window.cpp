@@ -11,6 +11,9 @@
 
 #include "GL.h"
 #include "River/External/imgui/imgui.h"
+#include "River/External/imgui/imgui_impl_glfw.h"
+#include "River/External/imgui/imgui_impl_opengl3.h"
+#include "River/Game.h"
 #include "Screen.h"
 #include "River/Mouse/MouseController.h"
 #include "River/Keyboard/KeyboardController.h"
@@ -208,6 +211,8 @@ namespace River {
 			return;
 		}
 
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 		glfwWindowHint(GLFW_SAMPLES, 4);
 
 		NativeWindow::window = glfwCreateWindow(
@@ -224,16 +229,36 @@ namespace River {
 			return;
 		}
 
+		// Set window to current
+		glfwMakeContextCurrent(NativeWindow::window);
+
+		// Initialize glew
+		const GLenum glewResult = glewInit();
+		if( glewResult != GLEW_OK ) {
+			std::stringstream msgStream;
+			msgStream << "GLEW initialization error '" << glewGetErrorString(glewResult) << "'";
+			throw Exception(msgStream.str());
+		}
+
 		IMGUI_CHECKVERSION();
     	ImGui::CreateContext();
     	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+		// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+    	ImGuiStyle& style = ImGui::GetStyle();
+    	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    	{
+        	style.WindowRounding = 0.0f;
+        	style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    	}
+
+		ImGui_ImplGlfw_InitForOpenGL(NativeWindow::window, true);
+    	ImGui_ImplOpenGL3_Init("#version 130");	
 
 		if( !fullscreen ) {
 			center();
 		}
 
-		// Set window to current
-		glfwMakeContextCurrent(NativeWindow::window);
 
 		// Get number of texture slots
 		GL(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextureSlots));
@@ -430,7 +455,6 @@ namespace River {
 			NativeWindow::viewportChanged = false;
 		}
 
-		glfwPollEvents();
 	}
 
 
@@ -439,7 +463,36 @@ namespace River {
 	}
 
 
-	void Window::clear() {
+	void Window::beginFrame() {
+
+		glfwPollEvents();
+
+		GL(glDepthMask(GL_TRUE)); // We must be able to write to the depth buffer in order to clear the bit
+
+		GL(glClearColor(clearColorValue.r, clearColorValue.g, clearColorValue.b, clearColorValue.a));
+		GL(glClearDepth(clearDepthValue));
+
+		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT ));
+
+		 // Start the Dear ImGui frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+		ImGui::ShowDemoWindow();
+		
+	}
+
+
+	void Window::endFrame() {
+
+		ImGui::Render();
+        int display_w, display_h;
+        glfwGetFramebufferSize(NativeWindow::window, &display_w, &display_h);
+        glViewport(0, 0, display_w, display_h);
+        glClearColor(0.0, 0.0, 0.0, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		// Measure speed
 		double currentTime = glfwGetTime();
@@ -455,15 +508,8 @@ namespace River {
 		}
 
 		glfwSwapBuffers(NativeWindow::window);
-		
-		GL(glDepthMask(GL_TRUE)); // We must be able to write to the depth buffer in order to clear the bit
-
-		GL(glClearColor(clearColorValue.r, clearColorValue.g, clearColorValue.b, clearColorValue.a));
-		GL(glClearDepth(clearDepthValue));
-
-		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT ));
 	}
-
+	
 
 	void Window::setClearColorValue(Color color) {
 		clearColorValue = color;

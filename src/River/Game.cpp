@@ -24,17 +24,11 @@ namespace River {
 
 		Window::open();
 
-		// Initialize glew
-		const GLenum glewResult = glewInit();
-		if( glewResult != GLEW_OK ) {
-			std::stringstream msgStream;
-			msgStream << "GLEW initialization error '" << glewGetErrorString(glewResult) << "'";
-			throw Exception(msgStream.str());
-		}
+	
 
 		//std::cout << "GLEW initialized" << std::endl;
 		//std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
-		//std::cout << "Graphics card: " << glGetString(GL_RENDERER) << std::endl;2
+		//std::cout << "Graphics card: " << glGetString(GL_RENDERER) << std::endl;
 
 		// Initialize audio system
 		AL::initialize();
@@ -44,13 +38,10 @@ namespace River {
 		}
 
 		while( !Window::shouldClose() ) {
-
-			Window::clear();
+  
+			Window::beginFrame();
 
 			rootLayer->clean();
-
-			// TODO: Use correct time here
-			AudioPlayer::updatePlayers(0.0166666666666);
 
 			// Note on events:
 			// A button press from the mouse is not registered as pressed
@@ -60,11 +51,20 @@ namespace River {
 
 			Window::invokeEvents();
 
+
+			// TODO: Use correct time here
+			AudioPlayer::updatePlayers(0.0166666666666);
+
+			
+
 			KeyboardController::invokeEvents();
 
 			MouseController::invokeEvents();
 
-			rootLayer->update();
+			// rootLayer->update();
+
+			Window::endFrame();
+
 		}
 
 	}
@@ -82,6 +82,19 @@ namespace River {
 
 	void Game::exit() {
 		Window::close();
+	}
+
+	
+	void Game::enableEditorMode() {
+		if( started ) {
+			throw new InvalidStateException("Cannot enable editor mode when game is already started");
+		}
+		
+		editorMode = true;
+	}
+
+	bool Game::isInEditorMode() {
+		return editorMode;
 	}
 	
 }

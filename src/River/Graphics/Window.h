@@ -102,9 +102,7 @@ namespace River {
          */
 		static void setRenderArea(dvec2 position, Resolution size);
 
-		static void clear();
-
-		static void setClearColorValue(Color color );
+		static void setClearColorValue(Color color);
 
 		static void setClearDepthValue(double value);
 
@@ -127,6 +125,10 @@ namespace River {
 		static bool shouldClose();
 
 		static void useRenderArea();
+
+		static void beginFrame();
+
+		static void endFrame();
 
 	private:
 

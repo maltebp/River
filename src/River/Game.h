@@ -33,11 +33,11 @@ namespace River {
 
 		static void removeLayer(Layer* layer);
 
+		static void enableEditorMode();
 
-	public:
+		static bool isInEditorMode();
 
 	private:
-
 
 		static inline std::function<void()> initCallback = nullptr;
 
@@ -48,8 +48,7 @@ namespace River {
 		*/
 		static inline Layer* rootLayer = new Layer();
 
-
-
+		static inline bool editorMode = false;
 
 	};
 }
