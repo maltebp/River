@@ -10,6 +10,7 @@
 #include "River/External/glm/glm.hpp"
 
 #include "GL.h"
+#include "River/External/imgui/imgui.h"
 #include "Screen.h"
 #include "River/Mouse/MouseController.h"
 #include "River/Keyboard/KeyboardController.h"
@@ -194,6 +195,7 @@ namespace River {
 
 
 	void Window::open() {
+
 		if( opened ) {
 			throw InvalidStateException("Window is already open");
 		}
@@ -221,6 +223,10 @@ namespace River {
 			// Error is triggered from callback
 			return;
 		}
+
+		IMGUI_CHECKVERSION();
+    	ImGui::CreateContext();
+    	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
 		if( !fullscreen ) {
 			center();
