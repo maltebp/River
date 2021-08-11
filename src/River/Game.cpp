@@ -23,7 +23,6 @@ namespace River {
 			throw new InvalidStateException("Game has already been started");
 
 		Window::open();
-
 	
 
 		//std::cout << "GLEW initialized" << std::endl;
@@ -51,17 +50,14 @@ namespace River {
 
 			Window::invokeEvents();
 
-
 			// TODO: Use correct time here
-			AudioPlayer::updatePlayers(0.0166666666666);
-
-			
+			AudioPlayer::updatePlayers(0.0166666666666);		
 
 			KeyboardController::invokeEvents();
 
 			MouseController::invokeEvents();
 
-			// rootLayer->update();
+			rootLayer->update();
 
 			Window::endFrame();
 

@@ -202,7 +202,6 @@ namespace River {
 		if( opened ) {
 			throw InvalidStateException("Window is already open");
 		}
-
 		opened = true;
 
 		bool initialized = glfwInit();
@@ -232,7 +231,7 @@ namespace River {
 		// Set window to current
 		glfwMakeContextCurrent(NativeWindow::window);
 
-		// Initialize glew
+		// Initialize GLEW
 		const GLenum glewResult = glewInit();
 		if( glewResult != GLEW_OK ) {
 			std::stringstream msgStream;
@@ -243,14 +242,17 @@ namespace River {
 		IMGUI_CHECKVERSION();
     	ImGui::CreateContext();
     	ImGuiIO& io = ImGui::GetIO(); (void)io;
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+    	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+    	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+    	io.ConfigViewportsNoAutoMerge = true;
+    	io.ConfigViewportsNoTaskBarIcon = true;
 
-		// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-    	ImGuiStyle& style = ImGui::GetStyle();
-    	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-    	{
-        	style.WindowRounding = 0.0f;
-        	style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-    	}
+		// // Because viewports are enabled we tweak WindowRounding/WindowBg
+		// // so platform windows can look identical to regular ones.
+    	// ImGuiStyle& style = ImGui::GetStyle();
+		// style.WindowRounding = 0.0f;
+		// style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 
 		ImGui_ImplGlfw_InitForOpenGL(NativeWindow::window, true);
     	ImGui_ImplOpenGL3_Init("#version 130");	
@@ -258,7 +260,6 @@ namespace River {
 		if( !fullscreen ) {
 			center();
 		}
-
 
 		// Get number of texture slots
 		GL(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextureSlots));
@@ -300,6 +301,74 @@ namespace River {
 		double mouseX, mouseY;
 		glfwGetCursorPos(NativeWindow::window, &mouseX, &mouseY);
 		MouseController::initialize(mouseX, mouseY);
+
+		frameBuffer = new FrameBuffer();
+		frameBuffer->addColorBuffer({500, 500});
+		frameBuffer->addDepthBuffer({500, 500});
+		frameBuffer->build();
+		frameBuffer->bind();
+	}
+
+
+	void Window::beginFrame() {
+
+		glfwPollEvents();
+
+		frameBuffer->bind();
+
+		GL(glDepthMask(GL_TRUE)); // We must be able to write to the depth buffer in order to clear the bit
+
+		GL(glClearColor(clearColorValue.r, clearColorValue.g, clearColorValue.b, clearColorValue.a));
+		GL(glClearDepth(clearDepthValue));
+
+		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT ));
+
+		 // Start the Dear ImGui frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+	
+	}
+
+
+	void Window::endFrame() {
+
+		frameBuffer->unbind();
+
+		ImGui::NewFrame();
+
+		ImGui::Begin("Scene");
+
+		ImGui::Image(
+			(void*)(intptr_t)frameBuffer->getColorBufferImage(0),
+			ImVec2(500, 500)
+			);
+
+		ImGui::End();
+
+		ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		 // Update and Render additional Platform Windows
+        // (Platform functions may change the current OpenGL context
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		glfwMakeContextCurrent(NativeWindow::window);
+
+		glfwSwapBuffers(NativeWindow::window);
+
+		// Measure speed
+		double currentTime = glfwGetTime();
+		frameCount++;
+
+		// If a second has passed.
+		double timePassed = currentTime - previousFpsTime;
+		if( timePassed >= 1.0 ) {
+			fps = frameCount / timePassed;
+
+			frameCount = 0;
+			previousFpsTime = currentTime;
+		}
+
 	}
 	
 
@@ -463,52 +532,7 @@ namespace River {
 	}
 
 
-	void Window::beginFrame() {
-
-		glfwPollEvents();
-
-		GL(glDepthMask(GL_TRUE)); // We must be able to write to the depth buffer in order to clear the bit
-
-		GL(glClearColor(clearColorValue.r, clearColorValue.g, clearColorValue.b, clearColorValue.a));
-		GL(glClearDepth(clearDepthValue));
-
-		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT ));
-
-		 // Start the Dear ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-		ImGui::ShowDemoWindow();
-		
-	}
-
-
-	void Window::endFrame() {
-
-		ImGui::Render();
-        int display_w, display_h;
-        glfwGetFramebufferSize(NativeWindow::window, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
-        glClearColor(0.0, 0.0, 0.0, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-		// Measure speed
-		double currentTime = glfwGetTime();
-		frameCount++;
-
-		// If a second has passed.
-		double timePassed = currentTime - previousFpsTime;
-		if( timePassed >= 1.0 ) {
-			fps = frameCount / timePassed;
-
-			frameCount = 0;
-			previousFpsTime = currentTime;
-		}
-
-		glfwSwapBuffers(NativeWindow::window);
-	}
+	
 	
 
 	void Window::setClearColorValue(Color color) {

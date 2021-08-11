@@ -178,7 +178,7 @@ void MainLayer::onUpdate() {
 
 	GlobalAssets::Fonts::ARIAL->load();
 
-	frameBuffer->bind();
+	// frameBuffer->bind();
 
 	GL(glDepthMask(GL_TRUE));
 	GL(glDisable(GL_DEPTH_TEST));
@@ -190,7 +190,7 @@ void MainLayer::onUpdate() {
 	River::SpriteRenderingSystem::render(&domain, camera);
 	River::TextRenderingSystem::render(&domain, camera);
 
-	frameBuffer->unbind();
+	// frameBuffer->unbind();
 
 	GL(glDisable(GL_BLEND));
 	textureRenderer.render(frameBuffer->getColorBufferImage());

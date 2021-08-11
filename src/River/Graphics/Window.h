@@ -150,6 +150,8 @@ namespace River {
 
 		static inline Resolution renderAreaSize = {0,0};
 
+		static inline FrameBuffer* frameBuffer;
+
 		/* The number of texture slots (or units) accessible from the fragment shader */
 		static inline int numTextureSlots;
 
