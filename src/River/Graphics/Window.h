@@ -126,6 +126,10 @@ namespace River {
 
 		static void useRenderArea();
 
+		static void update(std::function<void()> updateCallback, std::function<void()> imGuiCallback);
+
+		static void drawImGui(std::function<void()> updateCallBack);
+
 		static void beginFrame();
 
 		static void endFrame();
@@ -149,8 +153,6 @@ namespace River {
 		static inline dvec2 renderAreaPosition = {0,0};
 
 		static inline Resolution renderAreaSize = {0,0};
-
-		static inline FrameBuffer* frameBuffer;
 
 		/* The number of texture slots (or units) accessible from the fragment shader */
 		static inline int numTextureSlots;

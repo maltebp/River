@@ -210,6 +210,7 @@ namespace River {
 			return;
 		}
 
+		// glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 		glfwWindowHint(GLFW_SAMPLES, 4);
@@ -246,7 +247,7 @@ namespace River {
     	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
     	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
     	io.ConfigViewportsNoAutoMerge = true;
-    	io.ConfigViewportsNoTaskBarIcon = true;
+    	// io.ConfigViewportsNoTaskBarIcon = true;
 
 		// // Because viewports are enabled we tweak WindowRounding/WindowBg
 		// // so platform windows can look identical to regular ones.
@@ -302,19 +303,14 @@ namespace River {
 		glfwGetCursorPos(NativeWindow::window, &mouseX, &mouseY);
 		MouseController::initialize(mouseX, mouseY);
 
-		frameBuffer = new FrameBuffer();
-		frameBuffer->addColorBuffer({500, 500});
-		frameBuffer->addDepthBuffer({500, 500});
-		frameBuffer->build();
-		frameBuffer->bind();
 	}
 
 
-	void Window::beginFrame() {
+	void Window::update(std::function<void()> updateCallback, std::function<void()> imGuiCallback) {
 
 		glfwPollEvents();
 
-		frameBuffer->bind();
+		glfwMakeContextCurrent(NativeWindow::window);
 
 		GL(glDepthMask(GL_TRUE)); // We must be able to write to the depth buffer in order to clear the bit
 
@@ -323,27 +319,20 @@ namespace River {
 
 		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT ));
 
+		updateCallback();
+
 		 // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
-	
-	}
 
-
-	void Window::endFrame() {
-
-		frameBuffer->unbind();
+		bool editorMode = Game::isInEditorMode();
 
 		ImGui::NewFrame();
 
-		ImGui::Begin("Scene");
+		
 
-		ImGui::Image(
-			(void*)(intptr_t)frameBuffer->getColorBufferImage(0),
-			ImVec2(500, 500)
-			);
 
-		ImGui::End();
+		imGuiCallback();
 
 		ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -352,8 +341,8 @@ namespace River {
         // (Platform functions may change the current OpenGL context
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
-		glfwMakeContextCurrent(NativeWindow::window);
 
+		glfwMakeContextCurrent(NativeWindow::window);
 		glfwSwapBuffers(NativeWindow::window);
 
 		// Measure speed
@@ -370,7 +359,7 @@ namespace River {
 		}
 
 	}
-	
+
 
 	bool Window::isOpen() {
 		return opened;

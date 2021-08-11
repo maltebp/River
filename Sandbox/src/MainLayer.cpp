@@ -14,9 +14,7 @@ bool listenerAdded = false;
 
 MainLayer::MainLayer(const std::string& arg)
 {
-
 	
-
 	// Create test framebuffer
 	frameBuffer = new River::FrameBuffer();
 	frameBuffer->addColorBuffer({1280, 720});
