@@ -126,6 +126,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Graphics\FrameBuffer.h" />
     <ClInclude Include="src\River\Graphics\GLTextureRenderer.h" />
     <ClInclude Include="src\River\Graphics\SpriteAnimation\TextureAnimationCollection.h" />
+    <ClInclude Include="src\River\Graphics\Viewport.h" />
     <ClInclude Include="src\River\Utility\MixedArray.h" />
     <ClInclude Include="src\River\Graphics\Buffer.h" />
     <ClInclude Include="src\River\Graphics\IndexBuffer.h" />
@@ -199,6 +200,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClCompile Include="src\River\Graphics\SimpleVertexArray.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteAnimation\TextureAnimation.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteAnimation\TextureAnimationCollection.cpp" />
+    <ClCompile Include="src\River\Graphics\Viewport.cpp" />
     <ClCompile Include="src\River\Mouse\MouseController.cpp" />
     <ClCompile Include="src\River\Mouse\Mouse.cpp" />
     <ClCompile Include="src\River\Keyboard\Keyboard.cpp" />

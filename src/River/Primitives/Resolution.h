@@ -21,10 +21,12 @@ namespace River {
 		 * @return	True if both the width and height
 		 *			of this and other are the same
 		*/
-		bool operator ==(const Resolution& other);
-		bool operator !=(const Resolution& other);
+		bool operator ==(const Resolution& other) const;
+
+		bool operator !=(const Resolution& other) const;
 
 		unsigned int width = 0;
+		
 		unsigned int height = 0;
 	};
 

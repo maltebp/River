@@ -4,6 +4,8 @@
 
 #include "Assets.h"
 
+#include "River/Graphics/Viewport.h"
+
 River::AudioPlayer countdown;
 
 
@@ -12,8 +14,20 @@ static double audioDepth = 0;
 bool listenerAdded = false;
 
 
+class MyViewport : public River::Viewport {
+public:
+
+	MyViewport() : Viewport({100,100}, new River::FrameBuffer()) {
+
+	}
+
+};
+
+
 MainLayer::MainLayer(const std::string& arg)
 {
+
+	MyViewport viewport;
 
 	
 

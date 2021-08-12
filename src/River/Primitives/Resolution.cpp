@@ -19,12 +19,12 @@ namespace River {
 	}
 
 
-	bool Resolution::operator==(const Resolution& other) {
+	bool Resolution::operator==(const Resolution& other) const {
 		return height == other.height && width == other.width;
 	}
 
 
-	bool Resolution::operator!=(const Resolution& other) {
+	bool Resolution::operator!=(const Resolution& other) const {
 		return height != other.height || width != other.width;
 	}
 
