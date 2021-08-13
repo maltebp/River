@@ -10,9 +10,9 @@ namespace River {
     class Viewport {
     public:
 
-        void bindFrameBuffer();
+        virtual void bindFrameBuffer() = 0;
 
-        void unbindFrameBuffer();
+        virtual void unbindFrameBuffer() = 0;
 
         Resolution getResolution() const;   
 
@@ -20,17 +20,13 @@ namespace River {
 
     protected:
 
-        Viewport(const Resolution& initialResolution, FrameBuffer* frameBuffer);
+        Viewport(const Resolution& initialResolution = Resolution(0,0) );
 
         void setResolution(const Resolution& resolution);
-
-        void setFrameBuffer(FrameBuffer* frameBuffer);
 
     private:
 
         Resolution resolution;
-
-        FrameBuffer* frameBuffer;
 
         ListenerInvoker<ResolutionEvent&> resolutionChangedInvoker = resolutionChangedListeners;
 
