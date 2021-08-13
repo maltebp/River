@@ -123,6 +123,12 @@ namespace River {
          */
         void unbind();
 
+        /**
+         * @brief	Switches this FrameBuffer's position within the binding stack with the argument.
+         *          This also works in the case that one is unbound. Both buffer's must be built.
+         */
+        void switchBinding(FrameBuffer&  other);
+
         State getState();
 
         /**
@@ -149,6 +155,8 @@ namespace River {
         static FrameBuffer* getCurrent();
 
     private:
+
+        void bindBefore(std::vector<FrameBuffer*>::iterator target);
 
         void useRenderArea();
 

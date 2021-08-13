@@ -245,40 +245,25 @@ namespace River {
 
 
     void FrameBuffer::bind() {
-
         if( state == State::NEW ) {
             throw new InvalidStateException("FrameBuffer has not been built");
         }
-
-        auto it = std::find(bindingStack.begin(), bindingStack.end(), this);
-        if( it != bindingStack.end() ) {
-            bindingStack.erase(it);
-        }
-
-        if( bindingStack.size() > 0 ) {
-            bindingStack.back()->state = State::BOUND;
-        }
-
-        state = State::CURRENT;
-        bindingStack.push_back(this);
-        
-        GL(glBindFramebuffer(GL_FRAMEBUFFER, id));
-
-        GLint currentBuffer;
-        GL(glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentBuffer));
-
-        useRenderArea();
+        bindBefore(bindingStack.end());
     }
 
 
     void FrameBuffer::unbind() {
 
-        auto it = std::find(bindingStack.begin(), bindingStack.end(), this);
-        if( it == bindingStack.end() ) {
+        if( state != State::CURRENT && state != State::BOUND ) {
             throw new InvalidStateException("FrameBuffer is not bound");
         }
 
-        bindingStack.pop_back();
+        auto it = std::find(bindingStack.begin(), bindingStack.end(), this);
+        if( it == bindingStack.end() ) {
+            throw new InvalidStateException("FrameBuffer state says that it is bound, but it is not");
+        }
+
+        bindingStack.erase(it);
         state = State::UNBOUND;
 
         if( bindingStack.size() == 0 ) {
@@ -289,6 +274,82 @@ namespace River {
             GL(glBindFramebuffer(GL_FRAMEBUFFER, top->id));
             top->state = State::CURRENT;
             top->useRenderArea();
+        }
+    }
+
+
+    void FrameBuffer::switchBinding(FrameBuffer& other) {
+        if( this->state == State::NEW ) {
+            throw new InvalidStateException("FrameBuffer has not been built");
+        }
+        if( other.state == State::NEW ) {
+            throw new InvalidArgumentException("FrameBuffer has not been built");
+        }
+        if( this == &other ) {
+            throw new InvalidArgumentException("Cannot switch binding position with itself");
+        }
+
+        if( this->state == State::UNBOUND && other.state == State::UNBOUND ) return;
+        
+        auto findIndex = [](FrameBuffer* element){
+            for( int i=0; i < bindingStack.size(); i++ ) {
+                if( bindingStack[i] == element ) return i;
+            }
+            return -1;
+        };
+
+        int thisIndex = findIndex(this);
+        int otherIndex = findIndex(&other);
+
+        if( thisIndex >= 0 ) {
+            other.bindBefore(bindingStack.begin()+thisIndex);
+        }
+        else {
+            // 'other' must be currently bound, because 'this' was not
+            other.unbind();
+        }
+
+        if( otherIndex >= 0) {
+            this->bindBefore(bindingStack.begin()+otherIndex);
+        }
+        else {
+            // 'this' must be currently bound, because 'other' was not
+            this->unbind();
+        }
+    }
+
+
+    void FrameBuffer::bindBefore(std::vector<FrameBuffer*>::iterator targetIterator) {
+        // Inserts the this framebuffer BEFORE the given iterator
+
+        // Unbind if already bound
+        if( this->state == State::BOUND || this->state == State::CURRENT ) {
+            auto thisIterator = std::find(bindingStack.begin(), bindingStack.end(), this);
+            
+            if( targetIterator == thisIterator || --targetIterator == thisIterator ) {
+                // Binding this FrameBuffer at the target iterator would not change anything
+                return;
+            }
+
+            auto target = *targetIterator;
+            unbind();
+            targetIterator = std::find(bindingStack.begin(), bindingStack.end(), this);
+        } 
+
+        bool targetIsLast = targetIterator == bindingStack.end();
+        bindingStack.insert(targetIterator, this);
+
+        if( targetIsLast ) {
+            if( bindingStack.size() > 1 ) {
+                (*std::prev(bindingStack.end()))->state = State::BOUND;
+            }
+            
+            state = State::CURRENT;
+            GL(glBindFramebuffer(GL_FRAMEBUFFER, id));
+            useRenderArea();
+        }   
+        else {
+            state = State::BOUND;
         }
     }
 
