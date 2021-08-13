@@ -6,46 +6,9 @@
 namespace River {
 
 
-        Viewport::Viewport(const Resolution& initialResolution, FrameBuffer* frameBuffer) 
-            :   resolution(initialResolution),  
-                frameBuffer(frameBuffer)
-        {
-            if( frameBuffer == nullptr ) {
-                throw new InvalidArgumentException("FrameBuffer must not be null");
-            }  
-
-            if( frameBuffer->getState() == FrameBuffer::State::NEW ) {
-                throw new InvalidArgumentException("FrameBuffer must be built");
-            }
-        }
-
-
-        void Viewport::bindFrameBuffer() {
-            frameBuffer->bind();
-        }
-
-
-        void Viewport::unbindFrameBuffer() {
-            frameBuffer->unbind();
-        }
-
-
-        void Viewport::setFrameBuffer(FrameBuffer* frameBuffer) {
-            if( frameBuffer == this->frameBuffer ) return;
-
-            if( frameBuffer == nullptr ) {
-                throw new InvalidArgumentException("FrameBuffer must not be null");
-            }  
-
-            if( frameBuffer->getState() == FrameBuffer::State::NEW ) {
-                throw new InvalidArgumentException("FrameBuffer must be built");
-            }
-            
-            // Not entirely sure if it is good idea to switch binding here, if it should
-            // be up to the viewport inheritor
-            frameBuffer->switchBinding(*(this->frameBuffer));
-            this->frameBuffer = frameBuffer;
-        }
+        Viewport::Viewport(const Resolution& initialResolution) 
+            :   resolution(initialResolution)
+        { }
 
 
         void Viewport::setResolution(const Resolution& resolution) {
@@ -64,6 +27,7 @@ namespace River {
 
         Resolution Viewport::getResolution() const {
             return resolution;
-        }       
+        }  
+             
 
 }
