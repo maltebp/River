@@ -246,8 +246,8 @@
     </ClInclude>
     <ClInclude Include="src\River\External\imgui\imstb_truetype.h">
 =======
-    <ClInclude Include="src\River\Graphics\Viewport.h">
 >>>>>>> master
+    <ClInclude Include="src\River\Graphics\Viewport.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -381,8 +381,8 @@
     </ClCompile>
     <ClCompile Include="src\River\External\imgui\imgui_widgets.cpp">
 =======
-    <ClCompile Include="src\River\Graphics\Viewport.cpp">
 >>>>>>> master
+    <ClCompile Include="src\River\Graphics\Viewport.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
