@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include "Asset.h"
 #include "AssetCollection.h"
 

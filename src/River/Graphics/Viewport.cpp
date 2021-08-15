@@ -11,7 +11,7 @@ namespace River {
         { }
 
 
-        void Viewport::setResolution(const Resolution& resolution) {
+        void Viewport::setResolutionInternal(const Resolution& resolution) {
             bool resolutionChanged = resolution != this->resolution;
             if( !resolutionChanged ) return;
 
@@ -28,6 +28,6 @@ namespace River {
         Resolution Viewport::getResolution() const {
             return resolution;
         }  
-             
+
 
 }

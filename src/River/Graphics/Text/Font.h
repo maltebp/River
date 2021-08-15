@@ -55,7 +55,7 @@ namespace River {
 			 * @brief	Load the particular Font size, when loading the Font
 			*/
 			Creator& preloadSize(unsigned int fontSize);
-
+	
 			operator Font*();
 
 		private:

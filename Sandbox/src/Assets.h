@@ -15,7 +15,7 @@ namespace GlobalAssets {
 		inline Font* ARIAL = Font::create("assets/arial.ttf")
 			.addToCollection(COLLECTION)
 			.enableSizeAutoLoading();
-	}
+	} 
 
 
 	namespace Images {

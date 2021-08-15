@@ -127,7 +127,7 @@ namespace River {
          * @brief	Switches this FrameBuffer's position within the binding stack with the argument.
          *          This also works in the case that one is unbound. Both buffer's must be built.
          */
-        void switchBinding(FrameBuffer&  other);
+        void swapBinding(FrameBuffer&  other);
 
         State getState();
 

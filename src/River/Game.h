@@ -4,6 +4,7 @@
 #include <functional>
 
 #include "Error.h"
+#include "River/Graphics/Viewport.h"
 #include "Graphics/Window.h"
 #include "Layer/Layer.h"
 #include "Primitives/Color.h"

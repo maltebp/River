@@ -123,6 +123,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\River\EmbeddedResources\Fonts\MyriadProRegular.h" />
     <ClInclude Include="src\River\External\imgui\imconfig.h" />
     <ClInclude Include="src\River\External\imgui\imgui.h" />
     <ClInclude Include="src\River\External\imgui\imgui_impl_glfw.h" />
@@ -134,6 +135,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClInclude Include="src\River\Graphics\BufferUsageHint.h" />
     <ClInclude Include="src\River\Graphics\FrameBuffer.h" />
     <ClInclude Include="src\River\Graphics\GLTextureRenderer.h" />
+    <ClInclude Include="src\River\Graphics\MainViewport.h" />
     <ClInclude Include="src\River\Graphics\SpriteAnimation\TextureAnimationCollection.h" />
     <ClInclude Include="src\River\Graphics\Viewport.h" />
     <ClInclude Include="src\River\Utility\MixedArray.h" />
@@ -213,6 +215,7 @@ xcopy "$(ProjectDir)..\src\*.inl" "$(ProjectDir)..\build\include\" /S /Y /q</Com
     <ClCompile Include="src\River\Graphics\Buffer.cpp" />
     <ClCompile Include="src\River\Graphics\FrameBuffer.cpp" />
     <ClCompile Include="src\River\Graphics\GLTextureRenderer.cpp" />
+    <ClCompile Include="src\River\Graphics\MainViewport.cpp" />
     <ClCompile Include="src\River\Graphics\SimpleVertexArray.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteAnimation\TextureAnimation.cpp" />
     <ClCompile Include="src\River\Graphics\SpriteAnimation\TextureAnimationCollection.cpp" />

@@ -278,7 +278,7 @@ namespace River {
     }
 
 
-    void FrameBuffer::switchBinding(FrameBuffer& other) {
+    void FrameBuffer::swapBinding(FrameBuffer& other) {
         if( this->state == State::NEW ) {
             throw new InvalidStateException("FrameBuffer has not been built");
         }

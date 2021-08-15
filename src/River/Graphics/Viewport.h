@@ -14,7 +14,7 @@ namespace River {
 
         virtual void unbindFrameBuffer() = 0;
 
-        Resolution getResolution() const;   
+        Resolution getResolution() const;
 
         ListenerMap<ResolutionEvent&> resolutionChangedListeners;
 
@@ -22,7 +22,7 @@ namespace River {
 
         Viewport(const Resolution& initialResolution = Resolution(0,0) );
 
-        void setResolution(const Resolution& resolution);
+        void setResolutionInternal(const Resolution& resolution);
 
     private:
 

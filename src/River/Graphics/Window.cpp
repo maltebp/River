@@ -18,6 +18,7 @@
 #include "River/Mouse/MouseController.h"
 #include "River/Keyboard/KeyboardController.h"
 #include "River/Graphics/FrameBuffer.h"
+#include "River/EmbeddedResources/Fonts/MyriadProRegular.h"
 
 
 namespace River {
@@ -240,6 +241,10 @@ namespace River {
 			throw Exception(msgStream.str());
 		}
 
+		if( Game::isInEditorMode() ) {
+			mainViewport = new MainViewport(resolution);
+		}
+
 		IMGUI_CHECKVERSION();
     	ImGui::CreateContext();
     	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -256,7 +261,16 @@ namespace River {
 		// style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 
 		ImGui_ImplGlfw_InitForOpenGL(NativeWindow::window, true);
-    	ImGui_ImplOpenGL3_Init("#version 130");	
+    	ImGui_ImplOpenGL3_Init("#version 130");
+
+		
+		size_t fontDataSize = sizeof(EmbeddedResources::MYRIAD_PRO_REGULAR);
+		unsigned char* fontData = new unsigned char[fontDataSize];
+		for( int i=0; i<fontDataSize; i++ ) {
+			fontData[i] = EmbeddedResources::MYRIAD_PRO_REGULAR[i];
+		}
+		io.Fonts->AddFontFromMemoryTTF((void*)fontData,(int)fontDataSize, 16.0f);
+		io.Fonts->Build();
 
 		if( !fullscreen ) {
 			center();
@@ -329,9 +343,6 @@ namespace River {
 
 		ImGui::NewFrame();
 
-		
-
-
 		imGuiCallback();
 
 		ImGui::Render();
@@ -388,6 +399,15 @@ namespace River {
 
 	const Resolution& Window::getViewportResolution() {
 		return viewportResolution;
+	}
+
+	
+	MainViewport* Window::getMainViewport() {
+		if( !Game::isInEditorMode() ) {
+			throw new InvalidStateException("Game must be in editor mode for it to have a main viewport");
+		}
+
+		return mainViewport;
 	}
 
 
@@ -505,6 +525,10 @@ namespace River {
 
 		// Fire viewport changed event
 		if( NativeWindow::viewportChanged ) {
+			
+			mainViewport->setResolution(viewportResolution);
+
+			// TODO: Remove this
 			ResolutionEvent event(viewportResolution);
 			for( auto& listener : viewportChangedInvoker.listeners ) {
 				listener.second(event);

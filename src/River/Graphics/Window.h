@@ -9,6 +9,7 @@
 #include "River/Graphics/ResolutionEvent.h"
 #include "River/Primitives/Resolution.h"
 #include "River/Primitives/Color.h"
+#include "River/Graphics/MainViewport.h"
 
 
 namespace River {
@@ -78,9 +79,15 @@ namespace River {
 		*/
 		static inline ListenerMap<ResolutionEvent&> resolutionChangedListeners;
 
+		/**
+		 * @brief	Will throw an exception if the game is in editor mode, as no
+		 * 			main viewport will be available then.
+		 */
 		static const Resolution& getViewportResolution();
 
 		static inline ListenerMap<ResolutionEvent&> viewportChangedListeners;
+
+		static MainViewport* getMainViewport();
 
 		static void enableFullscreen(const Resolution& windowResolution = resolution);
 
@@ -88,7 +95,6 @@ namespace River {
 
 		static bool isFullscreen();
 
-	
 		/**
 		 * @brief	Centers the Window on the primary monitor.
 		 *			Has no effect if Window is fullscreen
@@ -143,6 +149,8 @@ namespace River {
 		static inline	Resolution resolution = { 800, 600 };
 		
 		static inline	Resolution viewportResolution = { 0, 0 };
+
+		static inline MainViewport* mainViewport;
 
 		static inline	bool fullscreen = false;
 		
