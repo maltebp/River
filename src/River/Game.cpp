@@ -122,8 +122,10 @@ namespace River {
 
 							ImGui::End();
 
-							ImGui::PopStyleVar();
+							ImGui::PopStyleVar(); 	
 						}
+
+						ImGui::Text("Hello world!");
 						
 					}
 				}

@@ -262,15 +262,7 @@ namespace River {
 
 		ImGui_ImplGlfw_InitForOpenGL(NativeWindow::window, true);
     	ImGui_ImplOpenGL3_Init("#version 130");
-
-		
-		size_t fontDataSize = sizeof(EmbeddedResources::MYRIAD_PRO_REGULAR);
-		unsigned char* fontData = new unsigned char[fontDataSize];
-		for( int i=0; i<fontDataSize; i++ ) {
-			fontData[i] = EmbeddedResources::MYRIAD_PRO_REGULAR[i];
-		}
-		io.Fonts->AddFontFromMemoryTTF((void*)fontData,(int)fontDataSize, 16.0f);
-		io.Fonts->Build();
+	
 
 		if( !fullscreen ) {
 			center();
@@ -322,6 +314,22 @@ namespace River {
 
 	void Window::update(std::function<void()> updateCallback, std::function<void()> imGuiCallback) {
 
+		const int numFonts = 10;
+		static ImFont** fonts = new ImFont*[numFonts];
+		static int fontCount = 0;
+
+		if( fontCount < numFonts ) {
+			fontCount++;
+			ImGuiIO& io = ImGui::GetIO();
+			size_t fontDataSize = sizeof(EmbeddedResources::MYRIAD_PRO_REGULAR);
+			unsigned char* fontData = new unsigned char[fontDataSize];
+			for( int i=0; i<fontDataSize; i++ ) {
+				fontData[i] = EmbeddedResources::MYRIAD_PRO_REGULAR[i];
+			}
+			fonts[fontCount-1] = io.Fonts->AddFontFromMemoryTTF((void*)fontData,(int)fontDataSize, (float)((fontCount-1)*2+10));
+			ImGui_ImplOpenGL3_CreateFontsTexture();
+		}
+		
 		glfwPollEvents();
 
 		glfwMakeContextCurrent(NativeWindow::window);
@@ -342,6 +350,16 @@ namespace River {
 		bool editorMode = Game::isInEditorMode();
 
 		ImGui::NewFrame();
+
+		ImGui::Begin("Fonts");
+
+		for( int i=0; i < fontCount; i++ ) {
+			ImGui::PushFont(fonts[i]);
+			ImGui::Text("This is font with size %d", i);
+			ImGui::PopFont();
+		}
+
+		ImGui::End();
 
 		imGuiCallback();
 
