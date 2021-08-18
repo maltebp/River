@@ -21,12 +21,18 @@
     <ClCompile Include="src\Main.h">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\EditorLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\MainLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Assets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
