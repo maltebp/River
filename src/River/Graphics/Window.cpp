@@ -110,6 +110,10 @@ namespace River {
 
 
 		static void keyCallback(GLFWwindow* glfwWindow, int glfwKey, int scancode, int glfwAction, int mods) {
+			if( Game::isImGuiEnabled() && ImGui::GetIO().WantCaptureKeyboard ) {
+				return;
+			}
+
 			KeyboardKey key = (KeyboardKey)glfwKey;
 
 			switch( glfwAction ) {
@@ -131,12 +135,18 @@ namespace River {
 
 
 		static void characterCallback(GLFWwindow* glfwWindow, unsigned int codepoint) {
+			if( Game::isImGuiEnabled() && ImGui::GetIO().WantTextInput ) {
+				return;
+			}
 			char32_t character = (char32_t)codepoint;
 			KeyboardController::registerCharacterEvent(character);
 		}
 
 
 		static void mousePosCallback(GLFWwindow* glfwWindow, double mouseX, double mouseY) {
+			if( Game::isImGuiEnabled() && ImGui::GetIO().WantCaptureMouse ) {
+				return;
+			}
 			mouseX -= Window::viewportResolution.width / 2.0;
 			mouseY -= Window::viewportResolution.height / 2.0;
 			mouseY *= -1;
@@ -150,6 +160,9 @@ namespace River {
 
 
 		static void mouseScrollCallback(GLFWwindow* glfwWindow, double xOffset, double yOffset) {
+			if( Game::isImGuiEnabled() && ImGui::GetIO().WantCaptureMouse ) {
+				return;
+			}
 			MouseController::registerMouseScroll(yOffset);
 			// yOffset is the classic scroll direction, while xOffset is also used for controllers,
 			// which are not supported in this framework yet
@@ -157,6 +170,10 @@ namespace River {
 
 
 		static void mouseButtonCallback(GLFWwindow* glfwWindow, int button, int action, int modifierBits) {
+			if( Game::isImGuiEnabled() && ImGui::GetIO().WantCaptureMouse ) {
+				return;
+			}
+
 			// Modifier bits are unused (ALT, SHIFT etc...), as they are not important for games
 
 			if( action == GLFW_PRESS ) {

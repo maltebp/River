@@ -13,7 +13,7 @@ public:
 
 	void onUpdate() override;
 
-	void onUpdateImGui() override;
+	void onUpdateImGui() override; 
 
 	void onKeyDownEvent(River::KeyEvent& e);
 

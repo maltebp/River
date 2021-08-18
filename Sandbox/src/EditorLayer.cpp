@@ -109,9 +109,21 @@ void EditorLayer::onUpdateImGui() {
             contentSize
         );
 
+        bool imageFocused = ImGui::IsItemHovered();
+
         ImGui::End();
 
         ImGui::PopStyleVar(); 	
+
+        ImGui::Begin("Capture info");
+
+        ImGuiIO& io = ImGui::GetIO();
+
+        ImGui::Text("WantCaptureMouse: %s", io.WantCaptureMouse ? "true" : "false" );
+        ImGui::Text("WantCaptureKeyboard: %s", io.WantCaptureMouse ? "true" : "false" );
+        ImGui::Text("FrameBuffer has focus: %s", imageFocused ? "true" : "false" );
+
+        ImGui::End();
     }
 
 }

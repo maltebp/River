@@ -181,11 +181,17 @@ void MainLayer::onUpdate() {
 
 }
 
+
 void MainLayer::onUpdateImGui() {
-	ImGui::Begin("Test window");
-	ImGui::Text("Hello world from text window!");
+	ImGui::Begin("Game debug window");
+
+	static char buffer[10];
+
+	ImGui::InputText("Hello world!", buffer, sizeof(buffer));
+
 	ImGui::End();
 }
+
 
 void MainLayer::onKeyDownEvent(River::KeyEvent& e) {
 	std::cout << "KeyDown: " << (int) e.getKey() << std::endl;

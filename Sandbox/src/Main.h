@@ -23,8 +23,9 @@ int main() {
 	
 	#ifdef EDITOR_MODE
 		Window::disableMainViewport();
-		Game::enableImGui();
 	#endif
+
+	Game::enableImGui();
 
 	Game::start([]() {
 		GlobalAssets::COLLECTION->load();
