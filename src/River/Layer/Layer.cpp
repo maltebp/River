@@ -69,6 +69,13 @@ namespace River {
 		for( auto subLayer : layers ) subLayer->update();
 	}
 
+	
+	void Layer::updateImGui() {
+		onUpdateImGui();
+		onUpdateImGuiAction();
+		for( auto subLayer : layers ) subLayer->updateImGui();
+	}
+
 
 	void Layer::destroy() {
 		// Sort of a special case... It doesn't call the destroy callbakc directly, but
@@ -93,6 +100,11 @@ namespace River {
 	void Layer::onUpdate(std::function<void()> action) {
 		if( action == nullptr ) throw InvalidArgumentException("Action must not be nullptr");
 		onUpdateAction = action;
+	}
+
+	void Layer::onUpdateImGui(std::function<void()> action) {
+		if( action == nullptr ) throw InvalidArgumentException("Action must not be nullptr");
+		onUpdateImGuiAction = action;
 	}
 
 	/**

@@ -84,6 +84,8 @@ namespace River {
 		*/
 		void onUpdate(std::function<void()> action);
 
+		void onUpdateImGui(std::function<void()> action);
+
 		/**
 		 * @brief	Sets an action function to be called immediately after the matching virtual function.
 		*/
@@ -103,7 +105,7 @@ namespace River {
 
 		virtual void onUpdate() { }
 
-		virtual void onRenderGUI() { }
+		virtual void onUpdateImGui() { }
 
 		virtual void onDestroy() { }
 
@@ -121,6 +123,8 @@ namespace River {
 
 		void update();
 
+		void updateImGui();
+
 		void destroy();
 
 
@@ -137,11 +141,13 @@ namespace River {
 
 		// Actions - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-		std::function<void()> onCreateAction = [](){};
+		std::function<void()> onCreateAction 		= [](){};
 
-		std::function<void()> onUpdateAction = [](){};
+		std::function<void()> onUpdateAction 		= [](){};
 
-		std::function<void()> onDestroyAction = [](){};
+		std::function<void()> onUpdateImGuiAction 	= [](){};
+
+		std::function<void()> onDestroyAction 		= [](){};
 
 		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

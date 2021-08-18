@@ -10,7 +10,10 @@ public:
 	MainLayer(River::Viewport* mainViewport);
 
 	void onCreate() override;
+
 	void onUpdate() override;
+
+	void onUpdateImGui() override;
 
 	void onKeyDownEvent(River::KeyEvent& e);
 

@@ -4,6 +4,8 @@
 
 #include "Assets.h"
 
+#include "River/External/imgui/imgui.h"
+
 River::AudioPlayer countdown;
 
 
@@ -161,7 +163,6 @@ void MainLayer::onUpdate() {
 
 	GlobalAssets::Fonts::ARIAL->load();
 
-	
 	mainViewport->bindFrameBuffer();
 
 	GL(glDepthMask(GL_TRUE));
@@ -177,6 +178,13 @@ void MainLayer::onUpdate() {
 	mainViewport->unbindFrameBuffer();
 
 	domain.clean();
+
+}
+
+void MainLayer::onUpdateImGui() {
+	ImGui::Begin("Test window");
+	ImGui::Text("Hello world from text window!");
+	ImGui::End();
 }
 
 void MainLayer::onKeyDownEvent(River::KeyEvent& e) {

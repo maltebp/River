@@ -69,6 +69,8 @@ namespace River {
 				},
 				[&]() {
 
+					rootLayer->updateImGui();
+
 					// if (editorMode) {
 					// 	// if (ImGui::BeginMainMenuBar()) {
 					// 	// 	if (ImGui::BeginMenu("Options")) {
