@@ -19,7 +19,7 @@ int main() {
 	Window::setResolution({ 1280, 720 });
 
 	// Window::disableMainViewport();
-	Game::enableImGui();
+	// Game::enableImGui();
 
 	Game::start([]() {
 		GlobalAssets::COLLECTION->load();

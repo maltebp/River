@@ -40,6 +40,12 @@ namespace River {
 
 	private:
 
+		static void update();
+
+		static void updateImGui();
+
+	private:
+
 		static inline std::function<void()> initCallback = nullptr;
 
 		static inline bool started = false;
