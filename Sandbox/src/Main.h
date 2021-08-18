@@ -18,13 +18,13 @@ int main() {
 	Window::setTitle("Sandbox Game");
 	Window::setResolution({ 1280, 720 });
 
-	Game::enableEditorMode();
+	// Window::disableMainViewport();
 
 	Game::start([]() {
 		GlobalAssets::COLLECTION->load();
 		River::SpriteRenderingSystem::initialize();
 		River::TextRenderingSystem::initialize();	
-		Game::pushLayer<MainLayer>("This is a layer starting argument!");
+		Game::pushLayer<MainLayer>(Window::getMainViewport());
 	});
 
 	std::cout << "Stopping Sandbox" << std::endl;

@@ -241,29 +241,28 @@ namespace River {
 			throw Exception(msgStream.str());
 		}
 
-		if( Game::isInEditorMode() ) {
-			mainViewport = new MainViewport(resolution);
-		}
-
-		IMGUI_CHECKVERSION();
-    	ImGui::CreateContext();
-    	ImGuiIO& io = ImGui::GetIO(); (void)io;
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-    	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-    	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
-    	io.ConfigViewportsNoAutoMerge = true;
-    	// io.ConfigViewportsNoTaskBarIcon = true;
-
-		// // Because viewports are enabled we tweak WindowRounding/WindowBg
-		// // so platform windows can look identical to regular ones.
-    	// ImGuiStyle& style = ImGui::GetStyle();
-		// style.WindowRounding = 0.0f;
-		// style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-
-		ImGui_ImplGlfw_InitForOpenGL(NativeWindow::window, true);
-    	ImGui_ImplOpenGL3_Init("#version 130");
 	
+ 
+		if( Game::isImGuiEnabled() ) {
+			IMGUI_CHECKVERSION();
+    		ImGui::CreateContext();
+    		ImGuiIO& io = ImGui::GetIO(); (void)io;
+			io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+    		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+    		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+    		io.ConfigViewportsNoAutoMerge = true;
+    		// io.ConfigViewportsNoTaskBarIcon = true;
 
+			// // Because viewports are enabled we tweak WindowRounding/WindowBg
+			// // so platform windows can look identical to regular ones.
+    		// ImGuiStyle& style = ImGui::GetStyle();
+			// style.WindowRounding = 0.0f;
+			// style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+
+			ImGui_ImplGlfw_InitForOpenGL(NativeWindow::window, true);
+    		ImGui_ImplOpenGL3_Init("#version 130");
+		}
+	
 		if( !fullscreen ) {
 			center();
 		}
@@ -309,68 +308,61 @@ namespace River {
 		glfwGetCursorPos(NativeWindow::window, &mouseX, &mouseY);
 		MouseController::initialize(mouseX, mouseY);
 
+		if( mainViewportEnabled ) {
+			mainViewport = new MainViewport({(unsigned int)framebufferWidth, (unsigned int)framebufferHeight});
+			mainViewportRenderer = new GLTextureRenderer();
+		}
+
 	}
 
 
 	void Window::update(std::function<void()> updateCallback, std::function<void()> imGuiCallback) {
-
-		const int numFonts = 10;
-		static ImFont** fonts = new ImFont*[numFonts];
-		static int fontCount = 0;
-
-		if( fontCount < numFonts ) {
-			fontCount++;
-			ImGuiIO& io = ImGui::GetIO();
-			size_t fontDataSize = sizeof(EmbeddedResources::MYRIAD_PRO_REGULAR);
-			unsigned char* fontData = new unsigned char[fontDataSize];
-			for( int i=0; i<fontDataSize; i++ ) {
-				fontData[i] = EmbeddedResources::MYRIAD_PRO_REGULAR[i];
-			}
-			fonts[fontCount-1] = io.Fonts->AddFontFromMemoryTTF((void*)fontData,(int)fontDataSize, (float)((fontCount-1)*2+10));
-			ImGui_ImplOpenGL3_CreateFontsTexture();
-		}
 		
 		glfwPollEvents();
 
 		glfwMakeContextCurrent(NativeWindow::window);
 
+		// Clear the actual viewport
 		GL(glDepthMask(GL_TRUE)); // We must be able to write to the depth buffer in order to clear the bit
-
-		GL(glClearColor(clearColorValue.r, clearColorValue.g, clearColorValue.b, clearColorValue.a));
+		GL(glClearColor(0, 0, 0, 1.0f));
 		GL(glClearDepth(clearDepthValue));
-
 		GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT ));
+
+		if( mainViewportEnabled ) {
+			mainViewport->setResolution(viewportResolution);
+			mainViewport->bindFrameBuffer();
+			GL(glDepthMask(GL_TRUE)); // We must be able to write to the depth buffer in order to clear the bit
+			GL(glClearColor(clearColorValue.r, clearColorValue.g, clearColorValue.b, clearColorValue.a));
+			GL(glClearDepth(clearDepthValue));
+			GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT ));
+			mainViewport->unbindFrameBuffer();	
+		}
 
 		updateCallback();
 
-		 // Start the Dear ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-
-		bool editorMode = Game::isInEditorMode();
-
-		ImGui::NewFrame();
-
-		ImGui::Begin("Fonts");
-
-		for( int i=0; i < fontCount; i++ ) {
-			ImGui::PushFont(fonts[i]);
-			ImGui::Text("This is font with size %d", i);
-			ImGui::PopFont();
+		// Render the main viewport's framebuffer
+		if( mainViewportEnabled ) {
+			mainViewportRenderer->render(mainViewport->frameBuffer->getColorBufferImage(0));
 		}
 
-		ImGui::End();
+		// Start the Dear ImGui frame
+		if( Game::isImGuiEnabled() ) {
+			ImGui_ImplOpenGL3_NewFrame();
+        	ImGui_ImplGlfw_NewFrame();
 
-		imGuiCallback();
+			ImGui::NewFrame();
 
-		ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+			imGuiCallback();
 
-		 // Update and Render additional Platform Windows
-        // (Platform functions may change the current OpenGL context
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
+			ImGui::Render();
+        	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+			 // Update and Render additional Platform Windows
+        	// (Platform functions may change the current OpenGL context
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+		}
+        
 		glfwMakeContextCurrent(NativeWindow::window);
 		glfwSwapBuffers(NativeWindow::window);
 
@@ -419,12 +411,16 @@ namespace River {
 		return viewportResolution;
 	}
 
+
+	void Window::disableMainViewport() {
+		mainViewportEnabled = false;
+	}
+
 	
 	MainViewport* Window::getMainViewport() {
-		if( !Game::isInEditorMode() ) {
-			throw new InvalidStateException("Game must be in editor mode for it to have a main viewport");
+		if( !mainViewportEnabled ) {
+			throw new InvalidStateException("Main viewport has been disabled");
 		}
-
 		return mainViewport;
 	}
 
@@ -544,8 +540,6 @@ namespace River {
 		// Fire viewport changed event
 		if( NativeWindow::viewportChanged ) {
 			
-			mainViewport->setResolution(viewportResolution);
-
 			// TODO: Remove this
 			ResolutionEvent event(viewportResolution);
 			for( auto& listener : viewportChangedInvoker.listeners ) {
@@ -562,9 +556,6 @@ namespace River {
 		return fps;
 	}
 
-
-	
-	
 
 	void Window::setClearColorValue(Color color) {
 		clearColorValue = color;

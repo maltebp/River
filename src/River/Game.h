@@ -34,9 +34,9 @@ namespace River {
 
 		static void removeLayer(Layer* layer);
 
-		static void enableEditorMode();
+		static void enableImGui();
 
-		static bool isInEditorMode();
+		static bool isImGuiEnabled();
 
 	private:
 
@@ -49,7 +49,7 @@ namespace River {
 		*/
 		static inline Layer* rootLayer = new Layer();
 
-		static inline bool editorMode = false;
+		static inline bool imGuiEnabled = false;
 
 	};
 }

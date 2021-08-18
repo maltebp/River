@@ -10,6 +10,7 @@
 #include "River/Primitives/Resolution.h"
 #include "River/Primitives/Color.h"
 #include "River/Graphics/MainViewport.h"
+#include "River/Graphics/GLTextureRenderer.h"
 
 
 namespace River {
@@ -87,6 +88,8 @@ namespace River {
 
 		static inline ListenerMap<ResolutionEvent&> viewportChangedListeners;
 
+		static void disableMainViewport();
+
 		static MainViewport* getMainViewport();
 
 		static void enableFullscreen(const Resolution& windowResolution = resolution);
@@ -150,7 +153,11 @@ namespace River {
 		
 		static inline	Resolution viewportResolution = { 0, 0 };
 
+		static inline bool mainViewportEnabled = true;
+
 		static inline MainViewport* mainViewport;
+
+		static inline GLTextureRenderer* mainViewportRenderer;
 
 		static inline	bool fullscreen = false;
 		

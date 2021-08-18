@@ -19,9 +19,7 @@ namespace River {
 
         virtual void unbindFrameBuffer() override; 
 
-    private:
-
-        void setResolution(const Resolution& resolution);
+        void setResolution(const Resolution& resolution);       
 
     private:
 

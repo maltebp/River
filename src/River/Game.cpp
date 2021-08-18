@@ -47,32 +47,14 @@ namespace River {
 
 			Window::update(
 				[&](){
-					
-					if(editorMode) {
-
-						if (frameBuffer == nullptr){
-
-							if (frameBuffer != nullptr) {
-								delete frameBuffer;
-							}
-
-							frameBuffer = new FrameBuffer();
-							frameBuffer->addColorBuffer(sceneViewSize);
-							frameBuffer->addDepthBuffer(sceneViewSize);
-							frameBuffer->build();	
-						}
-
-						frameBuffer->bind();
-					}
-
-					rootLayer->clean();
-
 					// Note on events:
 					// A button press from the mouse is not registered as pressed
 					// in the same event cycle as a Keyboard event. However, it
 					// will be available in the next cycle, and for now it shouldn't
 					// cause a problem
 
+					rootLayer->clean();
+						
 					Window::invokeEvents();
 
 					// TODO: Use correct time here
@@ -84,50 +66,47 @@ namespace River {
 
 					rootLayer->update();	
 
-					if(editorMode) {
-						frameBuffer->unbind();
-					}	
 				},
 				[&]() {
 
-					if (editorMode) {
-						if (ImGui::BeginMainMenuBar()) {
-							if (ImGui::BeginMenu("Options")) {
-								ImGui::Separator();
-								ImGui::EndMenu();
-							}
-							ImGui::EndMainMenuBar();
-						}
+					// if (editorMode) {
+					// 	// if (ImGui::BeginMainMenuBar()) {
+					// 	// 	if (ImGui::BeginMenu("Options")) {
+					// 	// 		ImGui::Separator();
+					// 	// 		ImGui::EndMenu();
+					// 	// 	}
+					// 	// 	ImGui::EndMainMenuBar();
+					// 	// }
 
-						ImGui::DockSpaceOverViewport();
+					// 	// ImGui::DockSpaceOverViewport();
 
-						// Scene Tool View
-						{
-							ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0,0 });
+					// 	// // Scene Tool View
+					// 	// {
+					// 	// 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0,0 });
 
-							ImGui::Begin("Scene", NULL);
-							ImVec2 min = ImGui::GetWindowContentRegionMin();
-							ImVec2 max = ImGui::GetWindowContentRegionMax();
+					// 	// 	ImGui::Begin("Scene", NULL);
+					// 	// 	ImVec2 min = ImGui::GetWindowContentRegionMin();
+					// 	// 	ImVec2 max = ImGui::GetWindowContentRegionMax();
 
-							ImVec2 contentSize = { max.x - min.x, max.y - min.y };
+					// 	// 	ImVec2 contentSize = { max.x - min.x, max.y - min.y };
 
-							Resolution newSize = { (unsigned int)contentSize.x, (unsigned int)contentSize.y };
-							sceneViewSizeChanged = newSize != sceneViewSize;
-							sceneViewSize = newSize;
+					// 	// 	Resolution newSize = { (unsigned int)contentSize.x, (unsigned int)contentSize.y };
+					// 	// 	sceneViewSizeChanged = newSize != sceneViewSize;
+					// 	// 	sceneViewSize = newSize;
 
-							ImGui::Image(
-								(void*)(intptr_t)frameBuffer->getColorBufferImage(0),
-								contentSize
-							);
+					// 	// 	ImGui::Image(
+					// 	// 		(void*)(intptr_t)frameBuffer->getColorBufferImage(0),
+					// 	// 		contentSize
+					// 	// 	);
 
-							ImGui::End();
+					// 	// 	ImGui::End();
 
-							ImGui::PopStyleVar(); 	
-						}
+					// 	// 	ImGui::PopStyleVar(); 	
+					// 	// }
 
-						ImGui::Text("Hello world!");
+					// 	// ImGui::Text("Hello world!");
 						
-					}
+					// }
 				}
 			);		
 		}
@@ -150,16 +129,18 @@ namespace River {
 	}
 
 	
-	void Game::enableEditorMode() {
+	void Game::enableImGui() {
 		if( started ) {
 			throw new InvalidStateException("Cannot enable editor mode when game is already started");
 		}
 		
-		editorMode = true;
+		imGuiEnabled = true;
 	}
 
-	bool Game::isInEditorMode() {
-		return editorMode;
+
+	bool Game::isImGuiEnabled() {
+		return imGuiEnabled;
 	}
+
 	
 }

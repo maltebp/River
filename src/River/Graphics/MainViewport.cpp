@@ -9,7 +9,7 @@ namespace River {
         
         FrameBuffer* createFrameBuffer(const Resolution& resolution) {
             FrameBuffer* frameBuffer = new FrameBuffer();
-            frameBuffer->addColorBuffer(resolution);
+            frameBuffer->addColorBuffer(resolution, 3u);
             frameBuffer->addDepthBuffer(resolution);
             frameBuffer->build();
             return frameBuffer;

@@ -11,13 +11,9 @@ static double audioDepth = 0;
 
 bool listenerAdded = false;
 
-MainLayer::MainLayer(const std::string& arg)
+MainLayer::MainLayer(River::Viewport* mainViewport)
+	:	mainViewport(mainViewport)
 {
-	// Create test framebuffer
-	frameBuffer = new River::FrameBuffer();
-	frameBuffer->addColorBuffer({1280, 720});
-	frameBuffer->addDepthBuffer({1280, 720});
-	frameBuffer->build();
 
 	River::Window::setClearColorValue(River::Colors::BLUE);
 
@@ -51,17 +47,8 @@ MainLayer::MainLayer(const std::string& arg)
 		});
 	River::Window::viewportChangedListeners.add(this, [this](River::ResolutionEvent& event) {
 		auto resolution = event.getResolution();
-
-		delete frameBuffer;
-
-		frameBuffer = new River::FrameBuffer();
-		frameBuffer->addColorBuffer(resolution);
-		frameBuffer->addDepthBuffer(resolution);
-		frameBuffer->build();
-		
 		printf("Viewport listener: %ix%i\n", resolution.width, resolution.height);
 	});
-	std::cout << "Start arg: " << arg;
 
 	GlobalAssets::Textures::CAR->load();
 }
@@ -174,7 +161,8 @@ void MainLayer::onUpdate() {
 
 	GlobalAssets::Fonts::ARIAL->load();
 
-	// frameBuffer->bind();
+	
+	mainViewport->bindFrameBuffer();
 
 	GL(glDepthMask(GL_TRUE));
 	GL(glDisable(GL_DEPTH_TEST));
@@ -186,10 +174,7 @@ void MainLayer::onUpdate() {
 	River::SpriteRenderingSystem::render(&domain, camera);
 	River::TextRenderingSystem::render(&domain, camera);
 
-	// frameBuffer->unbind();
-
-	GL(glDisable(GL_BLEND));
-	textureRenderer.render(frameBuffer->getColorBufferImage());
+	mainViewport->unbindFrameBuffer();
 
 	domain.clean();
 }
