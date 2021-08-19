@@ -26,7 +26,6 @@ namespace River {
 
 		Window::open();
 	
-
 		//std::cout << "GLEW initialized" << std::endl;
 		//std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
 		//std::cout << "Graphics card: " << glGetString(GL_RENDERER) << std::endl;
@@ -41,11 +40,10 @@ namespace River {
 		}
 
 		while( !Window::shouldClose() ) {
-
 			Resolution sceneViewSize = {500, 500};
 			bool sceneViewSizeChanged = true;
 
-			Window::update(Game::update, Game::updateImGui);		
+			Window::update(Game::update, Game::updateImGui);
 		}
 
 	}

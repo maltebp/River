@@ -263,18 +263,14 @@ namespace River {
 		if( Game::isImGuiEnabled() ) {
 			IMGUI_CHECKVERSION();
     		ImGui::CreateContext();
-    		ImGuiIO& io = ImGui::GetIO(); (void)io;
-			io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-    		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-    		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
-    		io.ConfigViewportsNoAutoMerge = true;
-    		// io.ConfigViewportsNoTaskBarIcon = true;
 
-			// // Because viewports are enabled we tweak WindowRounding/WindowBg
-			// // so platform windows can look identical to regular ones.
-    		// ImGuiStyle& style = ImGui::GetStyle();
-			// style.WindowRounding = 0.0f;
-			// style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+			// The default config for ImGui. Can be changed be the user
+			// at the Game startup
+			ImGuiIO& io = ImGui::GetIO(); (void)io;
+			io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+			io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+			io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+			io.ConfigViewportsNoAutoMerge = true;
 
 			ImGui_ImplGlfw_InitForOpenGL(NativeWindow::window, true);
     		ImGui_ImplOpenGL3_Init("#version 130");
