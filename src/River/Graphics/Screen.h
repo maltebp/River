@@ -18,6 +18,8 @@ namespace River {
 		// Doc notes:
 		//  - Also returns Resolutions that are higher than current
 		static std::vector<Resolution> getSupportedResolutions();
+
+		static double getScaling();
 		
 	};
 

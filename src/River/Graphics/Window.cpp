@@ -18,7 +18,6 @@
 #include "River/Mouse/MouseController.h"
 #include "River/Keyboard/KeyboardController.h"
 #include "River/Graphics/FrameBuffer.h"
-#include "River/EmbeddedResources/Fonts/MyriadProRegular.h"
 
 
 namespace River {

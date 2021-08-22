@@ -2,6 +2,7 @@
 
 #include "Screen.h"
 
+#include "River/Error.h"
 #include "River/Graphics/GL.h"
 
 namespace River {
@@ -33,6 +34,19 @@ namespace River {
 		}
 
 		return resolutions;
+	}
+
+
+	double Screen::getScaling() {
+		float scaleX, scaleY;
+
+		glfwGetMonitorContentScale(glfwGetPrimaryMonitor(), &scaleX, &scaleY);
+
+		if( scaleX != scaleY ) {
+			throw new Exception("River do not support monitor DPI scaling that is not equal in the x and y axis");
+		}
+
+		return scaleX;
 	}
 	
 }

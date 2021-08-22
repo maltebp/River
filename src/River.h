@@ -13,6 +13,7 @@
 
 #include "River/Graphics/Transform.h"
 
+#include "River/Graphics/Screen.h"
 #include "River/Graphics/Window.h"
 #include "River/Mouse/Mouse.h"
 #include "River/Keyboard/Keyboard.h"
