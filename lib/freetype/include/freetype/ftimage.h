@@ -5,7 +5,7 @@
  *   FreeType glyph image formats and default raster interface
  *   (specification).
  *
- * Copyright (C) 1996-2020 by
+ * Copyright (C) 1996-2019 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
  *
  * This file is part of the FreeType project, and may only be used,
@@ -869,7 +869,7 @@ FT_BEGIN_HEADER
    *
    * @input:
    *   y ::
-   *     The scanline's upward y~coordinate.
+   *     The scanline's y~coordinate.
    *
    *   count ::
    *     The number of spans to draw on this scanline.
@@ -945,16 +945,19 @@ FT_BEGIN_HEADER
    *     This flag is set to indicate direct rendering.  In this mode, client
    *     applications must provide their own span callback.  This lets them
    *     directly draw or compose over an existing bitmap.  If this bit is
-   *     _not_ set, the target pixmap's buffer _must_ be zeroed before
-   *     rendering and the output will be clipped to its size.
+   *     not set, the target pixmap's buffer _must_ be zeroed before
+   *     rendering.
    *
    *     Direct rendering is only possible with anti-aliased glyphs.
    *
    *   FT_RASTER_FLAG_CLIP ::
    *     This flag is only used in direct rendering mode.  If set, the output
    *     will be clipped to a box specified in the `clip_box` field of the
-   *     @FT_Raster_Params structure.  Otherwise, the `clip_box` is
-   *     effectively set to the bounding box and all spans are generated.
+   *     @FT_Raster_Params structure.
+   *
+   *     Note that by default, the glyph bitmap is clipped to the target
+   *     pixmap, except in direct rendering mode where all spans are
+   *     generated if no clipping box is set.
    */
 #define FT_RASTER_FLAG_DEFAULT  0x0
 #define FT_RASTER_FLAG_AA       0x1
@@ -975,8 +978,7 @@ FT_BEGIN_HEADER
    *   FT_Raster_Params
    *
    * @description:
-   *   A structure to hold the parameters used by a raster's render function,
-   *   passed as an argument to @FT_Outline_Render.
+   *   A structure to hold the arguments used by a raster's render function.
    *
    * @fields:
    *   target ::
