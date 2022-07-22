@@ -104,6 +104,10 @@ project "River"
         'python "' .. scripts_directory .. 'build_headers.py" "' .. _MAIN_SCRIPT_DIR .. '/headers/" "%{cfg.targetdir}/include"'
     }
 
+    pcheader "River/pch.h"
+    pcheader "River/pch.cpp"
+
+
 project "Sandbox"
 
     kind "ConsoleApp" -- Distinction from a "windowed app" is important apparently
