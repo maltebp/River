@@ -4,7 +4,7 @@
  *
  *   FreeType modules public interface (specification).
  *
- * Copyright (C) 1996-2020 by
+ * Copyright (C) 1996-2019 by
  * David Turner, Robert Wilhelm, and Werner Lemberg.
  *
  * This file is part of the FreeType project, and may only be used,
@@ -623,7 +623,7 @@ FT_BEGIN_HEADER
    *     it is bytecode interpreter's execution context, `TT_ExecContext`,
    *     which is declared in FreeType's internal header file `tttypes.h`.
    */
-  typedef FT_Error
+  typedef void
   (*FT_DebugHook_Func)( void*  arg );
 
 
