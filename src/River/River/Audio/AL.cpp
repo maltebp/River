@@ -29,6 +29,7 @@ namespace River {
 
 		// Open default device
 		ALCdevice* device = alcOpenDevice(nullptr);
+
 		if( device == nullptr ) throw new AudioException("Could not open preffered audio device");
 
 		// Not sure if we should check if eax2.0 exists here

@@ -4,7 +4,7 @@
 #include <vector>
 #include <functional>
 
-#include "glm.hpp"
+#include "River/External/glm/glm.hpp"
 #include "River/Utility/Event.h"
 #include "River/Graphics/ResolutionEvent.h"
 #include "River/Primitives/Resolution.h"

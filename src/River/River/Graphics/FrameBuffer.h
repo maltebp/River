@@ -1,7 +1,7 @@
 #pragma once
 
 #include "River/Graphics/GL.h"
-#include "glm.hpp"
+#include "River/External/glm/glm.hpp"
 #include "River/Primitives/Resolution.h"
 #include "River/Graphics/Texture/Image.h"
 

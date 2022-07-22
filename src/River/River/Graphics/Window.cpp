@@ -7,9 +7,8 @@
 #include <iomanip>
 #include <iostream>
 
-#include "glm.hpp"
-
 #include "GL.h"
+#include "River/External/glm/glm.hpp"
 #include "River/External/imgui/imgui.h"
 #include "River/External/imgui/imgui_impl_glfw.h"
 #include "River/External/imgui/imgui_impl_opengl3.h"

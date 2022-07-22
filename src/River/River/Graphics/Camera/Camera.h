@@ -3,9 +3,9 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
-#include <gtc/matrix_transform.hpp>
-#include <glm.hpp>
-#include <gtc/type_ptr.hpp>
+#include "River/External/glm/gtc/matrix_transform.hpp"
+#include "River/External/glm/gtc/type_ptr.hpp"
+#include "River/External/glm/glm.hpp"
 
 namespace River{
 	class Camera{

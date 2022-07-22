@@ -1,3 +1,22 @@
+lib_directory = "lib/"
+
+function static_libraries(libraries)
+    for i, lib in ipairs(libraries) do
+        local file_index = string.find(lib, "/[^/]*$")
+        
+        if file_index == nil then error() end
+
+        local file = string.sub(lib, file_index+1)
+        local directory = lib_directory .. string.sub(lib, 1, file_index)
+        libdirs { directory }
+        links { file }
+        
+        full_library_path = directory .. "/" .. file .. ".lib"
+        -- Not sure if the relative path will be work on other platforms
+        postbuildcommands { "{COPY} \"../" .. full_library_path .. "\" %{cfg.targetdir}" }
+    end
+end
+
 workspace "River"
     configurations { "Debug", "Release" }
     platforms { "x64" }
@@ -9,30 +28,47 @@ project "River"
 
     kind "StaticLib"
     language "C++"
-    targetdir "build/bin/River/%{cfg.buildcfg}"
+    targetdir "%{wks.location}/bin/%{prj.name}/%{cfg.buildcfg}"
 
     libdirs {
-        "lib/glfw/bin/Release/x64",
-        "lib/glew/bin/%{cfg.buildcfg}/%{cfg.platform}",
-        "lib/OpenAL/bin/Release/x64",
-        "lib/freetype/bin/%{cfg.buildcfg}/%{cfg.platform}",
-        "lib/RiverECS/bin/Debug/x64"
+        lib_directory .. "OpenAL/bin/Release/x64"
     }
 
     links {
         "opengl32",
-        "glfw3",
-        "glew32s",
-        "OpenAL32",
-        "freetype",
-        "RiverECS"
+        "OpenAL32"
     }
+
+    static_libraries {
+        "glew/bin/%{cfg.buildcfg}/%{cfg.platform}/glew32s",
+        "freetype/bin/%{cfg.buildcfg}/%{cfg.platform}/freetype",
+        "RiverECS/bin/Debug/x64/RiverECS"
+    }
+
+    filter "action:gmake2"
+        static_libraries {
+            "glfw/lib-mingw-w64/glfw3",
+        }
+
+    filter "action:vs2017"
+        static_libraries {
+            "glfw/lib-vc2022/glfw3",
+        }
+
+    filter "action:vs2019"
+        static_libraries {
+            "glfw/lib-vc2022/glfw3",
+        }
+
+    filter "action:vs2022"
+        static_libraries {
+            "glfw/lib-vc2022/glfw3",
+        }
 
     includedirs { 
         "src/River",
-        "lib/glew/include",
-        "lib/glfw/include",
-        "lib/glm/include",
+
+        -- Internalized library includes
         "lib/OpenAL/include",
         "lib/stb_image/include",
         "lib/freetype/include",
@@ -56,22 +92,16 @@ project "Sandbox"
 
     kind "ConsoleApp" -- Distinction from a "windowed app" is important apparently
     language "C++"
-    targetdir "build/bin/Sandbox/%{cfg.buildcfg}"
+    targetdir "%{wks.location}/bin/${prj.name}/%{cfg.buildcfg}"
 
     libdirs {
-        "lib/glfw/bin/Release/x64",
-        "lib/glew/bin/%{cfg.buildcfg}/%{cfg.platform}",
-        "lib/OpenAL/bin/Release/x64",
-        "lib/freetype/bin/%{cfg.buildcfg}/%{cfg.platform}",
-        "lib/RiverECS/bin/Debug/x64"
+        "build/bin/River/%{cfg.buildcfg}"
     }
-
+    
     links {
         "River",
-        "opengl32",
         "glfw3",
         "glew32s",
-        "OpenAL32",
         "freetype",
         "RiverECS"
     }
@@ -80,10 +110,7 @@ project "Sandbox"
     
     includedirs { 
         "src/Sandbox",
-        "src/River",
-        "lib/glew/include",
-        "lib/glm/include", -- TODO: This should be removed
-        "lib/glfw/include" -- TODO: This should be removed
+        "src/River"
     }
 
     filter "configurations:Debug"

@@ -2,8 +2,8 @@
 
 #include "ImageRenderer.h"
 
-#include <gtc/matrix_transform.hpp>
-#include <glm.hpp>
+#include "River/External/glm/gtc/matrix_transform.hpp"
+#include "River/External/glm/glm.hpp"
 
 #include "GL.h"
 #include "Shader/Shader.h"

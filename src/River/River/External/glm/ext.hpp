@@ -27,7 +27,7 @@
 
 #pragma once
 
-#include "glm.hpp"
+#include "River/External/glm/glm.hpp"
 
 #if GLM_MESSAGES == GLM_MESSAGES_ENABLED && !defined(GLM_MESSAGE_EXT_INCLUDED_DISPLAYED)
 #	define GLM_MESSAGE_EXT_INCLUDED_DISPLAYED
