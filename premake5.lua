@@ -48,7 +48,7 @@ project "River"
     }
 
     static_libraries {
-        -- "glew/bin/%{cfg.buildcfg}/%{cfg.platform}/glew32s",
+        "glew/bin/%{cfg.buildcfg}/%{cfg.platform}/glew32s",
         "freetype/bin/%{cfg.buildcfg}/%{cfg.platform}/freetype",
         "RiverECS/bin/Debug/x64/RiverECS"
     }
@@ -106,40 +106,3 @@ project "River"
 
     pchheader "River/pch.h"
     pchsource "src/River/River/pch.cpp"
-
-
-project "Sandbox"
-
-    kind "ConsoleApp" -- Distinction from a "windowed app" is important apparently
-    language "C++"
-    targetdir "%{wks.location}/bin/${prj.name}/%{cfg.buildcfg}"
-
-    libdirs {
-        "build/bin/River/%{cfg.buildcfg}"
-    }
-    
-    links {
-        "River",
-        "glfw3",
-        "glew32s",
-        "freetype",
-        "RiverECS"
-    }
-
-    files { "src/Sandbox/**.h", "src/Sandbox/**.cpp", "src/Sandbox/**.hpp" }
-    
-    includedirs { 
-        "src/Sandbox",
-        "build/bin/River/%{cfg.buildcfg}/include"
-    }
-
-    filter "configurations:Debug"
-        defines { "DEBUG" }
-        symbols "On"
-
-    filter "configurations:Release"
-        defines { "NDEBUG" }
-        optimize "On"
-
-    filter "platforms:x64"
-        architecture "x64"
