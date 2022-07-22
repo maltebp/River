@@ -104,8 +104,8 @@ project "River"
         'python "' .. scripts_directory .. 'build_headers.py" "' .. _MAIN_SCRIPT_DIR .. '/headers/" "%{cfg.targetdir}/include"'
     }
 
-    pcheader "River/pch.h"
-    pcheader "River/pch.cpp"
+    pchheader "River/pch.h"
+    pchsource "src/River/River/pch.cpp"
 
 
 project "Sandbox"
