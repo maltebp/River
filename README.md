@@ -1,5 +1,5 @@
 # River
-A hobby-level, one-man 2D game framework written as a C++17 library
+A hobby game framework  written in C++17
 
 ## Features
 The framework is under constant development, but as of now the following features are included:
@@ -14,13 +14,6 @@ The framework is under constant development, but as of now the following feature
  - Keyboard and mouse events
  - Spatial Audio
 
-
-### To come
-Some core features that are yet to be implemented
- - Collision system
- - Particles
- - Lighting
-
 ## Technologies / libraries
 The project makes use of following external libraries / technologies:
 
@@ -29,4 +22,11 @@ The project makes use of following external libraries / technologies:
  - OpenAL
  - FreeType
  - StbImage
- 
+
+## Usage
+
+ 1. Link against all the static libraries in `build/bin/River/<configuration>/lib`
+ 2. Install shared libraries (`.dll`s):
+    - OpenGL
+    - OpenAL
+ 3. Includes be found in `build/bin/River/<configuration/include`

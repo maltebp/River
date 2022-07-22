@@ -1,4 +1,6 @@
-lib_directory = "lib/"
+src_directory = _MAIN_SCRIPT_DIR .. "/src/"
+lib_directory = _MAIN_SCRIPT_DIR .. "/lib/"
+scripts_directory = _MAIN_SCRIPT_DIR .. "/scripts/"
 
 function static_libraries(libraries)
     for i, lib in ipairs(libraries) do
@@ -12,8 +14,14 @@ function static_libraries(libraries)
         links { file }
         
         full_library_path = directory .. "/" .. file .. ".lib"
-        -- Not sure if the relative path will be work on other platforms
-        postbuildcommands { "{COPY} \"../" .. full_library_path .. "\" %{cfg.targetdir}" }
+
+        prebuildcommands {
+            '{DELETE} "%{cfg.targetdir}/' .. file .. '.lib"'
+        }
+
+        postbuildcommands { 
+            '{COPYFILE} "' .. full_library_path .. '" "%{cfg.targetdir}"'
+        }
     end
 end
 
@@ -40,7 +48,7 @@ project "River"
     }
 
     static_libraries {
-        "glew/bin/%{cfg.buildcfg}/%{cfg.platform}/glew32s",
+        -- "glew/bin/%{cfg.buildcfg}/%{cfg.platform}/glew32s",
         "freetype/bin/%{cfg.buildcfg}/%{cfg.platform}/freetype",
         "RiverECS/bin/Debug/x64/RiverECS"
     }
@@ -88,6 +96,14 @@ project "River"
     filter "platforms:x64"
         architecture "x64"
 
+    prebuildcommands {
+        '{RMDIR} "%{cfg.targetdir}/include"'
+    }
+
+    postbuildcommands {
+        'python "' .. scripts_directory .. 'build_headers.py" "' .. _MAIN_SCRIPT_DIR .. '/headers/" "%{cfg.targetdir}/include"'
+    }
+
 project "Sandbox"
 
     kind "ConsoleApp" -- Distinction from a "windowed app" is important apparently
@@ -110,7 +126,7 @@ project "Sandbox"
     
     includedirs { 
         "src/Sandbox",
-        "src/River"
+        "build/bin/River/%{cfg.buildcfg}/include"
     }
 
     filter "configurations:Debug"
