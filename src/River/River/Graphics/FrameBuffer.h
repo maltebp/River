@@ -163,8 +163,6 @@ namespace River {
     private:
 
         GLuint id;
-        
-        Resolution resolution;
 
         State state = State::NEW;
 

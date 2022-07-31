@@ -11,7 +11,9 @@ namespace River {
 
 		onDestroy();
 		onDestroyAction();
-		for( auto subLayer : layers ) delete subLayer;
+		for( auto subLayer : layers ) {
+			delete subLayer;
+		}
 	}
 
 
@@ -66,14 +68,18 @@ namespace River {
 	void Layer::update() {
 		onUpdate();
 		onUpdateAction(); 
-		for( auto subLayer : layers ) subLayer->update();
+		for( auto subLayer : layers ) {
+			subLayer->update();
+		}
 	}
 
 	
 	void Layer::updateImGui() {
 		onUpdateImGui();
 		onUpdateImGuiAction();
-		for( auto subLayer : layers ) subLayer->updateImGui();
+		for( auto subLayer : layers ) {
+			subLayer->updateImGui();
+		} 
 	}
 
 
@@ -82,7 +88,9 @@ namespace River {
 		// removes this layer from its parent (marked for removal), or does nothing if
 		// it has no parent. This should only be the case of the root layer, which shouldn't
 		// be deleted anyways
-		if( parent != nullptr ) parent->removeLayer(this);
+		if( parent != nullptr ) {
+			parent->removeLayer(this);
+		}
 	}
 
 

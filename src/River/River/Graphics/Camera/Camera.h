@@ -9,22 +9,12 @@
 
 namespace River{
 	class Camera{
-	private:
-		unsigned int viewWidth, viewHeight;
-
-		float x = 0, y = 0, z = 0;
-		float rotation = 0;
-		float zoom = 1;
-
-		// Signals if the position/rotation/zoom has been updated
-		bool dirty = true;
-		glm::mat4 cameraMatrix;
-
-		glm::mat4 projectionMatrix;
-
 	public:
 
 		Camera(unsigned int viewWidth, unsigned int viewHeight);
+
+		void setViewWidth(unsigned int width);
+		void setViewHeight(unsigned int height);
 
 		void setPosition(float x, float y, float z);
 		void setX(float x);
@@ -35,8 +25,6 @@ namespace River{
 		void adjustX(float x);
 		void adjustY(float y);
 		void adjustZ(float z);
-
-		// TODO: Clean this up (getters)
 
 		float getX() {
 			return x;
@@ -84,7 +72,21 @@ namespace River{
 		 * @return	The matrix to transform objects into the Camera's view (conventionally the 'projectionMatrix * viewMatrix'
 		*/
 		glm::mat4& getCameraMatrix();
+
+	private:
+
+		unsigned int viewWidth, viewHeight;
+
+		float x = 0, y = 0, z = 0;
+
+		float rotation = 0;
+
+		float zoom = 1;
+
+		bool dirty = true;
+
+		glm::mat4 matrix;
+
 	};
+
 }
-
-
