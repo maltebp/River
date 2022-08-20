@@ -14,6 +14,7 @@ INCLUDE:
 
 # Files/directories not to copy from the source directory
 EXCLUDE:
+	premake5.lua
 	River/Audio/AL.h
 	River/Mouse/MouseController.h
 	River/Keyboard/KeyboardController.h
