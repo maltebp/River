@@ -2,132 +2,91 @@
 
 #include "Camera.h"
 
+#include <iostream>
 
-namespace River{
+#include "River/Error.h"
 
-
-	Camera::Camera(unsigned int viewWidth, unsigned int viewHeight) :
-		x(0), y(0), z(0),
-		rotation(0),
-		zoom(1),
-		viewWidth(viewWidth), viewHeight(viewHeight)
-	{ }
-
-	
-	void Camera::setViewWidth(unsigned int width) {
-		viewWidth = width;
-		dirty = true;
-	}
-
-	
-	void Camera::setViewHeight(unsigned int height) {
-		viewHeight = height;
-		dirty = true;
-	}
+using namespace glm;
+using namespace River;
 
 
-	void Camera::setPosition(float x, float y, float z){
-		this->x = x;
-		this->y = y;
-		this->z = z;
-		dirty = true;
-	}
-
-		
-	void Camera::setX(float x){
-		this->x = x;
-		dirty = true;
-	}
+const vec3 DEFAULT_DIRECTION = { 0.0, 0.0, -1.0f };
 
 
-	void Camera::setY(float y){
-		this->y = y;
-		dirty = true;
-	}
+Camera::Camera(unsigned int viewWidth, unsigned int viewHeight) { 
+	setViewSize(viewWidth, viewHeight);
+}
 
 
-	void Camera::setZ(float z){
-		this->z = z;
-		dirty = true;
-	}
+void Camera::setViewSize(unsigned int viewWidth, unsigned int viewHeight) {
+	if( viewWidth == 0 ) throw InvalidArgumentException("View width must be larger than 0");
+	if( viewHeight == 0 ) throw InvalidArgumentException("View width must be larger than 0");
+	_viewWidth = viewWidth;
+	_viewHeight = viewHeight;	
+}
 
 
-	void Camera::adjustPosition(float x, float y, float z){
-		this->x += x;
-		this->y += y;
-		this->z += z;
-		dirty = true;
-	}
+void Camera::setPosition(float x, float y, float z) {
+	_position = { x, y, z };
+}
 
 
-	void Camera::adjustX(float x){
-		this->x += x;
-		dirty = true;
-	}
+void Camera::setPosition(vec3 position) {
+	_position = position;
+	std::cout << "(" << position.x << ", " << position.y << ", " << position.z << ")" << std::endl; // TODO:
+}
 
 
-	void Camera::adjustY(float y){
-		this->y += y;
-		dirty = true;
-	}
+void Camera::adjustPosition(vec3 position) {
+	_position += position;
+}
 
 
-	void Camera::adjustZ(float z){
-		this->z += z;
-		dirty = true;
-	}
+vec3 Camera::getPosition() const {
+	return _position;
+}
 
 
-	void Camera::setRotation(float rotation){
-		this->rotation = fmod(rotation, 360.0f);
-		dirty = true;
-	}
+void Camera::setRotation(quat rotation) {
+	_rotation = rotation;
+}
 
 
-	void Camera::adjustRotation(float rotation){
-		this->rotation = fmod(this->rotation + rotation, 360.0f);
-		dirty = true;
-	}
+void Camera::setRotationToDirection(vec3 direction) {
+	direction = normalize(direction);
+
+	vec3 axis = cross(DEFAULT_DIRECTION, direction);
+	float w = 1 + dot(DEFAULT_DIRECTION, direction);
+
+	_rotation = normalize(quat(w, axis));
+}
 
 
-	float Camera::getRotation(){
-		return rotation;
-	}
+void Camera::setRotationToTarget(vec3 target) {
+	vec3 targetDirection = target - _position;
+	setRotationToDirection(targetDirection);
+}
 
 
-	void Camera::setZoom(float zoom){
-		this->zoom = zoom;
-		if( zoom < 0.01f ) this->zoom = 0.01f; 
-	}
+void Camera::adjustRotation(vec3 axis, float angle) {
+	_rotation = rotate(_rotation, radians(angle), axis);
+}
 
 
-	void Camera::adjustZoom(float zoomAdjustment){
-		this->zoom += zoomAdjustment;
-		if( this->zoom < 0.0f ) this->zoom = 0.01f;
-	}
+quat Camera::getRotation() const {
+	return _rotation;
+}
 
 
-	glm::mat4& Camera::getCameraMatrix(){
-		if( dirty ) {
-			glm::mat4 viewMatrix = glm::mat4(1.0f); // Identity matrix
-			viewMatrix = glm::rotate(viewMatrix, glm::radians(rotation), glm::vec3(0, 0, -1));
-			viewMatrix = glm::translate(viewMatrix, glm::vec3(-x, -y,  0.0f));
-			viewMatrix = glm::scale(viewMatrix, glm::vec3(zoom, zoom, 1));
+mat4 Camera::getMatrix() const {
 
-			glm::mat4 projectionMatrix = glm::ortho(
-				((float)viewWidth) / -2.0f,
-				((float)viewWidth) / 2.0f,
-				((float)viewHeight) / -2.0f,
-				((float)viewHeight) / 2.0f, 
-				1.0f,
-				-101.0f
-			);
-			
-			matrix = projectionMatrix * viewMatrix;
-			dirty = false;
-		}
+	vec3 target = _rotation * DEFAULT_DIRECTION;
 
-		return matrix;
-	}
+	mat4 viewMatrix = lookAt(_position, _position + target, vec3(0, 1, 0));
 
+	mat4 projectionMatrix = perspectiveFov(
+		_fov, (float)_viewWidth, (float)_viewHeight, 0.01f, 10000.0f
+	);
+
+	return projectionMatrix * viewMatrix;
 }

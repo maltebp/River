@@ -7,36 +7,46 @@
 #include "River/External/glm/gtc/type_ptr.hpp"
 #include "River/External/glm/glm.hpp"
 
-namespace River{
-	class Camera{
+
+namespace River {
+
+
+	class Camera {
 	public:
 
 		Camera(unsigned int viewWidth, unsigned int viewHeight);
 
-		void setViewWidth(unsigned int width);
-		void setViewHeight(unsigned int height);
+		void setViewSize(unsigned int width, unsigned int height);
+
+		void setPosition(glm::vec3 position);
 
 		void setPosition(float x, float y, float z);
+
+		void adjustPosition(glm::vec3 adjustment);
+
+		glm::vec3 getPosition() const;
+
+		void setRotation(glm::quat rotation);
+
+		void setRotationToDirection(glm::vec3 direction);
+
+		void setRotationToTarget(glm::vec3 target);
+
+		void adjustRotation(glm::vec3 axis, float angle);
+
+		glm::quat getRotation() const;
+
+		// TODO: Get euler rotation
+
+		glm::vec3 getDirection() const;
+
 		void setX(float x);
+
 		void setY(float y);
+
 		void setZ(float z);
 
 		void adjustPosition(float x, float y, float z);
-		void adjustX(float x);
-		void adjustY(float y);
-		void adjustZ(float z);
-
-		float getX() {
-			return x;
-		}
-
-		float getY() {
-			return y;
-		}
-
-		float getZ() {
-			return z;
-		}
 
 		/**
 		 * @brief	Set the cameras rotation to the given value
@@ -54,38 +64,19 @@ namespace River{
 		*/
 		void adjustRotation(float rotationAdjustment);
 
-		float getRotation();
-
-		/**
-		 * @brief	Sets the Camera's zoom level
-		 * @param zoom	The zoom level in percentage. 1 is no zoom (default), <1 is negative zoom (objects are smaller) and >1 is positive zoom (objects are larger.
-		*/
-		void setZoom(float zoom);
-
-		/**
-		 * @brief	Adds the given value to the Camera's current zoom level 
-		 * @param zoom	The amount of zoom to add in percentage points. 1 is no zoom (default), <1 is negative zoom (objects are smaller) and >1 is positive zoom (objects are larger.
-		*/
-		void adjustZoom(float zoomAdjustment);
-
-		/** 
-		 * @return	The matrix to transform objects into the Camera's view (conventionally the 'projectionMatrix * viewMatrix'
-		*/
-		glm::mat4& getCameraMatrix();
+		glm::mat4 getMatrix() const;
 
 	private:
 
-		unsigned int viewWidth, viewHeight;
+		unsigned int _viewWidth;
 
-		float x = 0, y = 0, z = 0;
+		unsigned int _viewHeight;
 
-		float rotation = 0;
+		glm::vec3 _position = { 0, 0, 0 };
 
-		float zoom = 1;
+		glm::quat _rotation = { 1, 0, 0, 0 };
 
-		bool dirty = true;
-
-		glm::mat4 matrix;
+		float _fov = 90;
 
 	};
 
