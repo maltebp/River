@@ -18,65 +18,41 @@ namespace River {
 
 		void setViewSize(unsigned int width, unsigned int height);
 
-		void setPosition(glm::vec3 position);
-
-		void setPosition(float x, float y, float z);
-
-		void adjustPosition(glm::vec3 adjustment);
-
-		glm::vec3 getPosition() const;
-
-		void setRotation(glm::quat rotation);
-
 		void setRotationToDirection(glm::vec3 direction);
 
-		void setRotationToTarget(glm::vec3 target);
+		void setFov(float fov);
 
-		void adjustRotation(glm::vec3 axis, float angle);
+		float getFov() const; 
 
-		glm::quat getRotation() const;
+		glm::vec3 getViewDirection() const;
 
-		// TODO: Get euler rotation
+		glm::vec3 getUpDirection() const;
 
-		glm::vec3 getDirection() const;
-
-		void setX(float x);
-
-		void setY(float y);
-
-		void setZ(float z);
-
-		void adjustPosition(float x, float y, float z);
-
-		/**
-		 * @brief	Set the cameras rotation to the given value
-					The rotation is automatically adjusted to a 0-360 interval
-
-		 * @param rotation	Rotation in degrees
-		*/
-		void setRotation(float rotation);
-
-		/**
-		 * @brief	Adds the given value to the Camera's current rotation.
-					The rotation is automatically adjusted to a 0-360 interval
-
-		 * @param rotation	Amount to rotate in degrees (clockwise)
-		*/
-		void adjustRotation(float rotationAdjustment);
+		glm::vec3 getRightDirection() const;
 
 		glm::mat4 getMatrix() const;
 
+	public:
+
+		glm::vec3 target = { 0, 0, 0 };
+
+		glm::quat rotation = { 1, 0, 0, 0 };
+
+		float distance = 1.0f;
+
+		static inline const glm::vec3 DEFAULT_VIEW_DIRECTION = { 0, 0, -1.0f };
+		
+		static inline const glm::vec3 DEFAULT_UP_DIRECTION = { 0, 1.0f, 0 };
+
+		static inline const glm::vec3 DEFAULT_RIGHT_DIRECTION = { 1.0f, 0, 0 };
+
 	private:
 
-		unsigned int _viewWidth;
+		unsigned int viewWidth;
 
-		unsigned int _viewHeight;
+		unsigned int viewHeight;
 
-		glm::vec3 _position = { 0, 0, 0 };
-
-		glm::quat _rotation = { 1, 0, 0, 0 };
-
-		float _fov = 90;
+		float fov = 45;
 
 	};
 
