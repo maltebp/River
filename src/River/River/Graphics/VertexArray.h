@@ -61,7 +61,7 @@ namespace River {
 		* @param count		Number of triangles to draw. Each triangle uses 3 vertices
 		 * @param offset	Offset into the vertices (or indices if an index buffer is attached)
 		*/
-		void drawTriangles(unsigned int count, unsigned int offset = 0);
+		void drawTriangles(size_t count, size_t offset = 0) const;
 
 		/**
 		 * @brief	Perform a draw call using GL_LINES and this vertex array.
@@ -71,7 +71,7 @@ namespace River {
 		 * @param count		Number of lines to draw. Each line uses 2 vertices/indices
 		 * @param offset	Offset into the vertices/indices if an index buffer is attached
 		*/
-		void drawLines(unsigned int count, unsigned int offset = 0);
+		void drawLines(size_t count, size_t offset = 0) const;
 
 		/**
 		 * @return	The GL id for the this Vertex Array

@@ -60,7 +60,6 @@ vec3 Camera::getRightDirection() const {
 }
 
 
-
 mat4 Camera::getMatrix() const {
 	vec3 rotatedUpDirection = rotation * DEFAULT_UP_DIRECTION;
 

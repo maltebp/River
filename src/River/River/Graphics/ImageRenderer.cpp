@@ -216,7 +216,8 @@ namespace River{
 
 		shaderProgram.use();
 		textureBinder.bind(&shaderProgram, "u_Textures");
-		shaderProgram.setFloatMatrix("u_viewMatrix", 4, glm::value_ptr(camera->getCameraMatrix()));
+
+		shaderProgram.setFloatMatrix("u_viewMatrix", 4, glm::value_ptr(camera->getMatrix()));
 
 		vertexBuffer.setData(vertexData.getVector());
 		indexBuffer.setData(indexData);

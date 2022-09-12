@@ -21,6 +21,7 @@ namespace River {
 	}
 
 
+	// TODO: Why do we have to specify index?
 	void VertexArray::setAttribute(unsigned int index, const VertexAttribute& type, VertexBuffer* buffer, size_t bufferOffset, size_t spacing) {
 		
 		if( type == VertexAttributes::NONE ) {
@@ -110,7 +111,7 @@ namespace River {
 	}
 
 
-	void VertexArray::drawTriangles(unsigned int count, unsigned int offset) {
+	void VertexArray::drawTriangles(size_t count, size_t offset) const {
 		if( count == 0 ) {
 			return;
 		}
@@ -128,7 +129,7 @@ namespace River {
 	}
 
 
-	void VertexArray::drawLines(unsigned int count, unsigned int offset) {
+	void VertexArray::drawLines(size_t count, size_t offset) const {
 		bind();
 
 		if( indexBuffer != nullptr ) {
