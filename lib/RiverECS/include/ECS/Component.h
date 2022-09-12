@@ -51,7 +51,7 @@ namespace River::ECS {
 		static_assert(std::is_default_constructible<x>::value, "Component type must have a default constructor")
 				
 
-	using ComponentTypeId = int32_t;
+	using ComponentTypeId = uint32_t;
 }
 
 
