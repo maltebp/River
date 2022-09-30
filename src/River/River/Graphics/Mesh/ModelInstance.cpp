@@ -3,7 +3,6 @@
 
 #include "River/Error.h"
 
-// TODO...
 
 using namespace River;
 
@@ -39,7 +38,7 @@ void ModelInstance::removeMaterialOverride(const Material* overriddenMaterial) {
 
 
 const Material* ModelInstance::getMaterialOverride(const Material* overriddenMaterial) const {
-    auto iterator = materialOverrides.find(overriddenMaterial);
-    bool overrideExists = iterator != materialOverrides.end();
-    return overrideExists ? iterator->second : nullptr;
+    auto it = materialOverrides.find(overriddenMaterial);
+    bool overrideExists = it != materialOverrides.end();
+    return overrideExists ? it->second : nullptr;
 }
