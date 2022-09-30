@@ -17,6 +17,9 @@ namespace River {
         Mesh(
             const std::vector<glm::vec3>& vertices,
             const std::vector<glm::vec3>& normals,
+
+            // TODO: Consider if this should be a list of uivec3 instead (if it is required that
+            // they come in sets of 3 anyway - can we ever have a mesh not made up of triangles?)
             const std::vector<unsigned int>& indices
         );       
 
@@ -26,6 +29,12 @@ namespace River {
         const VertexArray& getVertexArray() const;
 
         size_t getNumTriangles() const;
+
+    private:
+
+        Mesh(const Mesh&) = delete;
+
+        Mesh& operator=(const Mesh&) = delete;
 
     private:
 

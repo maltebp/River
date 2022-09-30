@@ -11,12 +11,13 @@ static std::string vertexShaderSource = R"(
 
     uniform mat4 u_CameraMatrix;
     uniform mat4 u_ModelMatrix;
+    uniform vec3 u_Albedo;
 
-    out vec3 o_Color;
+    out vec3 o_Albedo;
 
     void main()
     {
-        o_Color = a_Pos + vec3(0.5, 0.5, 0.5);
+        o_Albedo = u_Albedo;
         gl_Position = u_CameraMatrix * u_ModelMatrix * vec4(a_Pos, 1.0);
     }
 )";
@@ -27,10 +28,10 @@ static std::string fragmentShaderSource = R"(
 
     out vec4 FragColor;
 
-    in vec3 o_Color;
+    in vec3 o_Albedo;
 
     void main() {
-        FragColor = vec4(o_Color, 1.0);
+        FragColor = vec4(o_Albedo, 1.0);
     }
 )";
 
@@ -152,7 +153,11 @@ void MeshRenderer::renderModelInstance(
     shaderProgram.setFloatMatrix("u_ModelMatrix", 4, value_ptr(modelMatrix));
 
     for( auto [mesh, material] : modelInstance->getModel()->getMeshes() ) {
-        // TODO: Use material
+        const Material* materialOverride = modelInstance->getMaterialOverride(material);
+        const Material* actualMaterial = materialOverride != nullptr ? materialOverride : material;
+
+        shaderProgram.setFloat3("u_Albedo", actualMaterial->getAlbedo());
+
         const VertexArray& vertexArray = mesh->getVertexArray();
         vertexArray.bind();
         vertexArray.drawTriangles(mesh->getNumTriangles());
