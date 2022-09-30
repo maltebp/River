@@ -3,6 +3,8 @@
 #include "ShaderProgram.h"
 
 
+using namespace glm;
+
 
 namespace River{
 
@@ -99,6 +101,18 @@ namespace River{
 	void ShaderProgram::setIntArray(const std::string &name, const GLint* values, int count){
 		GLint location = getUniformLocation(name);
 		GL(glUniform1iv(location, count, values));
+	}
+
+
+	void ShaderProgram::setFloat3(const std::string &name, vec3 value){
+		GLint location = getUniformLocation(name);
+		GL(glUniform3fv(location, 1, &value[0]));
+	}
+
+
+	void ShaderProgram::setFloat4(const std::string &name, vec4 value){
+		GLint location = getUniformLocation(name);
+		GL(glUniform4fv(location, 1, &value[0]));
 	}
 
 

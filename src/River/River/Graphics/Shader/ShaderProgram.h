@@ -1,5 +1,6 @@
 #pragma once
 
+#include "River/External/glm/glm.hpp"
 #include "River/Graphics/GL.h"
 #include "River/Error.h"
 #include "VertexShader.h"
@@ -27,6 +28,10 @@ namespace River {
 		void setInt(const std::string& name, GLint value);
 
 		void setIntArray(const std::string& name, const GLint* values, int numValues);
+
+		void setFloat3(const std::string& name, glm::vec3 value);
+
+		void setFloat4(const std::string& name, glm::vec4 value);
 
 		/**
 		 * @brief Matrix is column-major order (see GLM documentation)
