@@ -36,100 +36,14 @@ static std::string fragmentShaderSource = R"(
 )";
 
 
-Mesh* BOX_MESH = nullptr;
-
-
-void Box::rotateX(float angle) {
-    vec3 xAxis = { 1.0f, 0, 0 };
-
-    rotation = rotation * rotate(quat(1.0f,0,0,0), radians(angle), xAxis);
-}
-
-
-void Box::rotateY(float angle) {
-    vec3 yAxis = { 0, 1.0f, 0 };
-    rotation = rotation * rotate(quat(1.0f,0,0,0), radians(angle), yAxis);
-}
-
-
-void Box::rotateZ(float angle) {
-    vec3 zAxis = { 0, 0, 1.0f };
-    rotation = rotation * rotate(quat(1.0f,0,0,0), radians(angle), zAxis);
-}
-
 
 MeshRenderer::MeshRenderer(Camera* camera)
     :   camera(camera)
 {
-
     // Shader program
     VertexShader vertexShader(vertexShaderSource);
     FragmentShader fragmentShader(fragmentShaderSource);
     shaderProgram.build(vertexShader, fragmentShader);
-
-     BOX_MESH = new Mesh(
-        {
-            { -0.5f, -0.5f, -0.5f },
-            { -0.5f,  0.5f, -0.5f },
-            {  0.5f,  0.5f, -0.5f },
-            {  0.5f, -0.5f, -0.5f },
-            { -0.5f, -0.5f,  0.5f },
-            { -0.5f,  0.5f,  0.5f },
-            {  0.5f,  0.5f,  0.5f },
-            {  0.5f, -0.5f,  0.5f }
-        },
-        {
-            // TODO: These are not correct, but they are not used right now
-            { -0.5f, -0.5f, -0.5f },
-            { -0.5f,  0.5f, -0.5f },
-            {  0.5f,  0.5f, -0.5f },
-            {  0.5f, -0.5f, -0.5f },
-            { -0.5f, -0.5f,  0.5f },
-            { -0.5f,  0.5f,  0.5f },
-            {  0.5f,  0.5f,  0.5f },
-            {  0.5f, -0.5f,  0.5f }
-        },
-        { 
-            0, 1, 4,  // Left 1
-            1, 5, 4,  // Left 2
-            1, 2, 5,  // Back 1
-            2, 6, 5,  // Back 2
-            2, 3, 6,  // Right 1
-            3, 7, 6,  // Right 2
-            3, 0, 7,  // Front 1
-            0, 4, 7,  // Front 2
-            7, 4, 6,  // Top 1
-            4, 5, 6,  // Top 2
-            3, 0, 2,  // Bottom 1
-            0, 1, 2   // Bottom 2
-        }
-    );
-}
-
-
-void MeshRenderer::drawBox(const Box& box) {
-
-    mat4 modelMatrix = translate(mat4(1.0), box.position);
-
-    modelMatrix = mat4_cast(box.rotation);
-
-    modelMatrix = scale(modelMatrix, box.scale);
-
-    BOX_MESH->getVertexArray().bind();
-
-    // Enable alpha testing, and discarding any fragment, which has an alpha of 0
-    // GL(glEnable(GL_ALPHA_TEST));
-    // GL(glAlphaFunc(GL_GREATER, 0));
-  
-    GL(glEnable(GL_DEPTH_TEST));
-    GL(glDepthMask(GL_TRUE)); // Enable writing to depth buffer 
-    GL(glDisable(GL_BLEND));
-    
-    shaderProgram.use();
-    shaderProgram.setFloatMatrix("u_CameraMatrix", 4, value_ptr(camera->getMatrix()));
-    shaderProgram.setFloatMatrix("u_ModelMatrix", 4, value_ptr(modelMatrix));
-
-    BOX_MESH->getVertexArray().drawTriangles(12);
 }
 
 
@@ -137,22 +51,23 @@ void MeshRenderer::renderModelInstance(
     const Transform3D* transform,
     const ModelInstance* modelInstance
 ) {
-    // TODO: Use transform matrix
-    mat4 modelMatrix = transform->getMatrix();
-    
-    // Enable alpha testing, and discarding any fragment, which has an alpha of 0
-    // GL(glEnable(GL_ALPHA_TEST));
-    // GL(glAlphaFunc(GL_GREATER, 0));
-
     GL(glEnable(GL_DEPTH_TEST));
     GL(glDepthMask(GL_TRUE)); // Enable writing to depth buffer 
     GL(glDisable(GL_BLEND));
+
+    mat4 modelMatrix = transform->getMatrix();
+
+    // Left here unused so that I don't forgot that this operation is required
+    // when we include normals
+    mat4 modelDirectionMatrix = transpose(inverse(modelMatrix)); 
     
     shaderProgram.use();
-    shaderProgram.setFloatMatrix("u_CameraMatrix", 4, value_ptr(camera->getMatrix()));
     shaderProgram.setFloatMatrix("u_ModelMatrix", 4, value_ptr(modelMatrix));
+    shaderProgram.setFloatMatrix("u_ModelDirectionMatrix", 4, value_ptr(modelMatrix));
+    shaderProgram.setFloatMatrix("u_CameraMatrix", 4, value_ptr(camera->getMatrix()));
 
     for( auto [mesh, material] : modelInstance->getModel()->getMeshes() ) {
+
         const Material* materialOverride = modelInstance->getMaterialOverride(material);
         const Material* actualMaterial = materialOverride != nullptr ? materialOverride : material;
 
@@ -162,6 +77,4 @@ void MeshRenderer::renderModelInstance(
         vertexArray.bind();
         vertexArray.drawTriangles(mesh->getNumTriangles());
     }
-
-    
 }
