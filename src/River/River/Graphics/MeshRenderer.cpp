@@ -7,7 +7,8 @@ using namespace River;
 
 static std::string vertexShaderSource = R"(
     #version 330 core
-    layout (location = 0) in vec3 a_Pos;
+    layout (location = 0) in vec3 a_Position;
+    layout (location = 1) in vec3 a_Normal;
 
     uniform mat4 u_CameraMatrix;
     uniform mat4 u_ModelMatrix;
@@ -17,8 +18,13 @@ static std::string vertexShaderSource = R"(
 
     void main()
     {
-        o_Albedo = u_Albedo;
-        gl_Position = u_CameraMatrix * u_ModelMatrix * vec4(a_Pos, 1.0);
+        vec3 normalColor = vec3(
+            0.5 * a_Normal.x + 0.5,
+            0.5 * a_Normal.y + 0.5,
+            0.5 * a_Normal.z + 0.5
+        );
+        o_Albedo = normalColor + u_Albedo * 0;
+        gl_Position = u_CameraMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
     }
 )";
 
@@ -63,7 +69,7 @@ void MeshRenderer::renderModelInstance(
     
     shaderProgram.use();
     shaderProgram.setFloatMatrix("u_ModelMatrix", 4, value_ptr(modelMatrix));
-    shaderProgram.setFloatMatrix("u_ModelDirectionMatrix", 4, value_ptr(modelMatrix));
+    // shaderProgram.setFloatMatrix("u_ModelDirectionMatrix", 4, value_ptr(modelMatrix));
     shaderProgram.setFloatMatrix("u_CameraMatrix", 4, value_ptr(camera->getMatrix()));
 
     for( auto [mesh, material] : modelInstance->getModel()->getMeshes() ) {
