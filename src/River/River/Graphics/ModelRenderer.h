@@ -9,10 +9,10 @@
 namespace River {
 
     
-    class MeshRenderer {
+    class ModelRenderer {
     public:
 
-        MeshRenderer(Camera* camera);
+        ModelRenderer(Camera* camera);
 
         void renderModelInstance(const Transform3D* transform, const ModelInstance* modelInstance);
 

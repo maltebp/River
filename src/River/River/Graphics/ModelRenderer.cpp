@@ -1,6 +1,6 @@
 #include "River/pch.h"
 
-#include "MeshRenderer.h"
+#include "ModelRenderer.h"
     
 using namespace glm;
 using namespace River;
@@ -43,7 +43,7 @@ static std::string fragmentShaderSource = R"(
 
 
 
-MeshRenderer::MeshRenderer(Camera* camera)
+ModelRenderer::ModelRenderer(Camera* camera)
     :   camera(camera)
 {
     // Shader program
@@ -53,7 +53,7 @@ MeshRenderer::MeshRenderer(Camera* camera)
 }
 
 
-void MeshRenderer::renderModelInstance(
+void ModelRenderer::renderModelInstance(
     const Transform3D* transform,
     const ModelInstance* modelInstance
 ) {
