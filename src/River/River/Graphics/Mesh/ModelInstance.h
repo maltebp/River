@@ -2,14 +2,13 @@
 
 #include <unordered_map>
 
+#include "River/External/RiverECS/ECS.h"
 #include "Model.h"
 
 
 namespace River {
 
-    // TODO: Convert to entity
-    
-    class ModelInstance {
+    class ModelInstance : public ECS::Component {
     public:
 
         void setModel(const Model* model);
