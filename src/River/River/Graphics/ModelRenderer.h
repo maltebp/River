@@ -17,6 +17,7 @@ namespace River {
         void renderModelInstance(const Transform3D* transform, const ModelInstance* modelInstance);
 
         // TODO: Just for developing PBR
+        void setGamma(float gamma);
         void setDirectionalLight(glm::vec3 direction, glm::vec3 color);
         void setPointLight(glm::vec3 position, glm::vec3 color);
         void setAmbientLight(glm::vec3 color);
@@ -26,6 +27,8 @@ namespace River {
         Camera* camera;
 
 		ShaderProgram shaderProgram;
+
+        float gamma = 2.2f;
 
         glm::vec3 directionalLightDirection = glm::vec3(0);
 

@@ -40,12 +40,19 @@ static std::string vertexShaderSource = R"(
 static std::string fragmentShaderSource = R"(
     #version 330 core
 
+    uniform float u_Gamma;
+
     out vec4 FragColor;
 
     in vec3 o_Albedo;
 
     void main() {
-        FragColor = vec4(o_Albedo, 1.0);
+        
+        vec3 radiance = o_Albedo;
+
+        vec3 gammaCorrectedColor = pow(radiance, 1.0f / vec3(u_Gamma));
+
+        FragColor = vec4(gammaCorrectedColor, 1.0);
     }
 )";
 
@@ -58,6 +65,11 @@ ModelRenderer::ModelRenderer(Camera* camera)
     VertexShader vertexShader(vertexShaderSource);
     FragmentShader fragmentShader(fragmentShaderSource);
     shaderProgram.build(vertexShader, fragmentShader);
+}
+
+
+void ModelRenderer::setGamma(float gamma) {
+    this->gamma = gamma;
 }
 
 
@@ -103,6 +115,8 @@ void ModelRenderer::renderModelInstance(
     // shaderProgram.setFloat3("u_PointColor", pointLightColor);
     // shaderProgram.setFloat3("u_DirectionalColor", directionalLightColor);
     shaderProgram.setFloat3("u_AmbientColor", ambientLightColor);
+
+    shaderProgram.setFloat("u_Gamma", gamma);
 
     for( auto [mesh, material] : modelInstance->getModel()->getMeshes() ) {
 
