@@ -21,6 +21,8 @@ static std::string vertexShaderSource = R"(
     uniform vec3 u_AmbientColor;
 
     out vec3 o_Albedo;
+    out vec3 o_WorldPosition;
+    out vec3 o_WorldNormal;
 
     void main()
     {
@@ -30,9 +32,14 @@ static std::string vertexShaderSource = R"(
             0.5 * a_Normal.z + 0.5
         );
 
-        o_Albedo = normalColor * u_AmbientColor;
+        o_Albedo = normalColor;
+        vec4 worldPosition = u_ModelMatrix * vec4(a_Position, 1.0);
+        o_WorldPosition = worldPosition.xyz;
 
-        gl_Position = u_CameraMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
+        // TODO: THIS IS NOT CORRECT I BELIEVE
+        o_WorldNormal = normalize(u_ModelMatrix * vec4(a_Normal, 0.0)).xyz;
+
+        gl_Position = u_CameraMatrix * worldPosition;
     }
 )";
 
@@ -41,16 +48,22 @@ static std::string fragmentShaderSource = R"(
     #version 330 core
 
     uniform float u_Gamma;
+    uniform vec3 u_DirectionalDirection;
+    uniform vec3 u_AmbientColor;
 
     out vec4 FragColor;
 
     in vec3 o_Albedo;
+    in vec3 o_WorldPosition;
+    in vec3 o_WorldNormal;
 
     void main() {
         
-        vec3 radiance = o_Albedo;
+        vec3 directionalRadiance = vec3(1.0) * max(dot(o_WorldNormal, -u_DirectionalDirection), 0.0);
 
-        vec3 gammaCorrectedColor = pow(radiance, 1.0f / vec3(u_Gamma));
+        vec3 radiance = o_Albedo * (directionalRadiance + u_AmbientColor);
+
+        vec3 gammaCorrectedColor = pow(radiance, 1.0 / vec3(u_Gamma));
 
         FragColor = vec4(gammaCorrectedColor, 1.0);
     }
@@ -109,7 +122,7 @@ void ModelRenderer::renderModelInstance(
     // shaderProgram.setFloatMatrix("u_ModelDirectionMatrix", 4, value_ptr(modelMatrix));
     shaderProgram.setFloatMatrix("u_CameraMatrix", 4, value_ptr(camera->getMatrix()));
 
-    // shaderProgram.setFloat3("u_DirectionalDirection", directionalLightDirection);
+    shaderProgram.setFloat3("u_DirectionalDirection", directionalLightDirection);
     // shaderProgram.setFloat3("u_DirectionalColor", directionalLightColor);
     // shaderProgram.setFloat3("u_PointPosition", pointLightPosition);
     // shaderProgram.setFloat3("u_PointColor", pointLightColor);
