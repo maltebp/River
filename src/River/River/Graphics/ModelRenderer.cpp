@@ -53,6 +53,7 @@ static std::string fragmentShaderSource = R"(
     uniform float u_Gamma;
     uniform vec3 u_DirectionalDirection;
     uniform vec3 u_DirectionalColor;
+    uniform float u_DirectionalIntensity;
 
     uniform vec3 u_PointPosition;
     uniform vec3 u_PointColor;
@@ -69,7 +70,7 @@ static std::string fragmentShaderSource = R"(
     #define PI 3.1415926538
 
     vec3 computeDirectionalLightRadiance() {
-        vec3 incomingRadiance = u_DirectionalColor;
+        vec3 incomingRadiance = u_DirectionalColor * u_DirectionalIntensity;
         incomingRadiance *= max(dot(o_WorldNormal, -u_DirectionalDirection), 0.0);
         return incomingRadiance;
     }
@@ -120,9 +121,10 @@ void ModelRenderer::setGamma(float gamma) {
 }
 
 
-void ModelRenderer::setDirectionalLight(vec3 direction, vec3 color) {
+void ModelRenderer::setDirectionalLight(vec3 direction, vec3 color, float intensity) {
     directionalLightDirection = direction;
     directionalLightColor = color;
+    directionalLightIntensity = intensity;
 }
 
 
@@ -159,6 +161,7 @@ void ModelRenderer::renderModelInstance(
 
     shaderProgram.setFloat3("u_DirectionalDirection", directionalLightDirection);
     shaderProgram.setFloat3("u_DirectionalColor", directionalLightColor);
+    shaderProgram.setFloat("u_DirectionalIntensity", directionalLightIntensity);
     shaderProgram.setFloat3("u_PointPosition", pointLightPosition);
     shaderProgram.setFloat3("u_PointColor", pointLightColor);
     shaderProgram.setFloat("u_PointIntensity", pointLightIntensity);

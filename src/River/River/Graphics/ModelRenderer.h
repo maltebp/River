@@ -18,7 +18,7 @@ namespace River {
 
         // TODO: Just for developing PBR
         void setGamma(float gamma);
-        void setDirectionalLight(glm::vec3 direction, glm::vec3 color);
+        void setDirectionalLight(glm::vec3 direction, glm::vec3 color, float intensity);
         void setPointLight(glm::vec3 position, glm::vec3 color, float intensity);
         void setAmbientLight(glm::vec3 color);
 
@@ -33,6 +33,8 @@ namespace River {
         glm::vec3 directionalLightDirection = glm::vec3(0);
 
         glm::vec3 directionalLightColor = glm::vec3(1.0);
+
+        float directionalLightIntensity = 0.0f;
 
         glm::vec3 pointLightPosition = glm::vec3(0);
 
