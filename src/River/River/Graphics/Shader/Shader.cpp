@@ -35,7 +35,7 @@ namespace River {
 			std::string stringMessage = message;
 			free(message);
 			GL(glDeleteShader(id));
-			throw River::ShaderException("Shader compilation failed with the message '" + stringMessage + "'");
+				throw River::ShaderException("Shader compilation failed with the message '" + stringMessage + "'");
 		}
 
 		ready = true;

@@ -18,6 +18,7 @@ static std::string vertexShaderSource = R"(
     uniform vec3 u_DirectionalColor;
     uniform vec3 u_PointPosition;
     uniform vec3 u_PointColor;
+    uniform vec3 u_PointIntensity;
     uniform vec3 u_AmbientColor;
 
     out vec3 o_Albedo;
@@ -53,6 +54,10 @@ static std::string fragmentShaderSource = R"(
     uniform vec3 u_DirectionalDirection;
     uniform vec3 u_DirectionalColor;
 
+    uniform vec3 u_PointPosition;
+    uniform vec3 u_PointColor;
+    uniform float u_PointIntensity;
+
     uniform vec3 u_AmbientColor;
 
     out vec4 FragColor;
@@ -63,17 +68,36 @@ static std::string fragmentShaderSource = R"(
 
     #define PI 3.1415926538
 
-    void main() {
+    vec3 computeDirectionalLightRadiance() {
+        vec3 incomingRadiance = u_DirectionalColor;
+        incomingRadiance *= max(dot(o_WorldNormal, -u_DirectionalDirection), 0.0);
+        return incomingRadiance;
+    }
+
+    vec3 computePointLightRadiance() {
+        vec3 pointLightIntensity = u_PointIntensity * u_PointColor;
         
+        float distanceToPointLight = distance(u_PointPosition, o_WorldPosition);
+        float attenuation = 1.0f / pow(distanceToPointLight, 2);
+        vec3 incomingRadiance = pointLightIntensity * attenuation; 
+
+        vec3 directionToPointLight = normalize(u_PointPosition - o_WorldPosition);
+        incomingRadiance *= max(dot(o_WorldNormal, directionToPointLight), 0.0f);
+
+        return incomingRadiance;
+    }
+
+    void main() {
+
         vec3 brdf = o_Albedo / PI;
 
-        vec3 incomingRadiance = u_DirectionalColor;
+        vec3 incomingRadiance = computeDirectionalLightRadiance() + computePointLightRadiance();
         
         vec3 ambientRadiance = o_Albedo * u_AmbientColor; 
 
-        vec3 radiance = ambientRadiance + brdf * incomingRadiance * max(dot(o_WorldNormal, -u_DirectionalDirection), 0.0);
+        vec3 totalIncomingRadiance = ambientRadiance + brdf * incomingRadiance;
 
-        vec3 gammaCorrectedColor = pow(radiance, vec3(1.0 / u_Gamma));
+        vec3 gammaCorrectedColor = pow(totalIncomingRadiance, vec3(1.0 / u_Gamma));
 
         FragColor = vec4(gammaCorrectedColor, 1.0);
     }
@@ -102,9 +126,10 @@ void ModelRenderer::setDirectionalLight(vec3 direction, vec3 color) {
 }
 
 
-void ModelRenderer::setPointLight(vec3 position, vec3 color) {
+void ModelRenderer::setPointLight(vec3 position, vec3 color, float intensity) {
     pointLightPosition = position;
     pointLightColor = color;
+    pointLightIntensity = intensity;
 }
 
 
@@ -134,9 +159,9 @@ void ModelRenderer::renderModelInstance(
 
     shaderProgram.setFloat3("u_DirectionalDirection", directionalLightDirection);
     shaderProgram.setFloat3("u_DirectionalColor", directionalLightColor);
-    // shaderProgram.setFloat3("u_PointPosition", pointLightPosition);
-    // shaderProgram.setFloat3("u_PointColor", pointLightColor);
-    // shaderProgram.setFloat3("u_DirectionalColor", directionalLightColor);
+    shaderProgram.setFloat3("u_PointPosition", pointLightPosition);
+    shaderProgram.setFloat3("u_PointColor", pointLightColor);
+    shaderProgram.setFloat("u_PointIntensity", pointLightIntensity);
     shaderProgram.setFloat3("u_AmbientColor", ambientLightColor);
 
     shaderProgram.setFloat("u_Gamma", gamma);
