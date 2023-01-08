@@ -21,14 +21,14 @@ vec3 Material::getAlbedo() const {
 }
 
 
-void Material::setMetallic(float metallic) {
-    if( metallic < 0 || metallic > 1.0f ) throw InvalidArgumentException("Metallic value has to be between 0 and 1");
-    this->metallic = metallic;
+void Material::setMetallicness(float metallicness) {
+    if( metallicness < 0 || metallicness > 1.0f ) throw InvalidArgumentException("Metallic value has to be between 0 and 1");
+    this->metallicness = metallicness;
 }
 
 
-float Material::getMetallic() const {
-    return metallic;
+float Material::getMetallicness() const {
+    return metallicness;
 }
 
 

@@ -13,9 +13,9 @@ namespace River {
 
         glm::vec3 getAlbedo() const;
 
-        void setMetallic(float metallic);
+        void setMetallicness(float metalicness);
 
-        float getMetallic() const;
+        float getMetallicness() const;
 
         void setRoughness(float roughness);
 
@@ -27,7 +27,7 @@ namespace River {
 
         float roughness;
 
-        float metallic;
+        float metallicness;
 
     };
 
