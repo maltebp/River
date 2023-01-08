@@ -32,6 +32,8 @@ namespace River {
 
 		glm::mat4 getMatrix() const;
 
+		glm::vec3 getPosition() const;
+
 	public:
 
 		glm::vec3 target = { 0, 0, 0 };

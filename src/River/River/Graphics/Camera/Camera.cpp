@@ -63,15 +63,18 @@ vec3 Camera::getRightDirection() const {
 mat4 Camera::getMatrix() const {
 	vec3 rotatedUpDirection = rotation * DEFAULT_UP_DIRECTION;
 
-	vec3 relativePosition = rotation * (distance * -DEFAULT_VIEW_DIRECTION);
-
-	vec3 position = target + relativePosition;
-
-	mat4 viewMatrix = lookAt(position, target, rotatedUpDirection);
+	mat4 viewMatrix = lookAt(getPosition(), target, rotatedUpDirection);
 
 	mat4 projectionMatrix = perspectiveFov(
 		fov, (float)viewWidth, (float)viewHeight, 0.01f, 10000.0f
 	);
 
 	return projectionMatrix * viewMatrix;
+}
+
+
+vec3 Camera::getPosition() const {
+	vec3 relativePosition = rotation * (distance * -DEFAULT_VIEW_DIRECTION);
+	vec3 position = target + relativePosition;
+	return position; 
 }
