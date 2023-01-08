@@ -46,6 +46,8 @@ static std::string fragmentShaderSource = R"(
 #version 330 core
 
 uniform float u_Gamma;
+uniform vec3 u_EyePosition;
+
 uniform vec3 u_DirectionalDirection;
 uniform vec3 u_DirectionalColor;
 uniform float u_DirectionalIntensity;
@@ -63,43 +65,139 @@ uniform float u_Roughness;
 out vec4 FragColor;
 
 in vec3 o_WorldPosition;
-in vec3 o_WorldNormal;
+in vec3 o_WorldNormal; // TODO: Why is this named "world normal"?
 
 #define PI 3.1415926538
+
+
+// Normal-distribution function
+float trowbridgeRetizGGX(vec3 surfaceNormal, vec3 directionToEye, vec3 directionToLight, float roughness) {
+
+    vec3 halfWayVector = normalize(directionToEye + directionToLight);
+    float roughnessSquared = roughness * roughness; 
+    float denominator = pow(max(dot(surfaceNormal, halfWayVector), 0), 2) * (roughnessSquared - 1) + 1;
+    denominator *= denominator;
+    denominator *= PI;
+    return roughnessSquared / denominator;
+}
+
+
+// Geometry-function
+float schlickGGX(vec3 surfaceNormal, vec3 direction, float roughness) {
+    // Should be changed if we use Image-Based Lighting (IBL)
+    float adjustedRoughness = pow(roughness + 1, 2) / 8.0;  
+
+    float a = max(dot(surfaceNormal, direction), 0.0);
+    return a / (a * (1 - adjustedRoughness) + adjustedRoughness);
+}
+
+
+// Geeomtry function that takes into account both geometry obstruction and shadowing
+float smith(vec3 surfaceNormal, vec3 directionToEye, vec3 directionToLight, float roughness) {
+    
+    float geometryObstruction = schlickGGX(surfaceNormal, directionToEye, roughness);
+
+    float geometryShadowing = schlickGGX(surfaceNormal, directionToLight, roughness);
+
+    return geometryObstruction * geometryShadowing;
+}
+
+
+vec3 fresnelSchlick(vec3 surfaceNormal, vec3 directionToEye, vec3 directionToLight, vec3 baseReflectivity) {
+    vec3 eyeLightHalfwayVector = normalize(directionToLight + directionToEye);
+    float cosTheta = max(dot(eyeLightHalfwayVector, directionToEye), 0);
+    return baseReflectivity + (1.0 - baseReflectivity) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
+}
+
+
+vec3 cookTorranceBrdf(
+    vec3 surfaceNormal,
+    vec3 directionToEye,
+    vec3 directionToLight,
+    vec3 albedo,
+    float roughness,
+    float metallicness
+) {
+    vec3 DIELECTRIC_BASE_REFLECTIVITY = vec3(0.04);
+    vec3 baseReflectivity = mix(DIELECTRIC_BASE_REFLECTIVITY, albedo, metallicness); 
+    
+    vec3 reflectionFactor = fresnelSchlick(surfaceNormal, directionToEye, directionToLight, baseReflectivity);
+    float reflectionProbability = trowbridgeRetizGGX(surfaceNormal, directionToEye, directionToLight, roughness);
+    float geometryProbability = smith(surfaceNormal, directionToEye, directionToLight, roughness);
+   
+    vec3 diffuseFactor = vec3(1.0) - reflectionFactor;
+    
+    // Metallic surfaces reflects all light
+    diffuseFactor *= 1 - metallicness;
+
+    float denominator = 4.0 * max(dot(surfaceNormal, directionToEye), 0.0) * max(dot(surfaceNormal, directionToLight), 0.0) + 0.0001;
+    
+    float specular = reflectionProbability * geometryProbability / denominator;
+    vec3 diffuse = albedo / PI; // Lambertian
+
+    vec3 brdf = diffuseFactor * diffuse + reflectionFactor * specular;
+    
+    return brdf;
+}
+
 
 vec3 computeDirectionalLightRadiance() {
     vec3 incomingRadiance = u_DirectionalColor * u_DirectionalIntensity;
     incomingRadiance *= max(dot(o_WorldNormal, -u_DirectionalDirection), 0.0);
-    return incomingRadiance;
+
+    vec3 directionToEye = normalize(u_EyePosition - o_WorldPosition);
+
+    vec3 brdf = cookTorranceBrdf(
+        o_WorldNormal, 
+        directionToEye, 
+        -u_DirectionalDirection, 
+        u_Albedo, 
+        u_Roughness,
+        u_Metallicness
+    );
+
+    vec3 reflectedRadiance = brdf * incomingRadiance;
+
+    return reflectedRadiance;
 }
 
 vec3 computePointLightRadiance() {
     vec3 pointLightIntensity = u_PointIntensity * u_PointColor;
     
     float distanceToPointLight = distance(u_PointPosition, o_WorldPosition);
-    float attenuation = 1.0f / pow(distanceToPointLight, 2);
+    float attenuation = 1.0 / pow(distanceToPointLight, 2);
     vec3 incomingRadiance = pointLightIntensity * attenuation; 
 
     vec3 directionToPointLight = normalize(u_PointPosition - o_WorldPosition);
-    incomingRadiance *= max(dot(o_WorldNormal, directionToPointLight), 0.0f);
+    incomingRadiance *= max(dot(o_WorldNormal, directionToPointLight), 0);
 
-    return incomingRadiance;
+    vec3 directionToEye = normalize(u_EyePosition - o_WorldPosition);
+
+    vec3 brdf = cookTorranceBrdf(
+        o_WorldNormal, 
+        directionToEye, 
+        directionToPointLight, 
+        u_Albedo, 
+        u_Roughness,
+        u_Metallicness
+    );
+
+    vec3 reflectedRadiance = brdf * incomingRadiance;
+
+    return reflectedRadiance;
 }
 
 void main() {
 
-    float metalicness = u_Metallicness;
-    float roughness = u_Roughness;
-
-    vec3 brdf = u_Albedo / PI + (u_Albedo * u_Metallicness * u_Roughness * 0.1);
-
-    vec3 incomingRadiance = computeDirectionalLightRadiance() + computePointLightRadiance();
+    vec3 directionalLightRadiance = computeDirectionalLightRadiance();
+    
+    vec3 pointLightRadiance = computePointLightRadiance();
     
     vec3 ambientRadiance = u_Albedo * u_AmbientColor; 
 
-    vec3 totalIncomingRadiance = ambientRadiance + brdf * incomingRadiance;
+    vec3 totalReflectedRadiance = ambientRadiance + directionalLightRadiance + pointLightRadiance;
 
-    vec3 gammaCorrectedColor = pow(totalIncomingRadiance, vec3(1.0 / u_Gamma));
+    vec3 gammaCorrectedColor = pow(totalReflectedRadiance, vec3(1.0 / u_Gamma));
 
     FragColor = vec4(gammaCorrectedColor, 1.0); 
 }
@@ -159,6 +257,8 @@ void ModelRenderer::renderModelInstance(
     shaderProgram.setFloatMatrix("u_ModelMatrix", 4, value_ptr(modelMatrix));
     // shaderProgram.setFloatMatrix("u_ModelDirectionMatrix", 4, value_ptr(modelMatrix));
     shaderProgram.setFloatMatrix("u_CameraMatrix", 4, value_ptr(camera->getMatrix()));
+
+    shaderProgram.setFloat3("u_EyePosition", camera->getPosition());
 
     shaderProgram.setFloat3("u_DirectionalDirection", directionalLightDirection);
     shaderProgram.setFloat3("u_DirectionalColor", directionalLightColor);
