@@ -71,7 +71,7 @@ in vec3 o_WorldNormal;
 
 
 // Normal-distribution function
-float trowbridgeRetizGGX(vec3 surfaceNormal, vec3 directionToEye, vec3 directionToLight, float roughness) {
+float trowbridgeReitzGGX(vec3 surfaceNormal, vec3 directionToEye, vec3 directionToLight, float roughness) {
 
     vec3 halfWayVector = normalize(directionToEye + directionToLight);
     float roughnessSquared = roughness * roughness; 
@@ -122,7 +122,7 @@ vec3 cookTorranceBrdf(
     vec3 baseReflectivity = mix(DIELECTRIC_BASE_REFLECTIVITY, albedo, metallicness); 
     
     vec3 reflectionFactor = fresnelSchlick(surfaceNormal, directionToEye, directionToLight, baseReflectivity);
-    float reflectionProbability = trowbridgeRetizGGX(surfaceNormal, directionToEye, directionToLight, roughness);
+    float reflectionProbability = trowbridgeReitzGGX(surfaceNormal, directionToEye, directionToLight, roughness);
     float geometryProbability = smith(surfaceNormal, directionToEye, directionToLight, roughness);
    
     vec3 diffuseFactor = vec3(1.0) - reflectionFactor;
@@ -141,14 +141,14 @@ vec3 cookTorranceBrdf(
 }
 
 
-vec3 computeDirectionalLightRadiance() {
+vec3 computeDirectionalLightRadiance(vec3 surfaceNormal) {
     vec3 incomingRadiance = u_DirectionalColor * u_DirectionalIntensity;
-    incomingRadiance *= max(dot(o_WorldNormal, -u_DirectionalDirection), 0.0);
+    incomingRadiance *= max(dot(surfaceNormal, -u_DirectionalDirection), 0.0);
 
     vec3 directionToEye = normalize(u_EyePosition - o_WorldPosition);
 
     vec3 brdf = cookTorranceBrdf(
-        o_WorldNormal, 
+        surfaceNormal, 
         directionToEye, 
         -u_DirectionalDirection, 
         u_Albedo, 
@@ -161,7 +161,7 @@ vec3 computeDirectionalLightRadiance() {
     return reflectedRadiance;
 }
 
-vec3 computePointLightRadiance() {
+vec3 computePointLightRadiance(vec3 surfaceNormal) {
     vec3 pointLightIntensity = u_PointIntensity * u_PointColor;
     
     float distanceToPointLight = distance(u_PointPosition, o_WorldPosition);
@@ -169,12 +169,12 @@ vec3 computePointLightRadiance() {
     vec3 incomingRadiance = pointLightIntensity * attenuation; 
 
     vec3 directionToPointLight = normalize(u_PointPosition - o_WorldPosition);
-    incomingRadiance *= max(dot(o_WorldNormal, directionToPointLight), 0);
+    incomingRadiance *= max(dot(surfaceNormal, directionToPointLight), 0);
 
     vec3 directionToEye = normalize(u_EyePosition - o_WorldPosition);
 
     vec3 brdf = cookTorranceBrdf(
-        o_WorldNormal, 
+        surfaceNormal, 
         directionToEye, 
         directionToPointLight, 
         u_Albedo, 
@@ -189,9 +189,17 @@ vec3 computePointLightRadiance() {
 
 void main() {
 
-    vec3 directionalLightRadiance = computeDirectionalLightRadiance();
+    // I believe its incorrect (but common) to have GPU linearly interpolate
+    // the normals - it should probably be "slerp'ed" instead.
+    vec3 surfaceNormal = normalize(o_WorldNormal);
+
+    vec3 directionalLightRadiance = computeDirectionalLightRadiance(
+        surfaceNormal
+    );
     
-    vec3 pointLightRadiance = computePointLightRadiance();
+    vec3 pointLightRadiance = computePointLightRadiance(
+        surfaceNormal
+    );
     
     vec3 ambientRadiance = u_Albedo * u_AmbientColor; 
 
