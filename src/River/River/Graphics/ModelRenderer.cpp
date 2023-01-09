@@ -6,39 +6,39 @@ using namespace glm;
 using namespace River;
 
 static std::string vertexShaderSource = R"(
-    #version 330 core
+#version 330 core
 
-    layout (location = 0) in vec3 a_Position;
-    layout (location = 1) in vec3 a_Normal;
+layout (location = 0) in vec3 a_Position;
+layout (location = 1) in vec3 a_Normal;
 
-    uniform mat4 u_CameraMatrix;
-    uniform mat4 u_ModelMatrix;
+uniform mat4 u_CameraMatrix;
+uniform mat4 u_ModelMatrix;
+uniform mat4 u_ModelNormalMatrix;
 
-    uniform vec3 u_DirectionalColor;
-    uniform vec3 u_PointPosition;
-    uniform vec3 u_PointColor;
-    uniform vec3 u_PointIntensity;
-    uniform vec3 u_AmbientColor;
+uniform vec3 u_DirectionalColor;
+uniform vec3 u_PointPosition;
+uniform vec3 u_PointColor;
+uniform vec3 u_PointIntensity;
+uniform vec3 u_AmbientColor;
 
-    out vec3 o_WorldPosition;
-    out vec3 o_WorldNormal;
+out vec3 o_WorldPosition;
+out vec3 o_WorldNormal;
 
-    void main()
-    {
-        vec3 normalColor = vec3(
-            0.5 * a_Normal.x + 0.5,
-            0.5 * a_Normal.y + 0.5,
-            0.5 * a_Normal.z + 0.5
-        );
+void main()
+{
+    vec3 normalColor = vec3(
+        0.5 * a_Normal.x + 0.5,
+        0.5 * a_Normal.y + 0.5,
+        0.5 * a_Normal.z + 0.5
+    );
 
-        vec4 worldPosition = u_ModelMatrix * vec4(a_Position, 1.0);
-        o_WorldPosition = worldPosition.xyz;
+    vec4 worldPosition = u_ModelMatrix * vec4(a_Position, 1.0);
+    o_WorldPosition = worldPosition.xyz;
 
-        // TODO: THIS IS NOT CORRECT I BELIEVE
-        o_WorldNormal = normalize(u_ModelMatrix * vec4(a_Normal, 0.0)).xyz;
+    o_WorldNormal = normalize((u_ModelNormalMatrix * vec4(a_Normal, 1.0)).xyz);
 
-        gl_Position = u_CameraMatrix * worldPosition;
-    }
+    gl_Position = u_CameraMatrix * worldPosition;
+}
 )";
 
 
@@ -65,7 +65,7 @@ uniform float u_Roughness;
 out vec4 FragColor;
 
 in vec3 o_WorldPosition;
-in vec3 o_WorldNormal; // TODO: Why is this named "world normal"?
+in vec3 o_WorldNormal;
 
 #define PI 3.1415926538
 
@@ -248,14 +248,13 @@ void ModelRenderer::renderModelInstance(
     GL(glDisable(GL_BLEND));
 
     mat4 modelMatrix = transform->getMatrix();
-
-    // Left here unused so that I don't forgot that this operation is required
-    // when we include normals
-    mat4 modelDirectionMatrix = transpose(inverse(modelMatrix)); 
+    mat4 modelNormalMatrix = transpose(inverse(modelMatrix)); 
     
     shaderProgram.use();
     shaderProgram.setFloatMatrix("u_ModelMatrix", 4, value_ptr(modelMatrix));
-    // shaderProgram.setFloatMatrix("u_ModelDirectionMatrix", 4, value_ptr(modelMatrix));
+    
+    shaderProgram.setFloatMatrix("u_ModelNormalMatrix", 4, value_ptr(modelNormalMatrix));
+    
     shaderProgram.setFloatMatrix("u_CameraMatrix", 4, value_ptr(camera->getMatrix()));
 
     shaderProgram.setFloat3("u_EyePosition", camera->getPosition());
