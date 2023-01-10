@@ -105,8 +105,8 @@ float smith(vec3 surfaceNormal, vec3 directionToEye, vec3 directionToLight, floa
 
 vec3 fresnelSchlick(vec3 surfaceNormal, vec3 directionToEye, vec3 directionToLight, vec3 baseReflectivity) {
     vec3 eyeLightHalfwayVector = normalize(directionToLight + directionToEye);
-    float cosTheta = max(dot(eyeLightHalfwayVector, directionToEye), 0);
-    return baseReflectivity + (1.0 - baseReflectivity) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
+    float a = max(dot(eyeLightHalfwayVector, directionToEye), 0);
+    return baseReflectivity + (1.0 - baseReflectivity) * pow(clamp(1.0 - a, 0.0, 1.0), 5.0);
 }
 
 
