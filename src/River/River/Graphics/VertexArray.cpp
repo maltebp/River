@@ -120,10 +120,10 @@ namespace River {
 
 		if( indexBuffer != nullptr ) {
 			size_t byteOffset = ((size_t)offset * indexType.getTypeSize());
-			GL(glDrawElements(GL_TRIANGLES, count*3, indexType.getType(), (void*)byteOffset));
+			GL(glDrawElements(GL_TRIANGLES, (GLsizei)(count*3), indexType.getType(), (void*)byteOffset));
 		}
 		else {
-			GL(glDrawArrays(GL_TRIANGLES, (GLint)offset, count * 3));
+			GL(glDrawArrays(GL_TRIANGLES, (GLint)offset, (GLsizei)(count * 3)));
 		}
 
 	}
@@ -134,10 +134,10 @@ namespace River {
 
 		if( indexBuffer != nullptr ) {
 			size_t byteOffset = ((size_t)offset * indexType.getTypeSize());
-			GL(glDrawElements(GL_LINES, count * 2, indexType.getType(), (void*)byteOffset));
+			GL(glDrawElements(GL_LINES, (GLsizei)(count * 2), indexType.getType(), (void*)byteOffset));
 		}
 		else {
-			GL(glDrawArrays(GL_LINES, offset, count * 2));
+			GL(glDrawArrays(GL_LINES, (GLint)offset, (GLsizei)(count * 2)));
 		}
 
 	}
