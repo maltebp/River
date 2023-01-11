@@ -16,8 +16,18 @@ namespace River {
 
         void renderModelInstance(const Transform3D* transform, const ModelInstance* modelInstance);
 
-        // TODO: Just for developing PBR
         void setGamma(float gamma);
+
+        void setExposureIsEnabled(bool exposureIsEnabled);
+
+        // TODO: Not a fan of the name of this method
+        [[nodiscard]] bool getExposureIsEnabled() const;
+
+        void setExposure(float exposure);
+
+        [[nodiscard]] float getExposure() const;
+        
+        // TODO: Just for developing PBR
         void setDirectionalLight(glm::vec3 direction, glm::vec3 color, float intensity);
         void setPointLight(glm::vec3 position, glm::vec3 color, float intensity);
         void setAmbientLight(glm::vec3 color);
@@ -29,6 +39,10 @@ namespace River {
 		ShaderProgram shaderProgram;
 
         float gamma = 2.2f;
+
+        float exposure = 1.0f;
+
+        bool exposureIsEnabled = true;
 
         glm::vec3 directionalLightDirection = glm::vec3(0);
 

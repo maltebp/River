@@ -46,6 +46,8 @@ static std::string fragmentShaderSource = R"(
 #version 330 core
 
 uniform float u_Gamma;
+uniform float u_Exposure;
+uniform bool u_ExposureIsEnabled;
 uniform vec3 u_EyePosition;
 
 uniform vec3 u_DirectionalDirection;
@@ -205,12 +207,15 @@ void main() {
 
     vec3 totalReflectedRadiance = ambientRadiance + directionalLightRadiance + pointLightRadiance;
 
-    vec3 gammaCorrectedColor = pow(totalReflectedRadiance, vec3(1.0 / u_Gamma));
+    if( u_ExposureIsEnabled ) {
+        totalReflectedRadiance = vec3(1.0f) - exp(-totalReflectedRadiance * u_Exposure);
+    }
 
-    FragColor = vec4(gammaCorrectedColor, 1.0); 
+    totalReflectedRadiance = pow(totalReflectedRadiance, vec3(1.0 / u_Gamma));
+
+    FragColor = vec4(totalReflectedRadiance, 1.0); 
 }
 )";
-
 
 
 ModelRenderer::ModelRenderer(Camera* camera)
@@ -225,6 +230,26 @@ ModelRenderer::ModelRenderer(Camera* camera)
 
 void ModelRenderer::setGamma(float gamma) {
     this->gamma = gamma;
+}
+
+
+void ModelRenderer::setExposureIsEnabled(bool exposureIsEnabled) {
+    this->exposureIsEnabled = exposureIsEnabled;
+}
+
+
+bool ModelRenderer::getExposureIsEnabled() const {
+    return exposureIsEnabled;
+}
+
+
+void ModelRenderer::setExposure(float exposure) {
+    this->exposure = max(exposure, 0.0f);
+}
+
+
+float ModelRenderer::getExposure() const {
+    return exposure;
 }
 
 
@@ -276,6 +301,9 @@ void ModelRenderer::renderModelInstance(
     shaderProgram.setFloat3("u_AmbientColor", ambientLightColor);
 
     shaderProgram.setFloat("u_Gamma", gamma);
+    shaderProgram.setFloat("u_Exposure", exposure);
+    shaderProgram.setBool("u_ExposureIsEnabled", exposureIsEnabled);
+
 
     for( auto [mesh, material] : modelInstance->getModel()->getMeshes() ) {
 
