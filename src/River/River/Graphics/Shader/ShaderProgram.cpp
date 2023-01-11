@@ -86,6 +86,12 @@ namespace River{
 	}
 
 
+	void ShaderProgram::setBool(const std::string& name, bool value) {
+		GLint location = getUniformLocation(name);
+		GL(glUniform1i(location, GLint(value)));
+	}
+
+
 	void ShaderProgram::setFloat(const std::string& name, GLfloat value) {
 		GLint location = getUniformLocation(name);
 		GL(glUniform1f(location, value));

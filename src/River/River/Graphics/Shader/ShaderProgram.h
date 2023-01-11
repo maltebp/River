@@ -22,6 +22,8 @@ namespace River {
 		void use();
 
 		// Uniforms -----------------------------------------------------------------
+
+		void setBool(const std::string& name, bool value);
 		
 		void setFloat(const std::string& name, GLfloat value);
 
