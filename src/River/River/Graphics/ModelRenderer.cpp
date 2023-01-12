@@ -1,11 +1,14 @@
 #include "River/pch.h"
 
+#include <cassert>
+
 #include "ModelRenderer.h"
     
+using namespace std;
 using namespace glm;
 using namespace River;
 
-static std::string vertexShaderSource = R"(
+static string vertexShaderSource = R"(
 #version 330 core
 
 layout (location = 0) in vec3 a_Position;
@@ -26,12 +29,6 @@ out vec3 o_WorldNormal;
 
 void main()
 {
-    vec3 normalColor = vec3(
-        0.5 * a_Normal.x + 0.5,
-        0.5 * a_Normal.y + 0.5,
-        0.5 * a_Normal.z + 0.5
-    );
-
     vec4 worldPosition = u_ModelMatrix * vec4(a_Position, 1.0);
     o_WorldPosition = worldPosition.xyz;
 
@@ -42,17 +39,33 @@ void main()
 )";
 
 
-static std::string fragmentShaderSource = R"(
+static string fragmentShaderSource = R"(
 #version 330 core
+
+#define PI 3.1415926538
+#define MAX_POINT_LIGHTS 16
+#define MAX_DIRECTIONAL_LIGHTS 8
+
+struct DirectionalLight {
+    vec3 coloredIntensity;
+    vec3 direction;
+};
+
+uniform DirectionalLight u_DirectionalLights[MAX_DIRECTIONAL_LIGHTS];
+uniform int u_NumDirectionalLights;
+
+struct PointLight {
+    vec3 coloredIntensity;
+    vec3 position;
+};
+
+uniform PointLight u_PointLights[MAX_POINT_LIGHTS];
+uniform int u_NumPointLights;
 
 uniform float u_Gamma;
 uniform float u_Exposure;
 uniform bool u_ExposureIsEnabled;
 uniform vec3 u_EyePosition;
-
-uniform vec3 u_DirectionalDirection;
-uniform vec3 u_DirectionalColor;
-uniform float u_DirectionalIntensity;
 
 uniform vec3 u_PointPosition;
 uniform vec3 u_PointColor;
@@ -68,8 +81,6 @@ out vec4 FragColor;
 
 in vec3 o_WorldPosition;
 in vec3 o_WorldNormal;
-
-#define PI 3.1415926538
 
 
 // Normal-distribution function
@@ -143,24 +154,29 @@ vec3 cookTorranceBrdf(
 }
 
 
-vec3 computeDirectionalLightRadiance(vec3 surfaceNormal) {
-    vec3 incomingRadiance = u_DirectionalColor * u_DirectionalIntensity;
-    incomingRadiance *= max(dot(surfaceNormal, -u_DirectionalDirection), 0.0);
-
-    vec3 directionToEye = normalize(u_EyePosition - o_WorldPosition);
+vec3 computeDirectionalLightRadiance(
+    DirectionalLight light,
+    vec3 surfaceNormal,
+    vec3 directionToEye,
+    vec3 albedo,
+    float roughness,
+    float metallicness
+) {
+    vec3 directionToLight = -light.direction;
+    vec3 irradiance = light.coloredIntensity * max(dot(surfaceNormal, directionToLight), 0.0);
 
     vec3 brdf = cookTorranceBrdf(
         surfaceNormal, 
         directionToEye, 
-        -u_DirectionalDirection, 
-        u_Albedo, 
-        u_Roughness,
-        u_Metallicness
+        directionToLight, 
+        albedo, 
+        roughness,
+        metallicness
     );
 
-    vec3 reflectedRadiance = brdf * incomingRadiance;
+    vec3 radiance = brdf * irradiance;
 
-    return reflectedRadiance;
+    return radiance;
 }
 
 vec3 computePointLightRadiance(vec3 surfaceNormal) {
@@ -191,21 +207,34 @@ vec3 computePointLightRadiance(vec3 surfaceNormal) {
 
 void main() {
 
+    vec3 directionToEye = normalize(u_EyePosition - o_WorldPosition);
+
     // I believe its incorrect (but common) to have GPU linearly interpolate
     // the normals - it should probably be "slerp'ed" instead.
     vec3 surfaceNormal = normalize(o_WorldNormal);
 
-    vec3 directionalLightRadiance = computeDirectionalLightRadiance(
-        surfaceNormal
-    );
-    
+    vec3 totalReflectedRadiance = vec3(0);
+
+    for( int i = 0; i < u_NumDirectionalLights; i++ ) {
+        totalReflectedRadiance += computeDirectionalLightRadiance(
+            u_DirectionalLights[i],
+            surfaceNormal,
+            directionToEye,
+            u_Albedo,
+            u_Roughness,
+            u_Metallicness          
+        );
+    }
+
     vec3 pointLightRadiance = computePointLightRadiance(
         surfaceNormal
     );
+    totalReflectedRadiance += pointLightRadiance;
     
     vec3 ambientRadiance = u_Albedo * u_AmbientColor; 
+    totalReflectedRadiance += ambientRadiance;
 
-    vec3 totalReflectedRadiance = ambientRadiance + directionalLightRadiance + pointLightRadiance;
+    // Post-processing
 
     if( u_ExposureIsEnabled ) {
         totalReflectedRadiance = vec3(1.0f) - exp(-totalReflectedRadiance * u_Exposure);
@@ -244,19 +273,12 @@ bool ModelRenderer::getExposureIsEnabled() const {
 
 
 void ModelRenderer::setExposure(float exposure) {
-    this->exposure = max(exposure, 0.0f);
+    this->exposure = glm::max(exposure, 0.0f);
 }
 
 
 float ModelRenderer::getExposure() const {
     return exposure;
-}
-
-
-void ModelRenderer::setDirectionalLight(vec3 direction, vec3 color, float intensity) {
-    directionalLightDirection = direction;
-    directionalLightColor = color;
-    directionalLightIntensity = intensity;
 }
 
 
@@ -274,7 +296,8 @@ void ModelRenderer::setAmbientLight(vec3 color) {
 
 void ModelRenderer::renderModelInstance(
     const Transform3D* transform,
-    const ModelInstance* modelInstance
+    const ModelInstance* modelInstance,
+    const vector<DirectionalLight>* directionalLights
 ) {
     GL(glEnable(GL_DEPTH_TEST));
     GL(glDepthMask(GL_TRUE)); // Enable writing to depth buffer 
@@ -292,9 +315,6 @@ void ModelRenderer::renderModelInstance(
 
     shaderProgram.setFloat3("u_EyePosition", camera->getPosition());
 
-    shaderProgram.setFloat3("u_DirectionalDirection", directionalLightDirection);
-    shaderProgram.setFloat3("u_DirectionalColor", directionalLightColor);
-    shaderProgram.setFloat("u_DirectionalIntensity", directionalLightIntensity);
     shaderProgram.setFloat3("u_PointPosition", pointLightPosition);
     shaderProgram.setFloat3("u_PointColor", pointLightColor);
     shaderProgram.setFloat("u_PointIntensity", pointLightIntensity);
@@ -304,6 +324,20 @@ void ModelRenderer::renderModelInstance(
     shaderProgram.setFloat("u_Exposure", exposure);
     shaderProgram.setBool("u_ExposureIsEnabled", exposureIsEnabled);
 
+    if( directionalLights != nullptr ) {
+        shaderProgram.setInt("u_NumDirectionalLights", directionalLights->size());
+        assert(directionalLights->size() < MAX_DIRECTIONAL_LIGHTS);
+
+        int i = 0;
+        for( const DirectionalLight& directionalLight : *directionalLights ) {
+            const string lightUniformName = "u_DirectionalLights[" + to_string(i) + "]";
+            shaderProgram.setFloat3(lightUniformName + ".direction", directionalLight.direction);
+            shaderProgram.setFloat3(lightUniformName + ".coloredIntensity", directionalLight.intensity * directionalLight.color);
+            i++;
+        }   
+    } else {
+        shaderProgram.setInt("u_NumDirectionalLights", 0);
+    }
 
     for( auto [mesh, material] : modelInstance->getModel()->getMeshes() ) {
 

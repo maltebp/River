@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "River/Graphics/Mesh/ModelInstance.h"
 #include "River/Graphics/Transform3D.h"
 #include "River/Graphics/Camera/Camera.h"
@@ -8,13 +10,25 @@
 
 namespace River {
 
-    
+    const size_t MAX_DIRECTIONAL_LIGHTS = 8;
+
+    // TODO: For developing PBR
+    struct DirectionalLight {
+        glm::vec3 direction{0};
+        glm::vec3 color{0};
+        float intensity = 0;
+    };
+
     class ModelRenderer {
     public:
 
         ModelRenderer(Camera* camera);
 
-        void renderModelInstance(const Transform3D* transform, const ModelInstance* modelInstance);
+        void renderModelInstance(
+            const Transform3D* transform,
+            const ModelInstance* modelInstance,
+            const std::vector<DirectionalLight>* directionalLights
+        );
 
         void setGamma(float gamma);
 
@@ -28,7 +42,6 @@ namespace River {
         [[nodiscard]] float getExposure() const;
         
         // TODO: Just for developing PBR
-        void setDirectionalLight(glm::vec3 direction, glm::vec3 color, float intensity);
         void setPointLight(glm::vec3 position, glm::vec3 color, float intensity);
         void setAmbientLight(glm::vec3 color);
 
@@ -43,12 +56,6 @@ namespace River {
         float exposure = 1.0f;
 
         bool exposureIsEnabled = true;
-
-        glm::vec3 directionalLightDirection = glm::vec3(0);
-
-        glm::vec3 directionalLightColor = glm::vec3(1.0);
-
-        float directionalLightIntensity = 0.0f;
 
         glm::vec3 pointLightPosition = glm::vec3(0);
 
