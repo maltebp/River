@@ -64,16 +64,20 @@ struct PointLight {
 uniform PointLight u_PointLights[MAX_POINT_LIGHTS];
 uniform int u_NumPointLights;
 
+struct Material {
+    vec3 albedo;
+    float roughness;
+    float metallicness;
+};
+
+uniform Material u_Material;
+
 uniform float u_Gamma;
 uniform float u_Exposure;
 uniform bool u_ExposureIsEnabled;
 uniform vec3 u_EyePosition;
 
 uniform vec3 u_AmbientColor;
-
-uniform vec3 u_Albedo;
-uniform float u_Metallicness;
-uniform float u_Roughness;
 
 out vec4 FragColor;
 
@@ -122,29 +126,27 @@ vec3 fresnelSchlick(vec3 surfaceNormal, vec3 directionToEye, vec3 directionToLig
 
 
 vec3 cookTorranceBrdf(
+    Material material,
     vec3 surfaceNormal,
     vec3 directionToEye,
-    vec3 directionToLight,
-    vec3 albedo,
-    float roughness,
-    float metallicness
+    vec3 directionToLight
 ) {
     vec3 DIELECTRIC_BASE_REFLECTIVITY = vec3(0.04);
-    vec3 baseReflectivity = mix(DIELECTRIC_BASE_REFLECTIVITY, albedo, metallicness); 
+    vec3 baseReflectivity = mix(DIELECTRIC_BASE_REFLECTIVITY, material.albedo, material.metallicness); 
     
     vec3 reflectionFactor = fresnelSchlick(surfaceNormal, directionToEye, directionToLight, baseReflectivity);
-    float reflectionProbability = trowbridgeReitzGGX(surfaceNormal, directionToEye, directionToLight, roughness);
-    float geometryProbability = smith(surfaceNormal, directionToEye, directionToLight, roughness);
+    float reflectionProbability = trowbridgeReitzGGX(surfaceNormal, directionToEye, directionToLight, material.roughness);
+    float geometryProbability = smith(surfaceNormal, directionToEye, directionToLight, material.roughness);
    
     vec3 diffuseFactor = vec3(1.0) - reflectionFactor;
     
     // Metallic surfaces reflects all light
-    diffuseFactor *= 1 - metallicness;
+    diffuseFactor *= 1 - material.metallicness;
 
     float denominator = 4.0 * max(dot(surfaceNormal, directionToEye), 0.0) * max(dot(surfaceNormal, directionToLight), 0.0) + 0.0001;
     
     float specular = reflectionProbability * geometryProbability / denominator;
-    vec3 diffuse = albedo / PI; // Lambertian
+    vec3 diffuse = material.albedo / PI; // Lambertian
 
     vec3 brdf = diffuseFactor * diffuse + reflectionFactor * specular;
     
@@ -156,20 +158,16 @@ vec3 computeDirectionalLightRadiance(
     DirectionalLight light,
     vec3 surfaceNormal,
     vec3 directionToEye,
-    vec3 albedo,
-    float roughness,
-    float metallicness
+    Material material
 ) {
     vec3 directionToLight = -light.direction;
     vec3 irradiance = light.coloredIntensity * max(dot(surfaceNormal, directionToLight), 0.0);
 
     vec3 brdf = cookTorranceBrdf(
+        material,
         surfaceNormal, 
         directionToEye, 
-        directionToLight, 
-        albedo, 
-        roughness,
-        metallicness
+        directionToLight
     );
 
     vec3 radiance = brdf * irradiance;
@@ -182,9 +180,7 @@ vec3 computePointLightRadiance(
     vec3 worldPosition,
     vec3 surfaceNormal,
     vec3 directionToEye,
-    vec3 albedo,
-    float roughness,
-    float metallicness
+    Material material
 ) {
     float distanceToLight = distance(light.position, worldPosition);
     float attenuation = 1.0 / pow(distanceToLight, 2);
@@ -195,12 +191,10 @@ vec3 computePointLightRadiance(
     vec3 irradiance = cosTheta * light.coloredIntensity * attenuation; 
 
     vec3 brdf = cookTorranceBrdf(
+        material,
         surfaceNormal, 
         directionToEye, 
-        directionToLight, 
-        albedo, 
-        roughness,
-        metallicness
+        directionToLight
     );
 
     vec3 radiance = brdf * irradiance;
@@ -223,9 +217,7 @@ void main() {
             u_DirectionalLights[i],
             surfaceNormal,
             directionToEye,
-            u_Albedo,
-            u_Roughness,
-            u_Metallicness          
+            u_Material        
         );
     }
 
@@ -235,13 +227,11 @@ void main() {
             o_WorldPosition,
             surfaceNormal,
             directionToEye,
-            u_Albedo,
-            u_Roughness,
-            u_Metallicness          
+            u_Material
         );
     }
     
-    vec3 ambientRadiance = u_Albedo * u_AmbientColor; 
+    vec3 ambientRadiance = u_Material.albedo * u_AmbientColor; 
     totalReflectedRadiance += ambientRadiance;
 
     // Post-processing
@@ -362,9 +352,9 @@ void ModelRenderer::renderModelInstance(
         const Material* materialOverride = modelInstance->getMaterialOverride(material);
         const Material* actualMaterial = materialOverride != nullptr ? materialOverride : material;
 
-        shaderProgram.setFloat3("u_Albedo", actualMaterial->getAlbedo());
-        shaderProgram.setFloat("u_Roughness", actualMaterial->getRoughness());
-        shaderProgram.setFloat("u_Metallicness", actualMaterial->getMetallicness());
+        shaderProgram.setFloat3("u_Material.albedo", actualMaterial->getAlbedo());
+        shaderProgram.setFloat("u_Material.roughness", actualMaterial->getRoughness());
+        shaderProgram.setFloat("u_Material.metallicness", actualMaterial->getMetallicness());
 
         const VertexArray& vertexArray = mesh->getVertexArray();
         vertexArray.bind();
