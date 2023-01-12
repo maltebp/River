@@ -77,7 +77,7 @@ uniform float u_Exposure;
 uniform bool u_ExposureIsEnabled;
 uniform vec3 u_EyePosition;
 
-uniform vec3 u_AmbientColor;
+uniform vec3 u_AmbientColoredIntensity;
 
 out vec4 FragColor;
 
@@ -231,7 +231,7 @@ void main() {
         );
     }
     
-    vec3 ambientRadiance = u_Material.albedo * u_AmbientColor; 
+    vec3 ambientRadiance = u_Material.albedo * u_AmbientColoredIntensity; 
     totalReflectedRadiance += ambientRadiance;
 
     // Post-processing
@@ -284,8 +284,9 @@ float ModelRenderer::getExposure() const {
 }
 
 
-void ModelRenderer::setAmbientLight(vec3 color) {
+void ModelRenderer::setAmbientLight(vec3 color, float intensity) {
     ambientLightColor = color;
+    ambientLightIntensity = intensity;
 }
 
 
@@ -311,7 +312,7 @@ void ModelRenderer::renderModelInstance(
 
     shaderProgram.setFloat3("u_EyePosition", camera->getPosition());
 
-    shaderProgram.setFloat3("u_AmbientColor", ambientLightColor);
+    shaderProgram.setFloat3("u_AmbientColoredIntensity", ambientLightColor * ambientLightIntensity);
 
     shaderProgram.setFloat("u_Gamma", gamma);
     shaderProgram.setFloat("u_Exposure", exposure);

@@ -50,7 +50,7 @@ namespace River {
         [[nodiscard]] float getExposure() const;
         
         // TODO: Just for developing PBR
-        void setAmbientLight(glm::vec3 color);
+        void setAmbientLight(glm::vec3 color, float intensity);
 
     private:
 
@@ -65,6 +65,8 @@ namespace River {
         bool exposureIsEnabled = true;
 
         glm::vec3 ambientLightColor = glm::vec3(0.0f);
+
+        float ambientLightIntensity = 1.0f;
 
     };
 
