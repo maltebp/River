@@ -43,6 +43,8 @@ static string fragmentShaderSource = R"(
 #version 330 core
 
 #define PI 3.1415926538
+
+// These should match the ones defined in C++
 #define MAX_POINT_LIGHTS 16
 #define MAX_DIRECTIONAL_LIGHTS 8
 
@@ -66,10 +68,6 @@ uniform float u_Gamma;
 uniform float u_Exposure;
 uniform bool u_ExposureIsEnabled;
 uniform vec3 u_EyePosition;
-
-uniform vec3 u_PointPosition;
-uniform vec3 u_PointColor;
-uniform float u_PointIntensity;
 
 uniform vec3 u_AmbientColor;
 
@@ -179,30 +177,35 @@ vec3 computeDirectionalLightRadiance(
     return radiance;
 }
 
-vec3 computePointLightRadiance(vec3 surfaceNormal) {
-    vec3 pointLightIntensity = u_PointIntensity * u_PointColor;
-    
-    float distanceToPointLight = distance(u_PointPosition, o_WorldPosition);
-    float attenuation = 1.0 / pow(distanceToPointLight, 2);
-    vec3 incomingRadiance = pointLightIntensity * attenuation; 
+vec3 computePointLightRadiance(
+    PointLight light,
+    vec3 worldPosition,
+    vec3 surfaceNormal,
+    vec3 directionToEye,
+    vec3 albedo,
+    float roughness,
+    float metallicness
+) {
+    float distanceToLight = distance(light.position, worldPosition);
+    float attenuation = 1.0 / pow(distanceToLight, 2);
 
-    vec3 directionToPointLight = normalize(u_PointPosition - o_WorldPosition);
-    incomingRadiance *= max(dot(surfaceNormal, directionToPointLight), 0);
+    vec3 directionToLight = normalize(light.position - worldPosition);
+    float cosTheta = max(dot(surfaceNormal, directionToLight), 0);
 
-    vec3 directionToEye = normalize(u_EyePosition - o_WorldPosition);
+    vec3 irradiance = cosTheta * light.coloredIntensity * attenuation; 
 
     vec3 brdf = cookTorranceBrdf(
         surfaceNormal, 
         directionToEye, 
-        directionToPointLight, 
-        u_Albedo, 
-        u_Roughness,
-        u_Metallicness
+        directionToLight, 
+        albedo, 
+        roughness,
+        metallicness
     );
 
-    vec3 reflectedRadiance = brdf * incomingRadiance;
+    vec3 radiance = brdf * irradiance;
 
-    return reflectedRadiance;
+    return radiance;
 }
 
 void main() {
@@ -226,20 +229,29 @@ void main() {
         );
     }
 
-    vec3 pointLightRadiance = computePointLightRadiance(
-        surfaceNormal
-    );
-    totalReflectedRadiance += pointLightRadiance;
+    for( int i = 0; i < u_NumPointLights; i++ ) {
+        totalReflectedRadiance += computePointLightRadiance(
+            u_PointLights[i],
+            o_WorldPosition,
+            surfaceNormal,
+            directionToEye,
+            u_Albedo,
+            u_Roughness,
+            u_Metallicness          
+        );
+    }
     
     vec3 ambientRadiance = u_Albedo * u_AmbientColor; 
     totalReflectedRadiance += ambientRadiance;
 
     // Post-processing
 
+    // Tone Mapping
     if( u_ExposureIsEnabled ) {
         totalReflectedRadiance = vec3(1.0f) - exp(-totalReflectedRadiance * u_Exposure);
     }
 
+    // Gamme correction
     totalReflectedRadiance = pow(totalReflectedRadiance, vec3(1.0 / u_Gamma));
 
     FragColor = vec4(totalReflectedRadiance, 1.0); 
@@ -282,13 +294,6 @@ float ModelRenderer::getExposure() const {
 }
 
 
-void ModelRenderer::setPointLight(vec3 position, vec3 color, float intensity) {
-    pointLightPosition = position;
-    pointLightColor = color;
-    pointLightIntensity = intensity;
-}
-
-
 void ModelRenderer::setAmbientLight(vec3 color) {
     ambientLightColor = color;
 }
@@ -297,7 +302,8 @@ void ModelRenderer::setAmbientLight(vec3 color) {
 void ModelRenderer::renderModelInstance(
     const Transform3D* transform,
     const ModelInstance* modelInstance,
-    const vector<DirectionalLight>* directionalLights
+    const vector<DirectionalLight>* directionalLights,
+    const vector<PointLight>* pointLights
 ) {
     GL(glEnable(GL_DEPTH_TEST));
     GL(glDepthMask(GL_TRUE)); // Enable writing to depth buffer 
@@ -315,9 +321,6 @@ void ModelRenderer::renderModelInstance(
 
     shaderProgram.setFloat3("u_EyePosition", camera->getPosition());
 
-    shaderProgram.setFloat3("u_PointPosition", pointLightPosition);
-    shaderProgram.setFloat3("u_PointColor", pointLightColor);
-    shaderProgram.setFloat("u_PointIntensity", pointLightIntensity);
     shaderProgram.setFloat3("u_AmbientColor", ambientLightColor);
 
     shaderProgram.setFloat("u_Gamma", gamma);
@@ -326,7 +329,7 @@ void ModelRenderer::renderModelInstance(
 
     if( directionalLights != nullptr ) {
         shaderProgram.setInt("u_NumDirectionalLights", directionalLights->size());
-        assert(directionalLights->size() < MAX_DIRECTIONAL_LIGHTS);
+        assert(directionalLights->size() <= MAX_DIRECTIONAL_LIGHTS);
 
         int i = 0;
         for( const DirectionalLight& directionalLight : *directionalLights ) {
@@ -337,6 +340,21 @@ void ModelRenderer::renderModelInstance(
         }   
     } else {
         shaderProgram.setInt("u_NumDirectionalLights", 0);
+    }
+
+    if( pointLights != nullptr ) {
+        shaderProgram.setInt("u_NumPointLights", pointLights->size());
+        assert(pointLights->size() <= MAX_POINT_LIGHTS);
+
+        int i = 0;
+        for( const PointLight& pointLight : *pointLights ) {
+            const string lightUniformName = "u_PointLights[" + to_string(i) + "]";
+            shaderProgram.setFloat3(lightUniformName + ".position", pointLight.position);
+            shaderProgram.setFloat3(lightUniformName + ".coloredIntensity", pointLight.intensity * pointLight.color);
+            i++;
+        }   
+    } else {
+        shaderProgram.setInt("u_PointLights", 0);
     }
 
     for( auto [mesh, material] : modelInstance->getModel()->getMeshes() ) {

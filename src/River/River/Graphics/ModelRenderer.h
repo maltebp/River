@@ -11,10 +11,17 @@
 namespace River {
 
     const size_t MAX_DIRECTIONAL_LIGHTS = 8;
+    const size_t MAX_POINT_LIGHTS = 32;
 
     // TODO: For developing PBR
     struct DirectionalLight {
         glm::vec3 direction{0};
+        glm::vec3 color{0};
+        float intensity = 0;
+    };
+
+    struct PointLight {
+        glm::vec3 position{0};
         glm::vec3 color{0};
         float intensity = 0;
     };
@@ -27,7 +34,8 @@ namespace River {
         void renderModelInstance(
             const Transform3D* transform,
             const ModelInstance* modelInstance,
-            const std::vector<DirectionalLight>* directionalLights
+            const std::vector<DirectionalLight>* directionalLights,
+            const std::vector<PointLight>* pointLights
         );
 
         void setGamma(float gamma);
@@ -42,7 +50,6 @@ namespace River {
         [[nodiscard]] float getExposure() const;
         
         // TODO: Just for developing PBR
-        void setPointLight(glm::vec3 position, glm::vec3 color, float intensity);
         void setAmbientLight(glm::vec3 color);
 
     private:
@@ -56,12 +63,6 @@ namespace River {
         float exposure = 1.0f;
 
         bool exposureIsEnabled = true;
-
-        glm::vec3 pointLightPosition = glm::vec3(0);
-
-        glm::vec3 pointLightColor = glm::vec3(1.0);
-
-        float pointLightIntensity = 0.0f;
 
         glm::vec3 ambientLightColor = glm::vec3(0.0f);
 
