@@ -1,6 +1,6 @@
-workspace "River"
-    location "build"
+workspace "river"
+    location "build/river"
     platforms { "x64" }
-    configurations { "Debug", "Release" }
+    configurations { "debug", "release" }
 
-include("src/River")
+include("libs/engine/core")

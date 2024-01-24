@@ -1,8 +1,11 @@
-river_dir = _SCRIPT_DIR .. "/../../"
+rv = {}
+
+rv.engine.core = {}
+
+rv.engine.core.links
 
 src_directory = river_dir .. "/src/"
 lib_directory = river_dir .. "/lib/"
-scripts_directory = river_dir .. "/scripts/"
 
 river_links = { }
 
@@ -32,7 +35,7 @@ function static_libraries(libraries)
 end
 
 
-project "River"
+project "river.engine.core"
 
     kind "StaticLib"
     language "C++"
@@ -108,10 +111,6 @@ project "River"
 
     prebuildcommands {
         '{RMDIR} "%{cfg.targetdir}/include"'
-    }
-
-    postbuildcommands {
-        'python "' .. scripts_directory .. 'build_headers.py" "' .. river_dir .. '/headers/" "%{cfg.targetdir}/include"'
     }
 
     pchheader("River/pch.h")
